@@ -4,7 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node dev.js",
+    "dev:client": "vite",
+    "dev:server": "cd server && npx ts-node index.ts",
+    "server": "cd server && npx ts-node index.ts",
+    "client": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },

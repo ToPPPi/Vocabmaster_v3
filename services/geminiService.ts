@@ -6,7 +6,7 @@ import { UserLevel } from "../types";
 
 const getAiClient = () => {
   // Ensure process is defined before accessing it to prevent browser crashes
-  const apiKey = (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : undefined;
+  const apiKey = (typeof window !== 'undefined' && import.meta.env) ? import.meta.env.VITE_API_KEY : (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : undefined;
   
   if (!apiKey) {
     console.warn("API_KEY not set. Mocking AI response.");
