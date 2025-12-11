@@ -14,9 +14,10 @@ interface LearningSessionProps {
     level?: ProficiencyLevel;
     progress: UserProgress;
     onComplete: () => void;
+    onBuyPremium?: () => void; // New callback for navigation
 }
 
-export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, progress, onComplete }) => {
+export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, progress, onComplete, onBuyPremium }) => {
     const [sessionWords, setSessionWords] = useState<Word[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [levelCompleted, setLevelCompleted] = useState(false);
@@ -199,10 +200,14 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
         await loadWords();
     };
     
-    const handleBuyPremium = async () => {
+    const handleBuyPremiumAction = async () => {
         triggerHaptic('medium');
-        await togglePremium(true);
-        await loadWords();
+        if (onBuyPremium) {
+            onBuyPremium();
+        } else {
+            // Fallback just in case
+            onComplete();
+        }
     };
 
     const getRegisterBadgeClass = (register?: string) => {
@@ -273,7 +278,7 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
                     
                     {/* Upsell if limited */}
                     {isLimitReached && (
-                         <button onClick={handleBuyPremium} className="w-full px-6 py-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-2xl font-bold text-lg shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-2">
+                         <button onClick={handleBuyPremiumAction} className="w-full px-6 py-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-2xl font-bold text-lg shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-2">
                             <Crown className="w-5 h-5" /> Снять лимиты (Premium)
                         </button>
                     )}
@@ -412,6 +417,21 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
                                                 <p className="text-sm text-slate-700">{aiData.nuance}</p>
                                             </div>
                                         )}
+
+                                        {/* Added Extra Examples Block */}
+                                        {aiData.extraExamples && aiData.extraExamples.length > 0 && (
+                                            <div className="mt-4 pt-3 border-t border-violet-200/50">
+                                                <span className="text-xs font-bold text-violet-500 uppercase block mb-2">Еще примеры:</span>
+                                                <div className="space-y-3">
+                                                    {aiData.extraExamples.map((ex, i) => (
+                                                        <div key={i} className="pl-2 border-l-2 border-violet-300">
+                                                            <p className="text-slate-800 text-xs font-medium mb-0.5">"{ex.en}"</p>
+                                                            <p className="text-slate-500 text-[10px]">{ex.ru}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {aiData.collocations && aiData.collocations.length > 0 && (
@@ -443,8 +463,9 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
                              {/* AI Button */}
                             <div className="pt-4 pb-20">
                                 {aiError && (
-                                    <div className="mb-3 p-3 bg-rose-50 border border-rose-100 rounded-xl text-rose-600 text-xs font-bold text-center flex items-center justify-center gap-2">
-                                        <WifiOff className="w-4 h-4"/> {aiError}
+                                    <div className={`mb-3 p-3 border rounded-xl text-xs font-bold text-center flex items-center justify-center gap-2 ${aiError.toLowerCase().includes('limit') || aiError.toLowerCase().includes('лимит') ? 'bg-amber-50 border-amber-100 text-amber-700' : 'bg-rose-50 border-rose-100 text-rose-600'}`}>
+                                        {aiError.toLowerCase().includes('limit') || aiError.toLowerCase().includes('лимит') ? <Crown className="w-4 h-4"/> : <WifiOff className="w-4 h-4"/>} 
+                                        {aiError}
                                     </div>
                                 )}
                                 <button 

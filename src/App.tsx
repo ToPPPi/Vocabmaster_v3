@@ -23,6 +23,9 @@ const App: React.FC = () => {
   const [view, setView] = useState<ViewState | 'level_browser' | 'progress_stats'>('onboarding');
   const [activeLevel, setActiveLevel] = useState<ProficiencyLevel | null>(null);
   const [levelsMode, setLevelsMode] = useState<'learn' | 'browse' | 'blitz'>('browse');
+  
+  // Navigation State
+  const [scrollToPremium, setScrollToPremium] = useState(false);
 
   useEffect(() => {
       const load = async () => {
@@ -127,6 +130,16 @@ const App: React.FC = () => {
       setView('onboarding');
   };
 
+  const handleGoToPremium = () => {
+      setScrollToPremium(true);
+      setView('profile');
+  };
+
+  const handleTabChange = (target: any) => {
+      setScrollToPremium(false); // Reset scroll trigger when manually navigating
+      setView(target);
+  };
+
   if (!progress) return <div className="min-h-screen flex items-center justify-center bg-slate-50"><Loader2 className="w-8 h-8 animate-spin text-violet-600"/></div>;
 
   const TabButton = ({ target, icon: Icon, label, customAction }: { target: any, icon: any, label: string, customAction?: () => void }) => {
@@ -136,7 +149,7 @@ const App: React.FC = () => {
             onClick={() => { 
                 triggerHaptic('selection'); 
                 if (customAction) customAction();
-                setView(target); 
+                handleTabChange(target); 
             }} 
             className={`flex flex-col items-center justify-center w-full h-full transition-colors duration-200 ${isActive ? 'text-violet-600' : 'text-slate-400'}`}
           >
@@ -169,8 +182,24 @@ const App: React.FC = () => {
                 />
             )}
 
-            {view === 'learn_daily' && <LearningSession mode="daily" level={activeLevel || ProficiencyLevel.A1} progress={progress} onComplete={() => { refreshProgress(); setView('dashboard'); }} />}
-            {view === 'learn_review' && <LearningSession mode="review" progress={progress} onComplete={() => { refreshProgress(); setView('dashboard'); }} />}
+            {view === 'learn_daily' && (
+                <LearningSession 
+                    mode="daily" 
+                    level={activeLevel || ProficiencyLevel.A1} 
+                    progress={progress} 
+                    onComplete={() => { refreshProgress(); setView('dashboard'); }} 
+                    onBuyPremium={handleGoToPremium}
+                />
+            )}
+            
+            {view === 'learn_review' && (
+                <LearningSession 
+                    mode="review" 
+                    progress={progress} 
+                    onComplete={() => { refreshProgress(); setView('dashboard'); }} 
+                    onBuyPremium={handleGoToPremium}
+                />
+            )}
             
             {/* Blitz Intro: Direct Routing to Game */}
             {view === 'blitz_intro' && (
@@ -200,7 +229,16 @@ const App: React.FC = () => {
             
             {view === 'level_browser' && <LevelBrowser level={activeLevel || ProficiencyLevel.A1} progress={progress} onBack={() => { setLevelsMode('browse'); setView('levels'); }} onUpdate={refreshProgress} />}
             {view === 'dictionary' && <DictionaryView progress={progress} onBack={() => setView('dashboard')} onUpdate={refreshProgress} />}
-            {view === 'profile' && <ProfileView progress={progress} onUpdate={refreshProgress} onLogout={handleLogout} />}
+            
+            {view === 'profile' && (
+                <ProfileView 
+                    progress={progress} 
+                    onUpdate={refreshProgress} 
+                    onLogout={handleLogout} 
+                    scrollToPremium={scrollToPremium}
+                />
+            )}
+            
             {view === 'progress_stats' && <ProgressStatsView progress={progress} onBack={() => setView('dashboard')} />}
             {view === 'achievements' && <AchievementsView progress={progress} onBack={() => setView('dashboard')} />} 
         </div>

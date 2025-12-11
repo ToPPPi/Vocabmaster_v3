@@ -14,36 +14,33 @@ export const triggerHaptic = (style: 'light' | 'medium' | 'heavy' | 'selection' 
 export const speak = (text: string) => {
     if (!('speechSynthesis' in window)) return;
 
-    // 1. Force cancel previous utterance (Crucial for mobile webview stability)
+    // 1. Immediately cancel any ongoing speech
     window.speechSynthesis.cancel();
 
-    // 2. Simple creation logic
+    // 2. Create Utterance
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US'; // Defaulting to US English
-    utterance.rate = 0.9;     // Slightly slower for learning
-    utterance.pitch = 1;
-    utterance.volume = 1;
+    
+    // 3. Settings for Android/iOS Webview compatibility
+    utterance.lang = 'en-US'; 
+    utterance.rate = 0.9;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
 
-    // 3. Attempt to find a better voice, but don't block execution if not found immediately
-    // Mobile browsers often load voices asynchronously or not at all if muted.
+    // 4. Try to get a better voice, but use default if not available instantly
+    // We don't want to wait for onvoiceschanged here as it delays the click action too much
     const voices = window.speechSynthesis.getVoices();
     if (voices.length > 0) {
-        // Try to find premium/local voices first
-        const preferredVoice = voices.find(v => v.lang === 'en-US' && !v.localService) // Google/Apple voices
-                            || voices.find(v => v.lang === 'en-US') 
-                            || null;
+        // Try to find a high-quality Google or Apple voice
+        const preferredVoice = voices.find(v => v.lang === 'en-US' && (v.name.includes('Google') || v.name.includes('Samantha') || v.localService)) 
+                            || voices.find(v => v.lang === 'en-US');
+        
         if (preferredVoice) {
             utterance.voice = preferredVoice;
         }
     }
 
-    // 4. Speak
-    // Some browsers require resume() if previously paused by system
-    if (window.speechSynthesis.paused) {
-        window.speechSynthesis.resume();
-    }
-    
-    // Slight delay to ensure cancel() finished
+    // 5. Fire speech immediately
+    // Small timeout ensures the cancellation has processed
     setTimeout(() => {
         window.speechSynthesis.speak(utterance);
     }, 10);

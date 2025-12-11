@@ -274,7 +274,8 @@ export const DictionaryView: React.FC<DictionaryViewProps> = ({ progress, onBack
                                             <span className="font-bold text-slate-900 text-lg leading-tight truncate">{w.term}</span>
                                             <span className="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md mt-1 w-fit whitespace-normal break-words">{w.translation}</span>
                                         </div>
-                                        <p className="text-sm text-slate-500 leading-snug font-medium line-clamp-1">{w.definition}</p>
+                                        {/* CSS FIX: Removed line-clamp-1 and added whitespace-normal to allow expansion */}
+                                        <p className="text-sm text-slate-500 leading-relaxed font-medium whitespace-normal break-words">{w.definition}</p>
                                      </div>
                                 </div>
                                 <div className="shrink-0 pl-1">

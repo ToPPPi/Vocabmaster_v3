@@ -1,15 +1,16 @@
 
-import React, { useState } from 'react';
-import { Check, Crown, BarChart3, Sparkles, Zap, Clock, Star, Infinity, Loader2, Database, Download, Upload, Users, Share2, MessageCircle, LogOut, Calendar, BookOpen, Flame } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Check, Crown, BarChart3, Sparkles, Zap, Clock, Star, Infinity, Loader2, Database, Download, Upload, Users, Share2, MessageCircle, LogOut, Calendar, BookOpen, Flame, Wrench } from 'lucide-react';
 import { Header } from './Header';
 import { UserProgress } from '../types';
-import { buyPremium, isUserPremium, exportUserData, importUserData, resetUserProgress, getSecureNow } from '../services/storageService';
+import { buyPremium, isUserPremium, exportUserData, importUserData, resetUserProgress, getSecureNow, togglePremium } from '../services/storageService';
 import { triggerHaptic, shareApp } from '../utils/uiHelpers';
 
 interface ProfileViewProps {
     progress: UserProgress;
     onUpdate: () => void;
     onLogout: () => void;
+    scrollToPremium?: boolean;
 }
 
 const BenefitRow = ({ icon: Icon, title, free, premium, highlight }: any) => (
@@ -31,7 +32,7 @@ const BenefitRow = ({ icon: Icon, title, free, premium, highlight }: any) => (
     </div>
 );
 
-export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, onLogout }) => {
+export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, onLogout, scrollToPremium }) => {
     const [isLoadingPayment, setIsLoadingPayment] = useState<string | null>(null);
     const [showImportInput, setShowImportInput] = useState(false);
     const [importCode, setImportCode] = useState("");
@@ -41,6 +42,19 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
     const [resetTaps, setResetTaps] = useState(0);
 
     const isPremium = isUserPremium(progress);
+    
+    // Auto-scroll logic
+    useEffect(() => {
+        if (scrollToPremium && !isPremium) {
+            const element = document.getElementById('premium-section');
+            if (element) {
+                // Short delay to ensure rendering
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+    }, [scrollToPremium, isPremium]);
     
     // Format Expiration Date
     const getExpirationDate = () => {
@@ -71,6 +85,13 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
         } finally {
             setIsLoadingPayment(null);
         }
+    };
+
+    const handleDevPremium = async () => {
+        triggerHaptic('success');
+        await togglePremium(true);
+        await onUpdate();
+        alert("Developer Premium Granted!");
     };
 
     const handleExport = async () => {
@@ -229,7 +250,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
 
                 {/* PREMIUM SECTION */}
                 {!progress.premiumStatus && (
-                    <div className="pt-6">
+                    <div id="premium-section" className="pt-6">
                         <h3 className="text-center text-lg font-bold text-slate-900 mb-6">Преимущества Premium</h3>
                         
                         <div className="space-y-3 mb-6">
@@ -338,9 +359,22 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                     <p className="text-xs text-slate-400 font-medium">
                         VocabMaster v1.2.0 {resetTaps > 0 && <span className="text-rose-400 font-bold">({resetTaps})</span>}
                     </p>
-                    {/* NEW HINT TEXT */}
                     <p className="text-[10px] text-slate-300 mt-1">(Нажмите 10 раз для сброса данных)</p>
                     <p className="text-[10px] text-slate-300 mt-1">support@vocabmaster.app</p>
+                </div>
+
+                {/* Developer Section */}
+                <div className="border-t border-slate-100 pt-4 mt-4">
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                        <Wrench className="w-3 h-3 text-slate-300" />
+                        <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Developer Zone</span>
+                    </div>
+                    <button 
+                        onClick={handleDevPremium}
+                        className="w-full py-3 bg-slate-800 text-slate-200 text-xs font-mono rounded-xl opacity-50 hover:opacity-100 transition-opacity"
+                    >
+                        [DEV] Grant Premium
+                    </button>
                 </div>
             </div>
         </div>
