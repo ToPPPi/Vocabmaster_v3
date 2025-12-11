@@ -275,42 +275,44 @@ export const Dashboard: React.FC<DashboardProps> = ({ progress, setViewState, on
 
                 {/* 4. PREMIUM BANNER - DETAILED VERSION */}
                 {!isPremium && (
-                    <div onClick={handleBuyPremium} className="bg-gradient-to-r from-violet-600 to-fuchsia-600 p-6 rounded-[2rem] text-white shadow-xl shadow-violet-200/50 cursor-pointer active:scale-[0.99] transition-transform relative overflow-hidden group">
+                    <div onClick={handleBuyPremium} className="bg-gradient-to-br from-violet-600 to-fuchsia-600 p-6 rounded-[2rem] text-white shadow-xl shadow-violet-200/50 cursor-pointer active:scale-[0.99] transition-transform relative overflow-hidden group">
                         <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
                         <div className="absolute bottom-0 left-0 -ml-8 -mb-8 w-24 h-24 bg-black/10 rounded-full blur-2xl"></div>
                         
-                        <div className="relative z-10 flex justify-between items-start mb-4">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm shadow-inner">
+                        <div className="relative z-10 flex justify-between items-start mb-6">
+                            <div>
+                                <div className="flex items-center gap-2 mb-1">
                                     <Crown className="w-6 h-6 text-yellow-300 fill-current" />
+                                    <h3 className="font-extrabold text-xl leading-none tracking-tight">VocabMaster Pro</h3>
                                 </div>
-                                <div>
-                                    <h3 className="font-extrabold text-xl leading-none">VocabMaster Pro</h3>
-                                    <p className="text-violet-100 text-xs font-medium mt-1">Разблокируй максимум</p>
-                                </div>
+                                <p className="text-violet-100 text-xs font-medium opacity-90">Версия для максимального результата</p>
                             </div>
-                            <div className="bg-white/20 px-3 py-1 rounded-lg backdrop-blur-md text-[10px] font-bold uppercase tracking-wider">
-                                от 150 ⭐️
+                            <div className="bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider shadow-sm border border-white/10">
+                                150 ⭐️
                             </div>
                         </div>
 
-                        <div className="relative z-10 space-y-2 mb-4">
-                            <div className="flex items-center gap-2 text-sm font-medium text-violet-50">
-                                <Check className="w-4 h-4 text-emerald-300 shrink-0" />
+                        <div className="relative z-10 space-y-2.5 mb-6">
+                            <div className="flex items-center gap-3 text-sm font-medium text-white/95">
+                                <Check className="w-4 h-4 text-emerald-300 shrink-0 stroke-[3]" />
                                 <span>Нет ограничений слов/день</span>
                             </div>
-                            <div className="flex items-center gap-2 text-sm font-medium text-violet-50">
-                                <Check className="w-4 h-4 text-emerald-300 shrink-0" />
+                            <div className="flex items-center gap-3 text-sm font-medium text-white/95">
+                                <Check className="w-4 h-4 text-emerald-300 shrink-0 stroke-[3]" />
                                 <span>Доступ к 10,000 слов (B2-C2)</span>
                             </div>
-                            <div className="flex items-center gap-2 text-sm font-medium text-violet-50">
-                                <Check className="w-4 h-4 text-emerald-300 shrink-0" />
+                            <div className="flex items-center gap-3 text-sm font-medium text-white/95">
+                                <Check className="w-4 h-4 text-emerald-300 shrink-0 stroke-[3]" />
                                 <span>ИИ тьютор - 50 разборов/день</span>
+                            </div>
+                            <div className="flex items-center gap-3 text-sm font-medium text-white/95">
+                                <Check className="w-4 h-4 text-emerald-300 shrink-0 stroke-[3]" />
+                                <span>Продвинутый алгоритм (FSRS)</span>
                             </div>
                         </div>
 
-                        <div className="relative z-10 w-full bg-white text-violet-700 py-3 rounded-xl font-bold text-center text-sm shadow-md flex items-center justify-center gap-2 hover:bg-violet-50 transition-colors">
-                            <span>Выбрать план</span>
+                        <div className="relative z-10 w-full bg-white text-violet-700 py-3.5 rounded-xl font-bold text-center text-sm shadow-lg flex items-center justify-center gap-2 group-hover:scale-[1.01] transition-transform">
+                            <span>Активировать Premium</span>
                             <ArrowRight className="w-4 h-4" />
                         </div>
                     </div>

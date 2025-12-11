@@ -138,7 +138,7 @@ const App: React.FC = () => {
                 if (customAction) customAction();
                 setView(target); 
             }} 
-            className={`flex flex-col items-center justify-center w-full h-full transition-colors duration-200 ${isActive ? 'text-violet-600' : 'text-slate-400 hover:text-slate-500'}`}
+            className={`flex flex-col items-center justify-center w-full h-full transition-colors duration-200 ${isActive ? 'text-violet-600' : 'text-slate-400'}`}
           >
               <Icon className={`w-6 h-6 mb-1 ${isActive ? 'fill-violet-100 stroke-violet-600' : 'stroke-current'}`} strokeWidth={isActive ? 2.5 : 2} />
               <span className={`text-[10px] font-bold ${isActive ? 'text-violet-700' : 'text-slate-400'}`}>{label}</span>
@@ -150,9 +150,8 @@ const App: React.FC = () => {
   const isFullScreen = view === 'blitz_game';
 
   return (
-    // Reverted to a clean layout without "Phone Frame" borders.
-    // max-w-md mx-auto ensures desktop view looks like a mobile app in the center, but without artificial styling.
-    <div className={`max-w-md mx-auto min-h-screen ${isFullScreen ? 'bg-slate-900' : 'bg-slate-50'} flex flex-col font-sans relative shadow-2xl md:shadow-none`}>
+    // Fixed height using h-[100dvh] ensures the container fits exactly in the viewport, allowing inner overflow-y-auto to scroll correctly.
+    <div className={`max-w-md mx-auto h-[100dvh] ${isFullScreen ? 'bg-slate-900' : 'bg-slate-50'} flex flex-col font-sans relative shadow-2xl md:shadow-none overflow-hidden`}>
         
         <div className={`flex-1 overflow-y-auto no-scrollbar relative z-10 ${!isFullScreen ? 'pb-24' : ''}`}>
             {view === 'onboarding' && <LandingPage onComplete={finishOnboarding} />}

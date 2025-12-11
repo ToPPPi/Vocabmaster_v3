@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Check, Crown, BarChart3, Sparkles, Zap, Clock, Star, Infinity, Loader2, Database, Download, Upload, Users, Share2, MessageCircle, LogOut, Calendar } from 'lucide-react';
+import { Check, Crown, BarChart3, Sparkles, Zap, Clock, Star, Infinity, Loader2, Database, Download, Upload, Users, Share2, MessageCircle, LogOut, Calendar, BookOpen } from 'lucide-react';
 import { Header } from './Header';
 import { UserProgress } from '../types';
 import { buyPremium, isUserPremium, exportUserData, importUserData, resetUserProgress, getSecureNow } from '../services/storageService';
@@ -11,6 +11,25 @@ interface ProfileViewProps {
     onUpdate: () => void;
     onLogout: () => void;
 }
+
+const BenefitRow = ({ icon: Icon, title, free, premium, highlight }: any) => (
+    <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+        <div className="flex items-center gap-2 mb-2">
+            <Icon className="w-5 h-5 text-violet-600" />
+            <span className="font-bold text-slate-900 text-sm">{title}</span>
+        </div>
+        <div className="grid grid-cols-2 gap-4 text-xs">
+            <div>
+                <div className="font-bold text-slate-400 uppercase tracking-wider mb-0.5" style={{fontSize: '10px'}}>БЕСПЛАТНО</div>
+                <div className="text-slate-600 font-medium">{free}</div>
+            </div>
+            <div>
+                <div className="font-bold text-emerald-600 uppercase tracking-wider mb-0.5" style={{fontSize: '10px'}}>ПРЕМИУМ</div>
+                <div className={`font-bold ${highlight ? 'text-emerald-700' : 'text-slate-900'}`}>{premium}</div>
+            </div>
+        </div>
+    </div>
+);
 
 export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, onLogout }) => {
     const [isLoadingPayment, setIsLoadingPayment] = useState<string | null>(null);
@@ -25,7 +44,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
     
     // Format Expiration Date
     const getExpirationDate = () => {
-        if (progress.premiumStatus) return 'Навсегда'; // Legacy
+        if (progress.premiumStatus) return 'Навсегда'; 
         if (!progress.premiumExpiration) return null;
         
         if (progress.premiumExpiration < getSecureNow()) return 'Истек';
@@ -36,7 +55,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
 
     const expDate = getExpirationDate();
 
-    const handleBuy = async (plan: 'month' | 'year') => {
+    const handleBuy = async (plan: 'month' | 'lifetime') => {
         triggerHaptic('medium');
         setIsLoadingPayment(plan);
         try {
@@ -81,22 +100,13 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
         }
     };
 
-    const openChannel = () => {
-        if (window.Telegram?.WebApp) {
-            window.Telegram.WebApp.openTelegramLink('https://t.me/vocabmaster_news'); 
-        } else {
-            window.open('https://t.me/vocabmaster_news', '_blank');
-        }
-    };
-
     const handleSecretReset = async () => {
         const newTaps = resetTaps + 1;
         setResetTaps(newTaps);
-        triggerHaptic('light'); // Feedback for every tap
+        triggerHaptic('light'); 
         
         if (newTaps === 7) triggerHaptic('warning');
         
-        // Reduced to 10 taps for better usability
         if (newTaps >= 10) {
             triggerHaptic('heavy');
             const confirm = window.confirm("⚠️ СБРОС ДАННЫХ\n\nВы уверены, что хотите полностью стереть прогресс? Это действие необратимо.");
@@ -141,7 +151,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                             <div className="mt-1 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 w-fit">
                                 <span className={`w-2 h-2 rounded-full ${isPremium ? 'bg-amber-400' : 'bg-slate-400'}`}></span>
                                 <span className="text-xs font-bold text-slate-600">
-                                    {isPremium ? 'Premium Активен' : 'Бесплатный'}
+                                    {isPremium ? 'Premium Активен' : 'Бесплатный аккаунт'}
                                 </span>
                             </div>
                             {isPremium && expDate && (
@@ -153,122 +163,60 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                     </div>
                 </div>
 
-                {/* Premium Section */}
-                <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6">
-                    <h3 className="text-center text-lg font-bold text-slate-900 mb-2">Тарифы Premium</h3>
-                    <p className="text-center text-xs text-slate-400 mb-6 px-4">Подписки суммируются. Если у вас есть активная подписка, срок будет продлен.</p>
-                    
-                    {/* Subscription Buttons */}
-                    <div className="grid grid-cols-1 gap-4 mb-6">
-                        
-                        {/* Monthly Plan */}
-                        <button 
-                             onClick={() => handleBuy('month')}
-                             disabled={isLoadingPayment !== null}
-                             className="relative overflow-hidden p-4 rounded-2xl border-2 transition-all active:scale-[0.98] bg-white border-violet-100 hover:border-violet-300 group"
-                        >
-                            <div className="flex justify-between items-center">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-violet-100 rounded-full flex items-center justify-center text-violet-600 group-hover:scale-110 transition-transform">
-                                        <Calendar className="w-5 h-5" />
-                                    </div>
-                                    <div className="text-left">
-                                        <div className="font-bold text-slate-900">1 Месяц</div>
-                                        <div className="text-[10px] text-slate-500 font-bold uppercase">150 Stars (≈299₽)</div>
-                                    </div>
-                                </div>
-                                {isLoadingPayment === 'month' ? (
-                                    <Loader2 className="w-5 h-5 animate-spin text-violet-600" />
-                                ) : (
-                                    <div className="bg-violet-50 text-violet-700 px-3 py-1.5 rounded-lg text-xs font-bold">
-                                        Купить
-                                    </div>
-                                )}
-                            </div>
-                        </button>
-
-                        {/* Annual Plan */}
-                        <button 
-                             onClick={() => handleBuy('year')}
-                             disabled={isLoadingPayment !== null}
-                             className="relative overflow-hidden p-4 rounded-2xl border-2 transition-all active:scale-[0.98] bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 hover:border-amber-300 group"
-                        >
-                            <div className="absolute top-0 right-0 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-bl-xl uppercase shadow-sm">
-                                Выгодно (-45%)
-                            </div>
-                            
-                            <div className="flex justify-between items-center">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-gradient-to-br from-amber-300 to-orange-400 rounded-full flex items-center justify-center text-white shadow-sm group-hover:scale-110 transition-transform">
-                                        <Star className="w-5 h-5 fill-current" />
-                                    </div>
-                                    <div className="text-left">
-                                        <div className="font-bold text-slate-900">1 Год</div>
-                                        <div className="text-[10px] text-slate-500 font-bold uppercase">1000 Stars (≈2000₽)</div>
-                                    </div>
-                                </div>
-                                {isLoadingPayment === 'year' ? (
-                                    <Loader2 className="w-5 h-5 animate-spin text-amber-600" />
-                                ) : (
-                                    <div className="bg-slate-900 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg">
-                                        Купить
-                                    </div>
-                                )}
-                            </div>
-                        </button>
+                {/* Community & Data - Grouped */}
+                <div className="space-y-4">
+                    <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
+                        <div className="flex items-center gap-2 mb-3 text-slate-900">
+                            <Users className="w-5 h-5 text-slate-400" />
+                            <h3 className="text-lg font-bold">Сообщество</h3>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                            <button onClick={shareApp} className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs font-bold text-slate-600 flex flex-col items-center gap-1 active:scale-95 transition-transform">
+                                <Share2 className="w-5 h-5 text-violet-500" />
+                                Пригласить друга
+                            </button>
+                            <button onClick={() => window.Telegram?.WebApp.openTelegramLink('https://t.me/vocabmaster_news')} className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs font-bold text-slate-600 flex flex-col items-center gap-1 active:scale-95 transition-transform">
+                                <MessageCircle className="w-5 h-5 text-sky-500" />
+                                Наш канал
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3">
-                        <h4 className="text-xs font-bold text-slate-400 uppercase text-center mb-2">Преимущества</h4>
-                        <div className="flex items-center gap-2 text-xs font-medium text-slate-700">
-                            <Check className="w-4 h-4 text-emerald-500 shrink-0" />
-                            <span>Все 10,000 слов (A1 - C2)</span>
+                    <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
+                        <div className="flex items-center gap-2 mb-3 text-slate-900">
+                            <Database className="w-5 h-5 text-slate-400" />
+                            <h3 className="text-lg font-bold">Управление данными</h3>
                         </div>
-                        <div className="flex items-center gap-2 text-xs font-medium text-slate-700">
-                            <Check className="w-4 h-4 text-emerald-500 shrink-0" />
-                            <span>Безлимитное обучение в день</span>
+                        <p className="text-xs text-slate-400 mb-4">Ваш прогресс хранится на этом устройстве. Рекомендуем периодически сохранять резервную копию.</p>
+                        <div className="grid grid-cols-2 gap-3">
+                            <button 
+                                onClick={handleExport}
+                                className="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 rounded-2xl border border-slate-100 active:bg-slate-100 active:scale-95 transition-all"
+                            >
+                                <Download className="w-6 h-6 text-violet-600" />
+                                <span className="text-xs font-bold text-slate-600">Скачать копию</span>
+                            </button>
+                            <button 
+                                onClick={() => setShowImportInput(!showImportInput)}
+                                className="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 rounded-2xl border border-slate-100 active:bg-slate-100 active:scale-95 transition-all"
+                            >
+                                <Upload className="w-6 h-6 text-emerald-600" />
+                                <span className="text-xs font-bold text-slate-600">Восстановить</span>
+                            </button>
                         </div>
-                        <div className="flex items-center gap-2 text-xs font-medium text-slate-700">
-                            <Check className="w-4 h-4 text-emerald-500 shrink-0" />
-                            <span>ИИ тьютор (50 разборов в день)</span>
-                        </div>
+                        {showImportInput && (
+                            <div className="mt-4 animate-in slide-in-from-top-2">
+                                <textarea 
+                                    value={importCode}
+                                    onChange={(e) => setImportCode(e.target.value)}
+                                    placeholder="Вставьте код..."
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-mono h-24 mb-3 focus:ring-2 focus:ring-violet-200 outline-none"
+                                />
+                                {importStatus && <div className="text-xs mb-2 text-emerald-600">{importStatus.msg}</div>}
+                                <button onClick={handleImport} className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm">Восстановить</button>
+                            </div>
+                        )}
                     </div>
-                </div>
-
-                {/* Data Management & Community Blocks */}
-                <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6">
-                    <div className="flex items-center gap-2 mb-4 text-slate-900">
-                        <Database className="w-5 h-5 text-slate-400" />
-                        <h3 className="text-lg font-bold">Управление данными</h3>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                        <button 
-                            onClick={handleExport}
-                            className="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 rounded-2xl border border-slate-100 active:bg-slate-100 active:scale-95 transition-all"
-                        >
-                            <Download className="w-6 h-6 text-violet-600" />
-                            <span className="text-xs font-bold text-slate-600">Скачать</span>
-                        </button>
-                        <button 
-                            onClick={() => setShowImportInput(!showImportInput)}
-                            className="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 rounded-2xl border border-slate-100 active:bg-slate-100 active:scale-95 transition-all"
-                        >
-                            <Upload className="w-6 h-6 text-emerald-600" />
-                            <span className="text-xs font-bold text-slate-600">Загрузить</span>
-                        </button>
-                    </div>
-                    {showImportInput && (
-                        <div className="mt-4 animate-in slide-in-from-top-2">
-                             <textarea 
-                                value={importCode}
-                                onChange={(e) => setImportCode(e.target.value)}
-                                placeholder="Вставьте код..."
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-mono h-24 mb-3 focus:ring-2 focus:ring-violet-200 outline-none"
-                             />
-                             {importStatus && <div className="text-xs mb-2 text-emerald-600">{importStatus.msg}</div>}
-                             <button onClick={handleImport} className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm">Восстановить</button>
-                        </div>
-                    )}
                 </div>
 
                 <button 
@@ -278,6 +226,81 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                     <LogOut className="w-5 h-5" />
                     Выйти
                 </button>
+
+                {/* PREMIUM SECTION - New Design */}
+                {!progress.premiumStatus && (
+                    <div className="pt-6">
+                        <h3 className="text-center text-lg font-bold text-slate-900 mb-6">Преимущества Premium</h3>
+                        
+                        <div className="space-y-3 mb-6">
+                            <BenefitRow 
+                                icon={Sparkles} 
+                                title="Глубина словаря" 
+                                free="3,000 слов (95%)" 
+                                premium="10,000 слов (98%)" 
+                                highlight={true}
+                            />
+                            <BenefitRow 
+                                icon={BarChart3} 
+                                title="Скорость обучения" 
+                                free="10 слов/день" 
+                                premium="Без ограничений" 
+                                highlight={true}
+                            />
+                            <BenefitRow 
+                                icon={Zap} 
+                                title="ИИ Тьютор" 
+                                free="5 разборов/день" 
+                                premium="50 разборов/день" 
+                                highlight={true}
+                            />
+                            <BenefitRow 
+                                icon={Clock} 
+                                title="Система повторений" 
+                                free="Линейная (+3 дня)" 
+                                premium="Умная (FSRS/Anki)" 
+                                highlight={true}
+                            />
+                        </div>
+
+                        {/* Monthly / Sub Button */}
+                        <button 
+                            onClick={() => handleBuy('month')}
+                            disabled={isLoadingPayment !== null}
+                            className="w-full py-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white rounded-2xl font-bold text-lg shadow-xl shadow-violet-200 active:scale-95 transition-transform flex items-center justify-center gap-2 mb-4"
+                        >
+                            {isLoadingPayment === 'month' ? (
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                            ) : (
+                                <Crown className="w-5 h-5" />
+                            )}
+                            Купить Premium за Stars
+                        </button>
+
+                        {/* Lifetime Card */}
+                        <button 
+                            onClick={() => handleBuy('lifetime')}
+                            disabled={isLoadingPayment !== null}
+                            className="w-full bg-amber-50 border border-amber-100 rounded-2xl p-4 flex items-center justify-between shadow-sm active:scale-95 transition-transform group relative overflow-hidden"
+                        >
+                            <div className="absolute top-0 right-0 w-20 h-20 bg-amber-300/10 rounded-full blur-xl -mr-10 -mt-10"></div>
+                            
+                            <div className="flex flex-col items-start z-10">
+                                <div className="flex items-center gap-2">
+                                    <Infinity className="w-5 h-5 text-amber-600" />
+                                    <span className="font-bold text-slate-900 text-lg">Навсегда</span>
+                                    <span className="bg-rose-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md uppercase">Выгодно</span>
+                                </div>
+                                <span className="text-xs text-amber-700 font-medium mt-0.5 text-left">Разовая оплата. Никаких подписок.</span>
+                            </div>
+
+                            <div className="bg-amber-400 text-white font-bold px-4 py-2 rounded-xl text-lg shadow-sm flex items-center gap-1 shrink-0 z-10 group-hover:bg-amber-500 transition-colors">
+                                {isLoadingPayment === 'lifetime' ? <Loader2 className="w-5 h-5 animate-spin" /> : <Star className="w-4 h-4 fill-white" />}
+                                500
+                            </div>
+                        </button>
+                    </div>
+                )}
                 
                 <div 
                     onClick={handleSecretReset}

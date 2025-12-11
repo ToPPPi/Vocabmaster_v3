@@ -3,7 +3,8 @@ import { AIExplanation, AIWordDetails } from "../types";
 
 // --- CONFIGURATION ---
 const getEnvVar = (key: string): string => {
-    const val = (import.meta as any).env[key];
+    // Safely access env
+    const val = (import.meta as any).env?.[key];
     return val || "";
 };
 
@@ -62,7 +63,7 @@ const callUniversalAI = async (messages: ChatMessage[]): Promise<string | null> 
     // --- PROXY LOGIC ---
     // If we are in dev mode OR if we haven't manually set a full URL, try to use the local proxy
     // to avoid CORS issues on localhost.
-    if ((import.meta as any).env.DEV && baseUrl === DEFAULT_BASE_URL) {
+    if ((import.meta as any).env?.DEV && baseUrl === DEFAULT_BASE_URL) {
         console.log(`🔧 Dev Mode: Using Proxy /ai-proxy`);
         baseUrl = '/ai-proxy';
     }
