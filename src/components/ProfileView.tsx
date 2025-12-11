@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Check, Crown, BarChart3, Sparkles, Zap, Clock, Star, Infinity, Loader2, Database, Download, Upload, Users, Share2, MessageCircle, LogOut, Calendar, BookOpen } from 'lucide-react';
+import { Check, Crown, BarChart3, Sparkles, Zap, Clock, Star, Infinity, Loader2, Database, Download, Upload, Users, Share2, MessageCircle, LogOut, Calendar, BookOpen, Flame } from 'lucide-react';
 import { Header } from './Header';
 import { UserProgress } from '../types';
 import { buyPremium, isUserPremium, exportUserData, importUserData, resetUserProgress, getSecureNow } from '../services/storageService';
@@ -227,7 +227,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                     Выйти
                 </button>
 
-                {/* PREMIUM SECTION - New Design */}
+                {/* PREMIUM SECTION - UPDATED DESIGN (Brand Colors) */}
                 {!progress.premiumStatus && (
                     <div className="pt-6">
                         <h3 className="text-center text-lg font-bold text-slate-900 mb-6">Преимущества Premium</h3>
@@ -263,58 +263,71 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                             />
                         </div>
 
-                        {/* Payment Options Block (Frame) */}
-                        <div className="bg-white rounded-3xl border border-slate-200 p-5 shadow-sm relative">
+                        {/* Payment Options Block (Brand Gradient Frame) */}
+                        <div className="bg-gradient-to-br from-violet-600 to-fuchsia-600 rounded-3xl p-6 shadow-xl shadow-violet-200/50 relative overflow-hidden text-white">
+                            
+                            {/* Decorative Background Blur */}
+                            <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+                            <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/10 rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none"></div>
+
                             {/* Header */}
-                            <div className="flex flex-col items-center mb-6">
-                                <div className="w-12 h-12 bg-gradient-to-br from-yellow-100 to-amber-100 rounded-full flex items-center justify-center mb-2 shadow-sm">
-                                    <Crown className="w-6 h-6 text-amber-500 fill-amber-500" />
+                            <div className="relative z-10 flex flex-col items-center mb-6 text-center">
+                                <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mb-2 shadow-inner border border-white/20">
+                                    <Crown className="w-7 h-7 text-yellow-300 fill-yellow-300 drop-shadow-sm" />
                                 </div>
-                                <h3 className="text-xl font-black text-slate-900">VocabMaster Pro</h3>
-                                <p className="text-xs text-slate-400 font-medium">Выберите свой план</p>
+                                <h3 className="text-2xl font-black tracking-tight">VocabMaster <span className="text-yellow-300">Pro</span></h3>
+                                <p className="text-xs text-violet-100 font-medium max-w-[200px] leading-tight mt-1 opacity-90">
+                                    Снимите все лимиты и ускорьте обучение
+                                </p>
                             </div>
 
-                            <div className="space-y-3">
-                                {/* Month Plan */}
+                            <div className="space-y-4 relative z-10">
+                                {/* Month Plan - Glass Effect */}
                                 <button 
                                     onClick={() => handleBuy('month')}
                                     disabled={isLoadingPayment !== null}
-                                    className="w-full group relative bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 transition-all active:scale-95 text-left"
+                                    className="w-full bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl p-4 transition-all active:scale-95 flex items-center justify-between group backdrop-blur-sm"
                                 >
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="font-bold text-slate-900 text-lg">1 Месяц</span>
-                                        <span className="bg-slate-900 text-white text-xs font-bold px-3 py-1.5 rounded-lg group-hover:bg-violet-600 transition-colors">
-                                            {isLoadingPayment === 'month' ? <Loader2 className="w-4 h-4 animate-spin"/> : 'Купить'}
-                                        </span>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white/80 group-hover:text-white transition-colors border border-white/10">
+                                            <Star className="w-5 h-5 fill-current" />
+                                        </div>
+                                        <div className="text-left">
+                                            <div className="font-bold text-white">1 Месяц</div>
+                                            <div className="text-xs text-violet-200 font-medium">150 ⭐️ <span className="opacity-50">•</span> ≈ 299 ₽</div>
+                                        </div>
                                     </div>
-                                    <div className="text-sm text-slate-500 font-medium flex items-center gap-1.5">
-                                        <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                                        <span>150 звёзд</span>
-                                        <span className="text-slate-300">•</span>
-                                        <span>≈ 299 ₽</span>
+                                    <div className="text-white text-xs font-bold bg-white/20 border border-white/20 px-3 py-2 rounded-xl group-hover:bg-white/30 transition-colors">
+                                        {isLoadingPayment === 'month' ? <Loader2 className="w-4 h-4 animate-spin"/> : 'Купить'}
                                     </div>
                                 </button>
 
-                                {/* Year Plan */}
+                                {/* Year Plan (Hero) - Solid White for Contrast */}
                                 <button 
                                     onClick={() => handleBuy('year')}
                                     disabled={isLoadingPayment !== null}
-                                    className="w-full group relative bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-4 transition-all active:scale-95 text-left shadow-lg shadow-slate-200"
+                                    className="w-full relative group"
                                 >
-                                    <div className="absolute top-0 right-0 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-xl rounded-tr-xl">
-                                        ВЫГОДНО
+                                    {/* Badge */}
+                                    <div className="absolute -top-3 right-4 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-md z-20 border-2 border-white flex items-center gap-1 transform group-hover:scale-110 transition-transform">
+                                        <Flame className="w-3 h-3 fill-current" /> ВЫГОДНО
                                     </div>
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="font-bold text-xl">1 Год</span>
-                                        <span className="bg-white/20 text-white text-xs font-bold px-3 py-1.5 rounded-lg group-hover:bg-white/30 transition-colors">
-                                             {isLoadingPayment === 'year' ? <Loader2 className="w-4 h-4 animate-spin"/> : 'Купить'}
-                                        </span>
-                                    </div>
-                                    <div className="text-sm text-slate-300 font-medium flex items-center gap-1.5">
-                                        <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
-                                        <span>1000 звёзд</span>
-                                        <span className="text-slate-500">•</span>
-                                        <span>≈ 1,990 ₽</span>
+
+                                    <div className="bg-white text-slate-900 rounded-2xl p-1 shadow-lg active:scale-95 transition-transform">
+                                        <div className="flex items-center justify-between p-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center text-violet-600">
+                                                    <Crown className="w-5 h-5 fill-current" />
+                                                </div>
+                                                <div className="text-left">
+                                                    <div className="font-bold text-lg leading-tight text-slate-900">1 Год</div>
+                                                    <div className="text-xs text-slate-500 font-medium mt-0.5">1000 ⭐️ <span className="text-slate-300">•</span> ≈ 1,990 ₽</div>
+                                                </div>
+                                            </div>
+                                            <div className="bg-slate-900 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm group-hover:bg-slate-800 transition-colors">
+                                                {isLoadingPayment === 'year' ? <Loader2 className="w-4 h-4 animate-spin"/> : 'Купить'}
+                                            </div>
+                                        </div>
                                     </div>
                                 </button>
                             </div>
