@@ -14,41 +14,39 @@ export const triggerHaptic = (style: 'light' | 'medium' | 'heavy' | 'selection' 
 export const speak = (text: string) => {
     if (!('speechSynthesis' in window)) return;
 
-    // 1. Force cancel any pending speech (critical for mobile)
+    // 1. Force cancel previous utterance (Crucial for mobile webview stability)
     window.speechSynthesis.cancel();
 
-    // 2. Ensure voices are loaded (Android/iOS fix)
-    const loadVoices = () => {
-        const voices = window.speechSynthesis.getVoices();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'en-US'; 
-        utterance.rate = 0.9;
-        utterance.pitch = 1;
-        utterance.volume = 1;
+    // 2. Simple creation logic
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US'; // Defaulting to US English
+    utterance.rate = 0.9;     // Slightly slower for learning
+    utterance.pitch = 1;
+    utterance.volume = 1;
 
-        // Try to find a good English voice
-        const enVoice = voices.find(v => v.lang === 'en-US' && !v.localService) 
-                     || voices.find(v => v.lang.startsWith('en'))
-                     || null;
-        
-        if (enVoice) {
-            utterance.voice = enVoice;
+    // 3. Attempt to find a better voice, but don't block execution if not found immediately
+    // Mobile browsers often load voices asynchronously or not at all if muted.
+    const voices = window.speechSynthesis.getVoices();
+    if (voices.length > 0) {
+        // Try to find premium/local voices first
+        const preferredVoice = voices.find(v => v.lang === 'en-US' && !v.localService) // Google/Apple voices
+                            || voices.find(v => v.lang === 'en-US') 
+                            || null;
+        if (preferredVoice) {
+            utterance.voice = preferredVoice;
         }
-
-        window.speechSynthesis.speak(utterance);
-    };
-
-    // If voices are already loaded, speak immediately
-    if (window.speechSynthesis.getVoices().length > 0) {
-        loadVoices();
-    } else {
-        // Otherwise wait for the event
-        window.speechSynthesis.onvoiceschanged = () => {
-            loadVoices();
-            // Remove listener to avoid multi-firing
-            window.speechSynthesis.onvoiceschanged = null;
-        };
     }
+
+    // 4. Speak
+    // Some browsers require resume() if previously paused by system
+    if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+    }
+    
+    // Slight delay to ensure cancel() finished
+    setTimeout(() => {
+        window.speechSynthesis.speak(utterance);
+    }, 10);
 };
 
 export const shareApp = () => {

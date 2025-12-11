@@ -21,7 +21,8 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
     const [isLoading, setIsLoading] = useState(true);
     const [levelCompleted, setLevelCompleted] = useState(false);
     
-    const [finalProgress, setFinalProgress] = useState<UserProgress>(progress);
+    // We keep track of local updates to ensure UI reflects instant changes
+    const [localLearnedCount, setLocalLearnedCount] = useState(progress.wordsLearnedToday);
 
     const loadWords = async () => {
         setIsLoading(true);
@@ -29,8 +30,10 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
         setLevelCompleted(false);
         setCurrentIndex(0);
         
+        // Always fetch fresh progress to check limits
         const currentProgress = await getUserProgress();
-        setFinalProgress(currentProgress);
+        setLocalLearnedCount(currentProgress.wordsLearnedToday);
+        
         const limitToday = currentProgress.premiumStatus ? DAILY_LIMIT_PREMIUM : DAILY_LIMIT_FREE;
         
         if (mode === 'daily' && !currentProgress.premiumStatus && currentProgress.wordsLearnedToday >= limitToday) {
@@ -122,43 +125,32 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
         const wordLevel = currentWord.level;
         const isLastCard = currentIndex >= sessionWords.length - 1;
 
-        if (!isLastCard) {
-            // Optimistic update for non-last cards
-            setTimeout(() => {
-                setIsFlipped(false);
-                setCurrentIndex(prev => prev + 1);
-                setIsProcessingRating(false);
-            }, 150);
+        // Use a Promise to ensure data saves before moving on
+        // The storage service uses memory cache now, so this is fast.
+        try {
+            const updatedProgress = await rateWord(wordId, rating, wordLevel);
+            setLocalLearnedCount(updatedProgress.wordsLearnedToday);
+
+            const limitNow = updatedProgress.premiumStatus ? DAILY_LIMIT_PREMIUM : DAILY_LIMIT_FREE;
             
-            // Fire and forget save
-            rateWord(wordId, rating, wordLevel).then(updatedProgress => {
-                setFinalProgress(updatedProgress);
-                const limitNow = updatedProgress.premiumStatus ? DAILY_LIMIT_PREMIUM : DAILY_LIMIT_FREE;
-                if (mode === 'daily' && !updatedProgress.premiumStatus && updatedProgress.wordsLearnedToday >= limitNow) {
-                     lockDailySession();
-                }
-            }).catch(err => console.error("Error saving rating:", err));
-        } else {
-            // CRITICAL FIX: For the LAST card, we MUST await the save
-            // This ensures that 'finalProgress' is fully updated (e.g. count is 10/10)
-            // BEFORE we switch to the 'completed' screen.
-            try {
-                const updatedProgress = await rateWord(wordId, rating, wordLevel);
-                setFinalProgress(updatedProgress);
-                
-                const limitNow = updatedProgress.premiumStatus ? DAILY_LIMIT_PREMIUM : DAILY_LIMIT_FREE;
-                if (mode === 'daily' && !updatedProgress.premiumStatus && updatedProgress.wordsLearnedToday >= limitNow) {
-                     await lockDailySession();
-                }
-                
+            if (mode === 'daily' && !updatedProgress.premiumStatus && updatedProgress.wordsLearnedToday >= limitNow) {
+                 await lockDailySession();
+            }
+
+            if (!isLastCard) {
+                // Delay slightly for animation
+                setTimeout(() => {
+                    setIsFlipped(false);
+                    setCurrentIndex(prev => prev + 1);
+                    setIsProcessingRating(false);
+                }, 150);
+            } else {
                 setCompleted(true);
-            } catch(err) {
-                console.error("Error saving final rating:", err);
-                // Force complete anyway to not trap user
-                setCompleted(true);
-            } finally {
                 setIsProcessingRating(false);
             }
+        } catch (e) {
+            console.error(e);
+            setIsProcessingRating(false);
         }
     };
 
@@ -210,8 +202,6 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
     const handleBuyPremium = async () => {
         triggerHaptic('medium');
         await togglePremium(true);
-        const p = await getUserProgress();
-        setFinalProgress(p);
         await loadWords();
     };
 
@@ -250,7 +240,9 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
     }
 
     if (completed) {
-        const isLimitReached = !finalProgress.premiumStatus && finalProgress.wordsLearnedToday >= DAILY_LIMIT_FREE;
+        // Strict limit checking against latest progress
+        const isLimitReached = !progress.premiumStatus && localLearnedCount >= DAILY_LIMIT_FREE;
+        // Button is hidden if limit is reached AND user is not premium
         const canContinue = mode === 'daily' && !isLimitReached;
 
         return (
@@ -272,16 +264,20 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
                 )}
                 
                 <div className="w-full max-w-xs space-y-3">
+                    {/* Only show Continue if NOT limited */}
                     {canContinue && (
                         <button onClick={handleContinue} className="w-full px-6 py-4 bg-violet-600 text-white rounded-2xl font-bold text-lg shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-2">
                             <RotateCcw className="w-5 h-5" /> Учить еще
                         </button>
                     )}
+                    
+                    {/* Upsell if limited */}
                     {isLimitReached && (
                          <button onClick={handleBuyPremium} className="w-full px-6 py-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-2xl font-bold text-lg shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-2">
                             <Crown className="w-5 h-5" /> Снять лимиты (Premium)
                         </button>
                     )}
+                    
                     <button onClick={handleFinish} className={`w-full px-6 py-4 rounded-2xl font-bold text-lg active:scale-95 transition-transform ${canContinue || isLimitReached ? 'bg-slate-100 text-slate-600' : 'bg-slate-900 text-white shadow-xl'}`}>
                         В меню
                     </button>
@@ -376,7 +372,7 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
                                 <p className="text-slate-800 text-lg leading-relaxed font-medium">{currentWord.definition}</p>
                             </div>
 
-                            {/* Usage Context (Added back) */}
+                            {/* Usage Context */}
                             {currentWord.usageContext && (
                                 <div className="bg-emerald-50 rounded-2xl p-4 border border-emerald-100">
                                     <div className="flex items-center gap-2 mb-2 text-emerald-700">
@@ -387,7 +383,7 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
                                 </div>
                             )}
 
-                            {/* Examples on Back (Added back) */}
+                            {/* Examples on Back */}
                             <div>
                                 <span className="text-xs font-bold text-slate-400 uppercase block mb-3 tracking-wide">Примеры</span>
                                 <div className="space-y-4">
@@ -410,7 +406,6 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
                                         </div>
                                         <p className="text-sm text-slate-900 leading-relaxed mb-3">{aiData.detailedExplanation}</p>
                                         
-                                        {/* Added missing fields */}
                                         {aiData.nuance && (
                                             <div className="mt-3 pt-3 border-t border-violet-200/50">
                                                 <span className="text-xs font-bold text-violet-500 uppercase block mb-1">Нюансы</span>

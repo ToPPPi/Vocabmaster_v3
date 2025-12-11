@@ -20,24 +20,24 @@ export const LevelBrowser: React.FC<LevelBrowserProps> = ({ level, progress, onB
     const [allWords, setAllWords] = useState<Word[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     
-    // Local state for immediate UI feedback (Optimistic UI)
+    // Initial known state from props
     const [knownWords, setKnownWords] = useState<Set<string>>(new Set());
 
     useEffect(() => {
         const load = async () => {
             const words = await getWordsByLevelAsync(level);
             setAllWords(words);
-            // Initialize from DB once
+            // Initialize directly from the passed progress object to ensure sync
             setKnownWords(new Set(Object.keys(progress.wordProgress)));
             setIsLoading(false);
         };
         load();
-    }, [level]); 
+    }, [level, progress]); // Added progress to dep array to refresh on prop change
 
-    const handleToggleKnown = (wordId: string) => {
+    const handleToggleKnown = async (wordId: string) => {
         triggerHaptic('selection');
         
-        // 1. Instant Visual Update (Trust the user input)
+        // 1. Instant Visual Update (Optimistic)
         setKnownWords(prev => {
             const newSet = new Set(prev);
             if (newSet.has(wordId)) {
@@ -48,18 +48,18 @@ export const LevelBrowser: React.FC<LevelBrowserProps> = ({ level, progress, onB
             return newSet;
         });
 
-        // 2. Background Save (Fire and forget)
-        // We DO NOT await this or call onUpdate() immediately to prevent 
-        // the app from reloading/flickering/crashing during rapid clicking.
-        toggleKnownStatus(wordId).catch(err => {
-            console.error("Failed to save word status", err);
-            // Optional: Revert state here if save fails, but for simple toggles it's rarely needed
-        });
+        // 2. Background Save
+        // Important: We don't await here to keep UI snappy, but the Storage Service now uses 
+        // a memory cache to handle rapid clicks correctly without race conditions.
+        try {
+            await toggleKnownStatus(wordId);
+        } catch (e) {
+            console.error("Failed to toggle word", e);
+        }
     };
 
-    // Sync back when component unmounts or user goes back
     const handleBack = () => {
-        onUpdate(); // Sync global state only on exit
+        onUpdate(); // Ensure parent state is refreshed
         onBack();
     };
 
@@ -89,11 +89,14 @@ export const LevelBrowser: React.FC<LevelBrowserProps> = ({ level, progress, onB
                         return (
                             <div key={`${word.id}-${index}`} className="bg-white px-5 py-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between gap-3">
                                 <div className="flex-1 min-w-0">
-                                    <div className="flex items-baseline gap-2 mb-1 flex-wrap">
+                                    <div className="flex flex-col mb-1.5">
                                         <span className="font-bold text-slate-900 text-lg">{word.term}</span>
-                                        <span className="text-xs font-bold text-violet-600 bg-violet-50 px-2 py-0.5 rounded-md">{word.translation}</span>
+                                        {/* CSS FIX: Changed items-baseline to flex-col and allowed translation to wrap */}
+                                        <span className="text-sm font-bold text-violet-600 bg-violet-50 px-2 py-1 rounded-md mt-1 w-fit whitespace-normal break-words leading-snug">
+                                            {word.translation}
+                                        </span>
                                     </div>
-                                    <p className="text-sm text-slate-500 leading-snug font-medium line-clamp-2">
+                                    <p className="text-sm text-slate-500 leading-snug font-medium">
                                         {word.definition}
                                     </p>
                                 </div>

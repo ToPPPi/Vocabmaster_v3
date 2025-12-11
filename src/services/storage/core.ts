@@ -26,6 +26,10 @@ export const INITIAL_PROGRESS: UserProgress = {
   blitzHighScores: {}
 };
 
+// --- MEMORY CACHE (CRITICAL FOR PERFORMANCE) ---
+// This prevents race conditions where rapid clicks read stale data from disk.
+let memoryCache: UserProgress | null = null;
+
 // --- TIME SECURITY (Anti-Cheat) ---
 let serverTimeOffset = 0;
 let isTimeSynced = false;
@@ -36,12 +40,8 @@ const syncTime = async () => {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 2000); 
         
-        // Use a simple HEAD request or a more CORS-friendly API if possible.
-        // For now, we wrap in try-catch and suppress errors to avoid console noise.
-        // Note: worldtimeapi often blocks localhost via CORS.
         const res = await fetch('https://worldtimeapi.org/api/ip', { 
             signal: controller.signal,
-            // mode: 'no-cors' // We can't use no-cors because we need the body.
         });
         clearTimeout(timeoutId);
         
@@ -53,8 +53,7 @@ const syncTime = async () => {
             isTimeSynced = true;
         }
     } catch (e) {
-        // Silently fail to local time if API is blocked or offline
-        // console.debug("Time sync skipped (CORS or Offline)");
+        // Silently fail to local time
     }
 };
 
@@ -123,39 +122,36 @@ const tgStorage = {
 
 const cloudAdapter = {
   async save(key: string, value: string): Promise<void> {
-    // 1. Try LocalStorage (Always acts as a fast cache/backup)
+    // 1. Sync Save to LocalStorage (Fastest)
     try {
         localStorage.setItem(key, value);
     } catch (e) {
         console.warn("LocalStorage full or unavailable");
     }
 
-    // 2. Try CloudStorage
+    // 2. Async Save to CloudStorage (Background)
     if (!tgStorage.isSupported()) return;
 
-    try {
-        const chunks: string[] = [];
-        for (let i = 0; i < value.length; i += CHUNK_SIZE) {
-            chunks.push(value.substring(i, i + CHUNK_SIZE));
+    // We don't await this in the main thread to prevent UI blocking
+    (async () => {
+        try {
+            const chunks: string[] = [];
+            for (let i = 0; i < value.length; i += CHUNK_SIZE) {
+                chunks.push(value.substring(i, i + CHUNK_SIZE));
+            }
+
+            const metaSaved = await tgStorage.setItem(`${key}_meta`, JSON.stringify({ count: chunks.length, timestamp: Date.now() }));
+            if (!metaSaved) return;
+
+            const promises = chunks.map((chunk, index) => 
+                tgStorage.setItem(`${key}_chunk_${index}`, chunk)
+            );
+
+            await Promise.all(promises);
+        } catch (e) {
+            console.error("Cloud save failed", e);
         }
-
-        // Save Meta info first (contains number of chunks)
-        const metaSaved = await tgStorage.setItem(`${key}_meta`, JSON.stringify({ count: chunks.length, timestamp: Date.now() }));
-        if (!metaSaved) return;
-
-        // Save all chunks in parallel
-        const promises = chunks.map((chunk, index) => 
-            tgStorage.setItem(`${key}_chunk_${index}`, chunk)
-        );
-
-        await Promise.all(promises);
-        
-        // Optional: Clean up old chunks if the new data is smaller (simple garbage collection)
-        // For this MVP, we assume data mostly grows or stays same size. 
-        
-    } catch (e) {
-        console.error("Cloud save failed", e);
-    }
+    })();
   },
 
   async load(key: string): Promise<string | null> {
@@ -168,7 +164,6 @@ const cloudAdapter = {
         // 2. Get Metadata
         const metaStr = await tgStorage.getItem(`${key}_meta`);
         
-        // If no cloud data, fall back to local
         if (!metaStr) {
             return localStorage.getItem(key);
         }
@@ -176,30 +171,23 @@ const cloudAdapter = {
         const meta = JSON.parse(metaStr);
         const count = meta.count;
         
-        // 3. Generate keys for all chunks
         const keys = Array.from({ length: count }, (_, i) => `${key}_chunk_${i}`);
         
-        // 4. Fetch all chunks at once
         const values = await tgStorage.getItems(keys);
         
         if (!values) {
-            console.warn("Cloud meta exists but chunks missing, falling back to local");
             return localStorage.getItem(key);
         }
 
-        // 5. Reassemble
         let fullString = "";
         for (let i = 0; i < count; i++) {
             const chunk = values[`${key}_chunk_${i}`];
             if (typeof chunk !== 'string') {
-                console.warn(`Chunk ${i} missing`);
-                // Critical failure in cloud data integrity
                 return localStorage.getItem(key);
             }
             fullString += chunk;
         }
 
-        // 6. Update local cache with fresh cloud data
         localStorage.setItem(key, fullString);
         return fullString;
 
@@ -211,45 +199,56 @@ const cloudAdapter = {
 };
 
 export const saveUserProgress = async (progress: UserProgress) => {
+  // 1. Update Memory Cache IMMEDIATELY
+  memoryCache = progress;
+  // 2. Persist
   await cloudAdapter.save(STORAGE_KEY, JSON.stringify(progress));
 };
 
 export const getUserProgress = async (): Promise<UserProgress> => {
-  await syncTime(); // Try to sync time (silently fails if CORS blocks)
+  // 1. Return Memory Cache if available (Instant access)
+  if (memoryCache) {
+      return checkDailyReset(memoryCache);
+  }
+
+  await syncTime();
   
   const stored = await cloudAdapter.load(STORAGE_KEY);
   
   if (!stored) {
-    return { ...INITIAL_PROGRESS };
+    memoryCache = { ...INITIAL_PROGRESS };
+    return memoryCache;
   }
   
-  let progress: UserProgress;
   try {
-      progress = JSON.parse(stored) as UserProgress;
+      memoryCache = JSON.parse(stored) as UserProgress;
   } catch (e) {
       console.error("Data corruption, resetting");
-      return { ...INITIAL_PROGRESS };
+      memoryCache = { ...INITIAL_PROGRESS };
   }
   
-  // --- MIGRATIONS & FALLBACKS ---
-  // Ensure new fields exist for old users
-  if (!progress.customWords) progress.customWords = [];
-  if (!progress.dailyProgressByLevel) progress.dailyProgressByLevel = {};
-  if (typeof progress.aiGenerationsToday === 'undefined') progress.aiGenerationsToday = 0;
-  if (!progress.wallet) progress.wallet = { coins: 100 };
-  if (!progress.inventory) progress.inventory = { streakFreeze: 0, timeFreeze: 1, bomb: 1 };
-  if (!progress.blitzHighScores) progress.blitzHighScores = {};
-  if (!progress.wordComments) progress.wordComments = {};
-  if (progress.photoUrl === undefined) progress.photoUrl = '';
-  // Monthly sub migration
-  if (progress.premiumExpiration === undefined) progress.premiumExpiration = null;
+  // Migrations
+  if (!memoryCache.customWords) memoryCache.customWords = [];
+  if (!memoryCache.dailyProgressByLevel) memoryCache.dailyProgressByLevel = {};
+  if (typeof memoryCache.aiGenerationsToday === 'undefined') memoryCache.aiGenerationsToday = 0;
+  if (!memoryCache.wallet) memoryCache.wallet = { coins: 100 };
+  if (!memoryCache.inventory) memoryCache.inventory = { streakFreeze: 0, timeFreeze: 1, bomb: 1 };
+  if (!memoryCache.blitzHighScores) memoryCache.blitzHighScores = {};
+  if (!memoryCache.wordComments) memoryCache.wordComments = {};
+  if (memoryCache.photoUrl === undefined) memoryCache.photoUrl = '';
+  if (memoryCache.premiumExpiration === undefined) memoryCache.premiumExpiration = null;
 
-  // --- DAILY RESET LOGIC ---
+  return checkDailyReset(memoryCache);
+};
+
+// Helper to handle daily resets on the progress object
+const checkDailyReset = async (progress: UserProgress): Promise<UserProgress> => {
   const now = getSecureNow();
   const todayDateStr = new Date(now).toISOString().split('T')[0];
 
+  let needsSave = false;
+
   if (progress.lastLoginDate !== todayDateStr) {
-       // Streak Protection Logic
        if (progress.lastLoginDate) {
            const lastDate = new Date(progress.lastLoginDate);
            const current = new Date(todayDateStr);
@@ -257,39 +256,32 @@ export const getUserProgress = async (): Promise<UserProgress> => {
            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
            
            if (diffDays > 1) {
-               // Missed a day
                if (progress.inventory.streakFreeze > 0) {
                    progress.inventory.streakFreeze -= 1;
-                   // Streak preserved (no reset)
-                   console.log("Streak saved by Freeze!");
                } else {
-                   // Streak reset
                    progress.streak = 0;
                }
            }
        } else {
-           // First login ever (or after reset)
            progress.streak = 0;
        }
 
-       // Reset daily counters
        progress.wordsLearnedToday = 0;
        progress.aiGenerationsToday = 0; 
        progress.dailyProgressByLevel = {}; 
        progress.nextSessionUnlockTime = undefined;
-       
        progress.lastLoginDate = todayDateStr;
-       
-       // Save the reset state immediately
-       await saveUserProgress(progress);
-       return progress;
+       needsSave = true;
   }
 
-  // 24h Lock Check using Secure Time (if user manually changed device time)
   if (progress.nextSessionUnlockTime && now >= progress.nextSessionUnlockTime) {
       progress.wordsLearnedToday = 0;
       progress.dailyProgressByLevel = {}; 
       progress.nextSessionUnlockTime = undefined;
+      needsSave = true;
+  }
+
+  if (needsSave) {
       await saveUserProgress(progress);
   }
   
@@ -299,8 +291,6 @@ export const getUserProgress = async (): Promise<UserProgress> => {
 export const syncTelegramUserData = async () => {
     const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
     if (tgUser) {
-        // We load purely from local/cloud to avoid overwriting current session changes
-        // This is a lightweight check
         const progress = await getUserProgress();
         let changed = false;
         
@@ -308,7 +298,6 @@ export const syncTelegramUserData = async () => {
             progress.userName = tgUser.first_name;
             changed = true;
         }
-        
         if (tgUser.photo_url && progress.photoUrl !== tgUser.photo_url) {
             progress.photoUrl = tgUser.photo_url;
             changed = true;
@@ -321,7 +310,6 @@ export const syncTelegramUserData = async () => {
 };
 
 export const resetUserProgress = async (): Promise<UserProgress> => {
-    // Clear Cloud
     if (tgStorage.isSupported()) {
         try {
             const metaStr = await tgStorage.getItem(`${STORAGE_KEY}_meta`);
@@ -334,9 +322,9 @@ export const resetUserProgress = async (): Promise<UserProgress> => {
             console.error("Failed to clear cloud", e);
         }
     }
-    // Clear Local
     localStorage.removeItem(STORAGE_KEY);
-    return { ...INITIAL_PROGRESS };
+    memoryCache = { ...INITIAL_PROGRESS };
+    return memoryCache;
 };
 
 export const completeOnboarding = async (name?: string): Promise<UserProgress> => {
@@ -348,8 +336,6 @@ export const completeOnboarding = async (name?: string): Promise<UserProgress> =
   await saveUserProgress(progress);
   return progress;
 };
-
-// --- BACKUP & RESTORE SYSTEM ---
 
 function utf8_to_b64(str: string) {
     return window.btoa(unescape(encodeURIComponent(str)));
