@@ -1,0 +1,22 @@
+{
+  "name": "VocabMaster",
+  "short_name": "VocabMaster",
+  "description": "Learn English words with AI and Spaced Repetition",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F1F5F9",
+  "theme_color": "#F1F5F9",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2014/2014916.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2014/2014916.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
