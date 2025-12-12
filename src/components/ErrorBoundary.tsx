@@ -1,4 +1,4 @@
-import React, { ErrorInfo, ReactNode } from 'react';
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { TriangleAlert, RefreshCw, Copy, Check } from 'lucide-react';
 import { exportUserData } from '../services/storageService';
 
@@ -13,7 +13,7 @@ interface State {
   backupCode: string | null;
 }
 
-export class ErrorBoundary extends React.Component<Props, State> {
+export class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false,
     error: null,
@@ -38,7 +38,8 @@ export class ErrorBoundary extends React.Component<Props, State> {
         const code = await exportUserData();
         if (code) {
              // Safe Clipboard Write
-             if (navigator.clipboard && window.isSecureContext) {
+             // Check if navigator.clipboard exists and if writeText is available
+             if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
                  await navigator.clipboard.writeText(code);
                  this.setState({ copied: true, backupCode: code });
                  setTimeout(() => this.setState({ copied: false }), 3000);

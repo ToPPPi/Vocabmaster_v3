@@ -1,0 +1,79 @@
+
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <!-- Background: Deep Slate with a subtle center spotlight -->
+        <radialGradient id="bg_grad" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(256 256) rotate(90) scale(400)">
+            <stop offset="0%" stop-color="#334155"/> <!-- Lighter center (Slate 700) -->
+            <stop offset="60%" stop-color="#0F172A"/> <!-- Darker surround (Slate 900) -->
+            <stop offset="100%" stop-color="#020617"/> <!-- Black edge -->
+        </radialGradient>
+
+        <!-- Main Brand Gradient (Vibrant) -->
+        <linearGradient id="brand_grad" x1="130" y1="130" x2="382" y2="130" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#8B5CF6"/> <!-- Violet -->
+            <stop offset="50%" stop-color="#EC4899"/> <!-- Pink -->
+            <stop offset="100%" stop-color="#F59E0B"/> <!-- Amber -->
+        </linearGradient>
+
+        <!-- Highlight Gradient (For 3D Volume) -->
+        <linearGradient id="highlight_grad" x1="256" y1="100" x2="256" y2="400" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="white" stop-opacity="0.3"/>
+            <stop offset="50%" stop-color="white" stop-opacity="0.1"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0.0"/>
+        </linearGradient>
+
+        <!-- Soft Glow Filter (Behind the letter) -->
+        <filter id="soft_glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="35" result="blur"/>
+            <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+
+        <!-- Hard Shadow (Drop Shadow) -->
+        <filter id="drop_shadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="15" stdDeviation="15" flood-color="#000" flood-opacity="0.5"/>
+        </filter>
+    </defs>
+
+    <!-- 1. Background -->
+    <rect width="512" height="512" fill="url(#bg_grad)"/>
+
+    <!-- 2. Back Glow (Ambient colored light behind the V) -->
+    <path d="M130 140 L 256 380 L 382 140" 
+          stroke="url(#brand_grad)" 
+          stroke-width="80" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+          fill="none" 
+          opacity="0.4"
+          filter="url(#soft_glow)"/>
+
+    <!-- 3. The Main V Shape (Base Color) -->
+    <g filter="url(#drop_shadow)">
+        <path d="M130 140 
+                 L 256 380 
+                 L 382 140" 
+              stroke="url(#brand_grad)" 
+              stroke-width="90" 
+              stroke-linecap="round" 
+              stroke-linejoin="round"
+              fill="none"/>
+    </g>
+
+    <!-- 4. The Volume Highlight (Simulates a rounded tube surface) -->
+    <!-- Thinner, semi-transparent white stroke on top creates the 3D effect -->
+    <path d="M130 140 
+             L 256 380 
+             L 382 140" 
+          stroke="url(#highlight_grad)" 
+          stroke-width="20" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"
+          fill="none"
+          style="mix-blend-mode: overlay;"/>
+
+    <!-- 5. Top Edge Shine (Specularity) -->
+    <!-- Tiny bright spots at the top rounded caps -->
+    <circle cx="130" cy="140" r="10" fill="white" fill-opacity="0.3"/>
+    <circle cx="382" cy="140" r="10" fill="white" fill-opacity="0.3"/>
+
+</svg>
