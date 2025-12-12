@@ -14,45 +14,60 @@ export const triggerHaptic = (style: 'light' | 'medium' | 'heavy' | 'selection' 
 export const speak = (text: string) => {
     if (!text) return;
 
-    // Strategy 1: Native Browser SpeechSynthesis (Preferred for reliability and speed)
-    const playNativeTTS = () => {
-        if (!('speechSynthesis' in window)) return false;
+    // Helper: Play from network (Fallback chain)
+    const playNetworkAudio = () => {
+        const encoded = encodeURIComponent(text);
+        // Primary: Youdao (Very reliable for English words, fast CDN)
+        const url1 = `https://dict.youdao.com/dictvoice?audio=${encoded}&type=1`;
+        // Secondary: Google Translate (Fallback)
+        const url2 = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encoded}&tl=en&client=tw-ob`;
 
-        window.speechSynthesis.cancel(); // Reset queue
+        const audio = new Audio(url1);
+        audio.play().catch(() => {
+            // If primary fails, try secondary
+            const audioBackup = new Audio(url2);
+            audioBackup.play().catch(e => console.warn("All TTS failed", e));
+        });
+    };
+
+    if ('speechSynthesis' in window) {
+        const synth = window.speechSynthesis;
+        
+        // Android WebView Hack:
+        // On Android WebViews (Telegram), getVoices() often returns empty array initially.
+        // If it's empty on Android, native playback usually fails silently.
+        // We force network playback in this case.
+        const voices = synth.getVoices();
+        const isAndroid = /Android/i.test(navigator.userAgent);
+
+        if (isAndroid && voices.length === 0) {
+            playNetworkAudio();
+            return;
+        }
+
+        // Cancel previous utterances to avoid queue getting stuck
+        synth.cancel();
 
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'en-US';
-        utterance.rate = 0.9;
-        
-        // Improve voice quality on iOS/Android if available
-        const voices = window.speechSynthesis.getVoices();
-        const preferredVoice = voices.find(v => v.lang === 'en-US' && v.localService) || 
-                               voices.find(v => v.lang.startsWith('en'));
+        utterance.rate = 0.9; // Slightly slower for better clarity
+
+        // Try to pick a high-quality local voice
+        const preferredVoice = voices.find(v => v.lang === 'en-US' && v.localService) 
+                            || voices.find(v => v.lang.startsWith('en'));
         
         if (preferredVoice) utterance.voice = preferredVoice;
 
-        window.speechSynthesis.speak(utterance);
-        return true;
-    };
+        // If native throws an error (common in restricted iframes), fallback to network
+        utterance.onerror = () => playNetworkAudio();
 
-    // Strategy 2: Network-based TTS (Fallback if native fails or is empty)
-    const playNetworkAudio = () => {
         try {
-            const encodedText = encodeURIComponent(text);
-            const audio = new Audio(`https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedText}&tl=en&client=tw-ob`);
-            audio.play().catch(e => console.warn("Audio playback failed", e));
+            synth.speak(utterance);
         } catch (e) {
-            console.error(e);
+            playNetworkAudio();
         }
-    };
-
-    // Try Native first
-    const nativeSuccess = playNativeTTS();
-    
-    // If native failed (or threw error silently), fallback to network
-    // Note: On some browsers, getVoices() is async, so the first click might fallback, 
-    // but subsequent clicks will use the loaded voices.
-    if (!nativeSuccess && navigator.onLine) {
+    } else {
+        // Browser doesn't support SpeechSynthesis at all
         playNetworkAudio();
     }
 };

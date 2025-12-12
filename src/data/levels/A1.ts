@@ -195,16 +195,6 @@ createRichWord('a1_also', 'Also', '/ˈɔːlsəʊ/', 'олсоу', 'Также', 
     ]
 ),
 
-createRichWord('a1_always', 'Always', '/ˈɔːlweɪz/', 'олвэйз', 'Всегда', ProficiencyLevel.A1, 'adv', 'High', 'Neutral',
-    'Во всех случаях, в любое время или постоянно; без исключений или перерывов.',
-    '- Частота: "Always late" (Всегда опаздывает)\n- Обещание: "Love you always" (Любить тебя всегда)\n- Привычка: "Always drink coffee" (Всегда пью кофе)',
-    [
-      { en: 'The sun always rises in the east and sets in the west.', ru: 'Солнце всегда встает на востоке и садится на западе.' },
-      { en: 'She always helps her mother with the housework on weekends.', ru: 'Она всегда помогает маме по дому в выходные дни.' },
-      { en: 'You should always brush your teeth before going to bed at night.', ru: 'Тебе следует всегда чистить зубы перед сном ночью.' },
-      { en: 'He is always happy to see his friends at the local park.', ru: 'Он всегда рад видеть своих друзей в местном парке.' }
-    ]
-),
 
 createRichWord('a1_and', 'And', '/ænd/', 'энд', 'И', ProficiencyLevel.A1, 'conj', 'High', 'Neutral',
     'Союз, используемый для соединения слов, фраз или частей предложений; выражает добавление.',
@@ -370,16 +360,6 @@ createRichWord('a1_away', 'Away', '/əˈweɪ/', 'эвэй', 'Прочь', Profic
       { en: 'Stay away from the fire because it is hot.', ru: 'Держись подальше от огня, потому что он горячий.' }
     ]
   ),
-createRichWord('a1_also', 'Also', '/ˈɔːlsəʊ/', 'олсоу', 'Также', ProficiencyLevel.A1, 'adv', 'High', 'Neutral',
-    'Используется для добавления информации; означает "в дополнение", "тоже" или "кроме того".',
-    '- Добавление: "I also like it" (Мне это тоже нравится)\n- Перечисление: "And also this" (А также это)\n- Уточнение: "Not only... but also" (Не только... но и)',
-    [
-      { en: 'She speaks French very well and she also speaks a little Spanish.', ru: 'Она очень хорошо говорит по-французски, а также немного по-испански.' },
-      { en: 'I am cold, and I am also hungry and tired after the walk.', ru: 'Мне холодно, а также я голоден и устал после прогулки.' },
-      { en: 'He is a talented actor and also a very good writer.', ru: 'Он талантливый актер, а также очень хороший писатель.' },
-      { en: 'Please bring your passport, and also bring a copy of your ticket.', ru: 'Пожалуйста, возьмите с собой паспорт, а также копию вашего билета.' }
-    ]
-),
 
 createRichWord('a1_always', 'Always', '/ˈɔːlweɪz/', 'олвэйз', 'Всегда', ProficiencyLevel.A1, 'adv', 'High', 'Neutral',
     'Во всех случаях, в любое время или постоянно; без исключений или перерывов.',

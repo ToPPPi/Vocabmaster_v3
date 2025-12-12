@@ -169,11 +169,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ progress, setViewState, on
                         </div>
                     </div>
 
-                    {/* ADJUSTED BUTTON SIZE: Reduced padding and cleaner look */}
+                    {/* ADJUSTED BUTTON SIZE: Py-2.5 -> Py-2 for even smaller height */}
                     <button 
                         onClick={() => { triggerHaptic('medium'); onStartDaily(); }}
                         disabled={isLocked}
-                        className={`w-full py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.98] ${isLocked ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-slate-900 text-white hover:bg-slate-800'}`}
+                        className={`w-full py-2 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.98] ${isLocked ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-slate-900 text-white hover:bg-slate-800'}`}
                     >
                         {isLocked ? <Clock className="w-4 h-4" /> : <Play className="w-4 h-4 fill-white" />}
                         {isLocked ? lockLabel : 'Учить новые слова'}

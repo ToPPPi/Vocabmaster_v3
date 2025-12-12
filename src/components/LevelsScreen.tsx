@@ -112,13 +112,13 @@ export const LevelsScreen: React.FC<LevelsScreenProps> = ({ progress, mode, onBa
                                     disabled={isLocked}
                                     className={`active:scale-95 transition-transform flex items-center gap-2 font-semibold rounded-xl ${
                                         mode === 'browse' 
-                                            ? 'px-4 py-2 text-sm bg-white border border-slate-200 text-slate-600 shadow-sm' // Smaller Browse Button
-                                            : 'px-6 py-3 bg-slate-900 text-white shadow-lg'
-                                    } ${mode === 'blitz' ? 'bg-violet-600 text-white shadow-lg' : ''}`}
+                                            ? 'px-4 py-2 text-sm bg-white border border-slate-200 text-slate-600 shadow-sm' // Browse
+                                            : 'px-4 py-2 text-sm bg-slate-900 text-white shadow-md' // Learn (Smaller now: px-4 py-2 text-sm)
+                                    } ${mode === 'blitz' ? 'bg-violet-600 text-white shadow-md' : ''}`}
                                 >
-                                    {mode === 'learn' && <GraduationCap className="w-5 h-5" />}
+                                    {mode === 'learn' && <GraduationCap className="w-4 h-4" />}
                                     {mode === 'browse' && <BookOpen className="w-4 h-4" />}
-                                    {mode === 'blitz' && <Zap className="w-5 h-5 fill-current" />}
+                                    {mode === 'blitz' && <Zap className="w-4 h-4 fill-current" />}
                                     
                                     {mode === 'learn' ? 'Учить' : mode === 'blitz' ? 'Играть' : 'Обзор'}
                                 </button>
