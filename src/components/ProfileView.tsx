@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-import { Check, Crown, BarChart3, Sparkles, Zap, Clock, Star, Infinity, Loader2, Database, Download, Upload, Users, Share2, MessageCircle, LogOut, Calendar, BookOpen, Flame, Wrench } from 'lucide-react';
+import { Check, Crown, BarChart3, Sparkles, Zap, Clock, Star, Infinity, Loader2, Database, Download, Upload, Users, Share2, MessageCircle, LogOut, Calendar, BookOpen, Flame, Wrench, KeyRound, Gift, Ticket, X } from 'lucide-react';
 import { Header } from './Header';
 import { UserProgress } from '../types';
-import { buyPremium, isUserPremium, exportUserData, importUserData, resetUserProgress, getSecureNow, togglePremium } from '../services/storageService';
+import { buyPremium, isUserPremium, exportUserData, importUserData, resetUserProgress, getSecureNow, togglePremium, redeemPromoCode } from '../services/storageService';
 import { triggerHaptic, shareApp } from '../utils/uiHelpers';
 
 interface ProfileViewProps {
@@ -35,8 +35,10 @@ const BenefitRow = ({ icon: Icon, title, free, premium, highlight }: any) => (
 export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, onLogout, scrollToPremium }) => {
     const [isLoadingPayment, setIsLoadingPayment] = useState<string | null>(null);
     const [showImportInput, setShowImportInput] = useState(false);
+    const [showPromoInput, setShowPromoInput] = useState(false);
     const [importCode, setImportCode] = useState("");
-    const [importStatus, setImportStatus] = useState<{success?: boolean, msg?: string} | null>(null);
+    const [promoCode, setPromoCode] = useState("");
+    const [actionStatus, setActionStatus] = useState<{success?: boolean, msg?: string} | null>(null);
     
     // Secret Reset Logic
     const [resetTaps, setResetTaps] = useState(0);
@@ -109,13 +111,32 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
         if (!importCode.trim()) return;
         triggerHaptic('medium');
         const result = await importUserData(importCode);
-        setImportStatus({ success: result.success, msg: result.message });
+        setActionStatus({ success: result.success, msg: result.message });
         
         if (result.success) {
             triggerHaptic('success');
             setTimeout(() => {
                 window.location.reload();
             }, 1500);
+        } else {
+            triggerHaptic('error');
+        }
+    };
+
+    const handlePromoRedeem = async () => {
+        if (!promoCode.trim()) return;
+        triggerHaptic('medium');
+        const result = await redeemPromoCode(promoCode);
+        setActionStatus({ success: result.success, msg: result.message });
+        
+        if (result.success) {
+            triggerHaptic('success');
+            await onUpdate();
+            setPromoCode("");
+            setTimeout(() => {
+                setShowPromoInput(false);
+                setActionStatus(null);
+            }, 2000);
         } else {
             triggerHaptic('error');
         }
@@ -208,45 +229,39 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                             <Database className="w-5 h-5 text-slate-400" />
                             <h3 className="text-lg font-bold">Управление данными</h3>
                         </div>
-                        <p className="text-xs text-slate-400 mb-4">Ваш прогресс хранится на этом устройстве. Рекомендуем периодически сохранять резервную копию.</p>
                         <div className="grid grid-cols-2 gap-3">
                             <button 
                                 onClick={handleExport}
-                                className="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 rounded-2xl border border-slate-100 active:bg-slate-100 active:scale-95 transition-all"
+                                className="flex flex-col items-center justify-center gap-2 p-3 bg-slate-50 rounded-2xl border border-slate-100 active:bg-slate-100 active:scale-95 transition-all"
                             >
-                                <Download className="w-6 h-6 text-violet-600" />
-                                <span className="text-xs font-bold text-slate-600">Скачать копию</span>
+                                <Download className="w-5 h-5 text-violet-600" />
+                                <span className="text-[10px] font-bold text-slate-600 text-center leading-tight">Скачать<br/>копию</span>
                             </button>
                             <button 
-                                onClick={() => setShowImportInput(!showImportInput)}
-                                className="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 rounded-2xl border border-slate-100 active:bg-slate-100 active:scale-95 transition-all"
+                                onClick={() => { setShowImportInput(!showImportInput); setShowPromoInput(false); setActionStatus(null); }}
+                                className="flex flex-col items-center justify-center gap-2 p-3 bg-slate-50 rounded-2xl border border-slate-100 active:bg-slate-100 active:scale-95 transition-all"
                             >
-                                <Upload className="w-6 h-6 text-emerald-600" />
-                                <span className="text-xs font-bold text-slate-600">Восстановить</span>
+                                <Upload className="w-5 h-5 text-emerald-600" />
+                                <span className="text-[10px] font-bold text-slate-600 text-center leading-tight">Восста-<br/>новить</span>
                             </button>
                         </div>
+
+                        {/* Import Logic */}
                         {showImportInput && (
-                            <div className="mt-4 animate-in slide-in-from-top-2">
+                            <div className="mt-4 animate-in slide-in-from-top-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                <span className="text-xs font-bold text-slate-500 mb-2 block">Восстановление данных</span>
                                 <textarea 
                                     value={importCode}
                                     onChange={(e) => setImportCode(e.target.value)}
-                                    placeholder="Вставьте код..."
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-mono h-24 mb-3 focus:ring-2 focus:ring-violet-200 outline-none"
+                                    placeholder="Вставьте код резервной копии..."
+                                    className="w-full bg-white border border-slate-200 rounded-xl p-3 text-xs font-mono h-24 mb-3 focus:ring-2 focus:ring-emerald-200 outline-none"
                                 />
-                                {importStatus && <div className="text-xs mb-2 text-emerald-600">{importStatus.msg}</div>}
-                                <button onClick={handleImport} className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm">Восстановить</button>
+                                {actionStatus && <div className={`text-xs mb-2 font-bold ${actionStatus.success ? 'text-emerald-600' : 'text-rose-600'}`}>{actionStatus.msg}</div>}
+                                <button onClick={handleImport} className="w-full py-3 bg-emerald-600 text-white rounded-xl font-bold text-sm shadow-md active:scale-95 transition-transform">Восстановить</button>
                             </div>
                         )}
                     </div>
                 </div>
-
-                <button 
-                    onClick={() => { triggerHaptic('medium'); onLogout(); }}
-                    className="w-full bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 font-bold py-4 rounded-2xl shadow-sm active:scale-[0.98] transition-transform flex items-center justify-center gap-2"
-                >
-                    <LogOut className="w-5 h-5" />
-                    Выйти
-                </button>
 
                 {/* PREMIUM SECTION */}
                 {!progress.premiumStatus && (
@@ -285,7 +300,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                         </div>
 
                         {/* Payment Options Block */}
-                        <div className="bg-gradient-to-br from-violet-600 to-fuchsia-600 rounded-3xl p-6 shadow-xl shadow-violet-200/50 relative overflow-hidden text-white">
+                        <div className="bg-gradient-to-br from-violet-600 to-fuchsia-600 rounded-3xl p-6 shadow-xl shadow-violet-200/50 relative overflow-hidden text-white transition-all">
                             <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
                             <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/10 rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none"></div>
 
@@ -300,57 +315,125 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                             </div>
 
                             <div className="space-y-4 relative z-10">
-                                {/* Month Plan */}
-                                <button 
-                                    onClick={() => handleBuy('month')}
-                                    disabled={isLoadingPayment !== null}
-                                    className="w-full bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl p-4 transition-all active:scale-95 flex items-center justify-between group backdrop-blur-sm"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white/80 group-hover:text-white transition-colors border border-white/10">
-                                            <Star className="w-5 h-5 fill-current" />
-                                        </div>
-                                        <div className="text-left">
-                                            <div className="font-bold text-white">1 Месяц</div>
-                                            <div className="text-xs text-violet-200 font-medium">150 ⭐️ <span className="opacity-50">•</span> ≈ 299 ₽</div>
-                                        </div>
-                                    </div>
-                                    <div className="text-white text-xs font-bold bg-white/20 border border-white/20 px-3 py-2 rounded-xl group-hover:bg-white/30 transition-colors">
-                                        {isLoadingPayment === 'month' ? <Loader2 className="w-4 h-4 animate-spin"/> : 'Купить'}
-                                    </div>
-                                </button>
+                                {showPromoInput ? (
+                                    /* --- PROMO CODE INPUT MODE --- */
+                                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
+                                        <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4">
+                                            <p className="text-violet-100 text-xs font-bold mb-3 text-center uppercase tracking-wide opacity-80">
+                                                Ввод подарочного кода
+                                            </p>
+                                            
+                                            <input 
+                                                id="promo-input"
+                                                type="text"
+                                                value={promoCode}
+                                                onChange={(e) => setPromoCode(e.target.value)}
+                                                placeholder="ВВЕДИТЕ КОД"
+                                                className="w-full bg-white text-slate-900 border-none rounded-xl px-4 py-3 text-sm font-bold text-center mb-3 placeholder:text-slate-300 focus:ring-2 focus:ring-yellow-300 outline-none uppercase tracking-widest"
+                                                autoFocus
+                                            />
+                                            
+                                            {actionStatus && (
+                                                <div className={`text-xs mb-3 font-bold text-center px-2 py-1 rounded-lg ${actionStatus.success ? 'bg-emerald-500/20 text-emerald-200' : 'bg-rose-500/20 text-rose-200'}`}>
+                                                    {actionStatus.msg}
+                                                </div>
+                                            )}
 
-                                {/* Year Plan */}
-                                <button 
-                                    onClick={() => handleBuy('year')}
-                                    disabled={isLoadingPayment !== null}
-                                    className="w-full relative group"
-                                >
-                                    <div className="absolute -top-3 right-4 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-md z-20 border-2 border-white flex items-center gap-1 transform group-hover:scale-110 transition-transform">
-                                        <Flame className="w-3 h-3 fill-current" /> ВЫГОДНО
+                                            <div className="flex gap-2">
+                                                <button 
+                                                    onClick={() => { setShowPromoInput(false); setActionStatus(null); setPromoCode(""); }}
+                                                    className="flex-1 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold text-xs transition-colors"
+                                                >
+                                                    Отмена
+                                                </button>
+                                                <button 
+                                                    onClick={handlePromoRedeem}
+                                                    disabled={!promoCode}
+                                                    className="flex-1 py-3 bg-yellow-400 text-yellow-900 rounded-xl font-bold text-xs shadow-lg active:scale-95 transition-transform disabled:opacity-50 disabled:scale-100"
+                                                >
+                                                    Активировать
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-
-                                    <div className="bg-white text-slate-900 rounded-2xl p-1 shadow-lg active:scale-95 transition-transform">
-                                        <div className="flex items-center justify-between p-4">
+                                ) : (
+                                    /* --- STANDARD BUTTONS MODE --- */
+                                    <>
+                                        {/* Month Plan */}
+                                        <button 
+                                            onClick={() => handleBuy('month')}
+                                            disabled={isLoadingPayment !== null}
+                                            className="w-full bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl p-4 transition-all active:scale-95 flex items-center justify-between group backdrop-blur-sm"
+                                        >
                                             <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center text-violet-600">
-                                                    <Crown className="w-5 h-5 fill-current" />
+                                                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white/80 group-hover:text-white transition-colors border border-white/10">
+                                                    <Star className="w-5 h-5 fill-current" />
                                                 </div>
                                                 <div className="text-left">
-                                                    <div className="font-bold text-lg leading-tight text-slate-900">1 Год</div>
-                                                    <div className="text-xs text-slate-500 font-medium mt-0.5">1000 ⭐️ <span className="text-slate-300">•</span> ≈ 1,990 ₽</div>
+                                                    <div className="font-bold text-white">1 Месяц</div>
+                                                    <div className="text-xs text-violet-200 font-medium">150 ⭐️ <span className="opacity-50">•</span> ≈ 299 ₽</div>
                                                 </div>
                                             </div>
-                                            <div className="bg-slate-900 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm group-hover:bg-slate-800 transition-colors">
-                                                {isLoadingPayment === 'year' ? <Loader2 className="w-4 h-4 animate-spin"/> : 'Купить'}
+                                            <div className="text-white text-xs font-bold bg-white/20 border border-white/20 px-3 py-2 rounded-xl group-hover:bg-white/30 transition-colors">
+                                                {isLoadingPayment === 'month' ? <Loader2 className="w-4 h-4 animate-spin"/> : 'Купить'}
                                             </div>
+                                        </button>
+
+                                        {/* Year Plan */}
+                                        <button 
+                                            onClick={() => handleBuy('year')}
+                                            disabled={isLoadingPayment !== null}
+                                            className="w-full relative group"
+                                        >
+                                            <div className="absolute -top-3 right-4 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-md z-20 border-2 border-white flex items-center gap-1 transform group-hover:scale-110 transition-transform">
+                                                <Flame className="w-3 h-3 fill-current" /> ВЫГОДНО
+                                            </div>
+
+                                            <div className="bg-white text-slate-900 rounded-2xl p-1 shadow-lg active:scale-95 transition-transform">
+                                                <div className="flex items-center justify-between p-4">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center text-violet-600">
+                                                            <Crown className="w-5 h-5 fill-current" />
+                                                        </div>
+                                                        <div className="text-left">
+                                                            <div className="font-bold text-lg leading-tight text-slate-900">1 Год</div>
+                                                            <div className="text-xs text-slate-500 font-medium mt-0.5">1000 ⭐️ <span className="text-slate-300">•</span> ≈ 1,990 ₽</div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="bg-slate-900 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm group-hover:bg-slate-800 transition-colors">
+                                                        {isLoadingPayment === 'year' ? <Loader2 className="w-4 h-4 animate-spin"/> : 'Купить'}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </button>
+                                        
+                                        {/* Promo Link inside Card */}
+                                        <div className="text-center pt-2">
+                                            <button 
+                                                onClick={() => { setShowPromoInput(true); setActionStatus(null); }}
+                                                className="text-violet-200 text-xs font-medium hover:text-white underline decoration-violet-400/50 underline-offset-4 transition-colors"
+                                            >
+                                                У меня есть промокод
+                                            </button>
                                         </div>
-                                    </div>
-                                </button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>
                 )}
+                
+                {/* ACTIONS AREA (Logout Only) */}
+                <div className="space-y-4 pt-4 border-t border-slate-200/50 mt-6">
+                    {/* LOGOUT BUTTON */}
+                    <button 
+                        onClick={() => { triggerHaptic('medium'); onLogout(); }}
+                        className="w-full bg-white text-rose-600 border border-slate-200 hover:bg-rose-50 font-bold py-4 rounded-2xl shadow-sm active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                    >
+                        <LogOut className="w-5 h-5" />
+                        Выйти из аккаунта
+                    </button>
+                </div>
                 
                 <div 
                     onClick={handleSecretReset}

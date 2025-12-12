@@ -120,6 +120,43 @@ export const togglePremium = async (forceState?: boolean): Promise<UserProgress>
     return progress;
 };
 
+// --- PROMO CODES (MANUAL GRANTING) ---
+// YOU CAN EDIT THIS LIST TO ADD NEW CODES
+const VALID_PROMO_CODES: Record<string, 'month' | 'year' | 'lifetime'> = {
+    'VOCAB-START': 'month',      // Public promo
+    'ADMIN-GRANT-30': 'month',   // Support code
+    'ADMIN-GRANT-365': 'year',   // Support code
+    'VOCAB-MASTER-KEY': 'lifetime' // VIP
+};
+
+export const redeemPromoCode = async (code: string): Promise<{success: boolean, message: string}> => {
+    const cleanCode = code.trim().toUpperCase();
+    const plan = VALID_PROMO_CODES[cleanCode];
+
+    if (!plan) {
+        return { success: false, message: "Неверный промокод" };
+    }
+
+    const progress = await getUserProgress();
+    
+    // Initialize array if missing (migration)
+    if (!progress.usedPromoCodes) progress.usedPromoCodes = [];
+
+    // Check if used
+    if (progress.usedPromoCodes.includes(cleanCode)) {
+        return { success: false, message: "Код уже был использован вами" };
+    }
+
+    // Activate
+    await activatePremium(plan);
+    
+    // Mark as used
+    progress.usedPromoCodes.push(cleanCode);
+    await saveUserProgress(progress);
+
+    return { success: true, message: `Код принят! Активирован план: ${plan.toUpperCase()}` };
+};
+
 export const addCoins = async (amount: number) => {
     const progress = await getUserProgress();
     progress.wallet.coins += amount;

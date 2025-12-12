@@ -1,61 +1,75 @@
 
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
-        <!-- Main Background: Deep Learning Violet -->
-        <linearGradient id="bg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#4C1D95"/> <!-- Violet 900 -->
-            <stop offset="100%" stop-color="#7C3AED"/> <!-- Violet 600 -->
+        <!-- Background: Deep Premium Violet -->
+        <linearGradient id="bg_grad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#5B21B6"/> <!-- Violet 800 -->
+            <stop offset="100%" stop-color="#2E1065"/> <!-- Violet 950 -->
         </linearGradient>
         
-        <!-- Book Pages Gradient -->
-        <linearGradient id="pages" x1="150" y1="150" x2="362" y2="362" gradientUnits="userSpaceOnUse">
+        <!-- Pillars (M legs): Silver/White Gloss -->
+        <linearGradient id="pillar_grad" x1="100" y1="100" x2="100" y2="400" gradientUnits="userSpaceOnUse">
             <stop offset="0%" stop-color="#FFFFFF"/>
-            <stop offset="100%" stop-color="#E2E8F0"/>
+            <stop offset="100%" stop-color="#E2E8F0"/> <!-- Slate 200 -->
         </linearGradient>
 
-        <!-- The Spark/AI Gradient -->
-        <linearGradient id="spark" x1="256" y1="100" x2="256" y2="200" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#FDE047"/> <!-- Yellow 300 -->
-            <stop offset="100%" stop-color="#F59E0B"/> <!-- Amber 500 -->
+        <!-- The V (Center): Vibrant Gold -->
+        <linearGradient id="v_grad" x1="256" y1="120" x2="256" y2="400" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#FCD34D"/> <!-- Amber 300 -->
+            <stop offset="50%" stop-color="#F59E0B"/> <!-- Amber 500 -->
+            <stop offset="100%" stop-color="#D97706"/> <!-- Amber 600 -->
         </linearGradient>
 
-        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="15" stdDeviation="15" flood-color="#000" flood-opacity="0.3"/>
+        <!-- Drop Shadow for Depth -->
+        <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.3"/>
         </filter>
         
-        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="10" result="blur"/>
-            <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        <!-- Inner Glow for the V -->
+        <filter id="inner-glow" x="-50%" y="-50%" width="200%" height="200%">
+             <feGaussianBlur stdDeviation="4" result="blur"/>
+             <feComposite in="SourceGraphic" in2="blur" operator="arithmetic" k2="1.5" k3="-0.5"/>
         </filter>
     </defs>
     
-    <!-- Background -->
-    <rect x="0" y="0" width="512" height="512" rx="128" fill="url(#bg)"/>
+    <!-- Background Shape (Squircle-ish context, fills the view) -->
+    <rect width="512" height="512" fill="url(#bg_grad)"/>
     
-    <!-- Decorative Circle -->
-    <circle cx="256" cy="256" r="180" stroke="white" stroke-opacity="0.1" stroke-width="2"/>
+    <!-- Subtle Background Grid/Pattern -->
+    <path d="M0 256 H512 M256 0 V512" stroke="white" stroke-opacity="0.03" stroke-width="2"/>
+    <circle cx="256" cy="256" r="200" stroke="white" stroke-opacity="0.03" stroke-width="40"/>
 
     <!-- Main Icon Group -->
-    <g transform="translate(0, 20)">
+    <g transform="translate(0, 20)" filter="url(#shadow)">
         
-        <!-- The Book (Stylized 'V') -->
-        <!-- Left Page -->
-        <path d="M256 360 C256 360 160 380 120 340 V180 C160 220 256 200 256 200" 
-              fill="url(#pages)" 
-              filter="url(#shadow)"/>
-        
-        <!-- Right Page -->
-        <path d="M256 360 C256 360 352 380 392 340 V180 C352 220 256 200 256 200" 
-              fill="url(#pages)" 
-              filter="url(#shadow)"/>
+        <!-- Left Pillar of M -->
+        <path d="M85 120 
+                 L165 120 
+                 L165 400 
+                 L85 400 
+                 Z" 
+              fill="url(#pillar_grad)" />
               
-        <!-- Spine Shadow -->
-        <path d="M256 200 V360" stroke="#CBD5E1" stroke-width="2"/>
+        <!-- Right Pillar of M -->
+        <path d="M347 120 
+                 L427 120 
+                 L427 400 
+                 L347 400 
+                 Z" 
+              fill="url(#pillar_grad)" />
 
-        <!-- The Spark of Knowledge (Floating above) -->
-        <g filter="url(#glow)">
-            <path d="M256 80 L275 140 L335 145 L285 180 L300 240 L256 205 L212 240 L227 180 L177 145 L237 140 Z" 
-                  fill="url(#spark)"/>
-        </g>
+        <!-- The Golden V (Connecting the pillars to form M) -->
+        <!-- Coordinates carefully calculated to interlock -->
+        <path d="M165 120 
+                 L256 320 
+                 L347 120 
+                 L295 120 
+                 L256 210 
+                 L217 120 
+                 Z" 
+              fill="url(#v_grad)"/>
+              
+        <!-- Optional: A small jewel/diamond at the bottom tip of V for "Mastery" -->
+        <path d="M256 340 L270 365 L256 390 L242 365 Z" fill="#FCD34D" fill-opacity="0.8"/>
     </g>
 </svg>

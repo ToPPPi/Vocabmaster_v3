@@ -16,6 +16,7 @@ export const INITIAL_PROGRESS: UserProgress = {
   premiumExpiration: null,
   wordProgress: {},
   wordComments: {},
+  usedPromoCodes: [],
   hasSeenOnboarding: false,
   userName: '',
   photoUrl: '',
@@ -235,6 +236,7 @@ export const getUserProgress = async (): Promise<UserProgress> => {
   if (!memoryCache.inventory) memoryCache.inventory = { streakFreeze: 0, timeFreeze: 1, bomb: 1 };
   if (!memoryCache.blitzHighScores) memoryCache.blitzHighScores = {};
   if (!memoryCache.wordComments) memoryCache.wordComments = {};
+  if (!memoryCache.usedPromoCodes) memoryCache.usedPromoCodes = [];
   if (memoryCache.photoUrl === undefined) memoryCache.photoUrl = '';
   if (memoryCache.premiumExpiration === undefined) memoryCache.premiumExpiration = null;
 

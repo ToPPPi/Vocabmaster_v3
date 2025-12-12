@@ -63,6 +63,10 @@ export interface UserProgress {
   wordProgress: Record<string, WordProgress>; 
   // Map of wordID -> User Comment
   wordComments: Record<string, string>;
+  
+  // Track used codes to prevent abuse
+  usedPromoCodes: string[];
+
   hasSeenOnboarding: boolean;
   userName?: string;
   photoUrl?: string; // Telegram Profile Photo
