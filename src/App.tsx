@@ -125,8 +125,8 @@ const App: React.FC = () => {
   };
 
   const handleLogout = async () => {
-      const freshStart = await resetUserProgress();
-      setProgress(freshStart);
+      // FIX: Do NOT reset data. Just go to onboarding screen.
+      // Data is preserved in localStorage/CloudStorage.
       setView('onboarding');
   };
 

@@ -23,14 +23,17 @@ export const LevelBrowser: React.FC<LevelBrowserProps> = ({ level, progress, onB
     // Initial known state from props
     const [knownWords, setKnownWords] = useState<Set<string>>(new Set());
 
-    // CRITICAL FIX: Removed 'progress' from dependency array.
-    // We only want to load the word LIST once.
-    // The 'known' status is handled via the separate Set state.
-    // This prevents the list from reshuffling or pagination breaking when a user clicks a heart.
+    // CRITICAL FIX: Sort words by ID.
+    // This ensures the list order is DETERMINISTIC.
+    // Without this, if the underlying array order changes (e.g. from async loading or merging),
+    // words will shift between pages, causing duplicates and confusion.
     useEffect(() => {
         const load = async () => {
             const words = await getWordsByLevelAsync(level);
-            setAllWords(words);
+            // Sort by ID to guarantee same order every time
+            const sortedWords = [...words].sort((a, b) => a.id.localeCompare(b.id));
+            
+            setAllWords(sortedWords);
             // Initialize known state only once on mount
             setKnownWords(new Set(Object.keys(progress.wordProgress)));
             setIsLoading(false);
@@ -87,10 +90,10 @@ export const LevelBrowser: React.FC<LevelBrowserProps> = ({ level, progress, onB
                         <p className="text-lg font-medium">Слов пока нет.</p>
                     </div>
                 ) : (
-                    displayWords.map((word, index) => {
+                    displayWords.map((word) => {
                         const isKnown = knownWords.has(word.id);
                         return (
-                            <div key={`${word.id}-${index}`} className="bg-white px-5 py-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between gap-3">
+                            <div key={word.id} className="bg-white px-5 py-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between gap-3">
                                 <div className="flex-1 min-w-0">
                                     <div className="flex flex-col mb-1.5">
                                         <span className="font-bold text-slate-900 text-lg">{word.term}</span>

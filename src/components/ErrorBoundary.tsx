@@ -1,4 +1,4 @@
-import React, { ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from 'react';
 import { TriangleAlert, RefreshCw, Copy, Check } from 'lucide-react';
 import { exportUserData } from '../services/storageService';
 
@@ -13,16 +13,13 @@ interface State {
   backupCode: string | null;
 }
 
-export class ErrorBoundary extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      hasError: false,
-      error: null,
-      copied: false,
-      backupCode: null
-    };
-  }
+export class ErrorBoundary extends Component<Props, State> {
+  public state: State = {
+    hasError: false,
+    error: null,
+    copied: false,
+    backupCode: null
+  };
 
   public static getDerivedStateFromError(error: Error): Partial<State> {
     return { hasError: true, error, copied: false, backupCode: null };
