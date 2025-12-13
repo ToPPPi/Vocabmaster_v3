@@ -29,7 +29,7 @@ export const INITIAL_PROGRESS: UserProgress = {
   blitzHighScores: {}
 };
 
-// --- ENCODING UTILS (UTF-8 Safe) ---
+// --- ENCODING UTILS ---
 const safeEncode = (str: string): string => {
     return window.btoa(unescape(encodeURIComponent(str)));
 };
@@ -40,31 +40,55 @@ const safeDecode = (str: string): string => {
 
 // --- STATE ---
 let memoryCache: UserProgress | null = null;
+let isIdbBroken = false; // Flag to skip IDB if it failed once
 
 // --- UTILS ---
 export const getSecureNow = () => Date.now();
 
-// --- CORE FUNCTIONS (LOCAL ONLY MODE) ---
+// --- CORE FUNCTIONS (HYBRID STORAGE) ---
 
 export const initUserProgress = async (): Promise<{ data: UserProgress, hasConflict: boolean, cloudDate?: number }> => {
-    // 1. Load Local Data only
-    let localData = null;
+    let localData: UserProgress | null = null;
+
+    // 1. Try LocalStorage FIRST (Fastest, Sync) - This is our "Pocket"
     try {
-        // idbService.load now has a timeout and catches its own errors, returning null if it fails.
-        // This ensures this line does NOT hang.
-        localData = await idbService.load();
+        const rawLS = localStorage.getItem(STORAGE_KEY);
+        if (rawLS) {
+            localData = JSON.parse(rawLS);
+            console.log("✅ Loaded from LocalStorage");
+        }
     } catch (e) {
-        console.error("Critical Error Loading IDB:", e);
+        console.warn("LocalStorage read failed", e);
+    }
+
+    // 2. Try IndexedDB (The "Warehouse") - async, might be fresher but slower
+    if (!isIdbBroken) {
+        try {
+            // We race IDB against a timeout so we don't hang forever
+            const idbData = await idbService.load(); 
+            if (idbData) {
+                // If IDB has newer data than LS (based on lastLocalUpdate), use it
+                if (!localData || (idbData.lastLocalUpdate > (localData.lastLocalUpdate || 0))) {
+                    console.log("✅ Loaded newer data from IndexedDB");
+                    localData = idbData;
+                    // Sync back to LS to keep it fresh
+                    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(idbData)); } catch(e){}
+                }
+            }
+        } catch (e) {
+            console.error("⚠️ IndexedDB failed/timed out. Switching to LocalStorage mode.", e);
+            isIdbBroken = true; // Stop trying to use IDB this session
+        }
     }
     
-    // 2. If no local data (or load failed/timed out), start fresh
+    // 3. If no data anywhere, start fresh
     if (!localData) {
-        console.log("No local data found or DB timeout. Starting fresh.");
+        console.log("🌟 New user (no data found).");
         memoryCache = { ...INITIAL_PROGRESS };
         return { data: memoryCache, hasConflict: false };
     }
 
-    // 3. Use local data
+    // 4. Success
     memoryCache = localData;
     return { 
         data: checkDailyReset(localData), 
@@ -78,7 +102,7 @@ export const getUserProgress = async (): Promise<UserProgress> => {
     return res.data;
 };
 
-// Kept for compatibility but does nothing in Local Mode
+// Kept for interface compatibility
 export const downloadCloudData = async (): Promise<UserProgress | null> => {
     return null; 
 };
@@ -87,14 +111,23 @@ export const saveUserProgress = async (progress: UserProgress, forceCloudUpload 
     progress.lastLocalUpdate = Date.now();
     memoryCache = progress;
     
-    // INSTANT SAVE: Only write to local IndexedDB
-    try {
-        await idbService.save(progress);
-    } catch (e) {
-        console.error("Save failed:", e);
-    }
+    // HYBRID SAVE STRATEGY:
     
-    // Cloud sync logic removed for performance
+    // 1. Save to LocalStorage (Guaranteed synchronous backup)
+    try {
+        const json = JSON.stringify(progress);
+        localStorage.setItem(STORAGE_KEY, json);
+    } catch (e) {
+        console.error("LocalStorage Save Failed (Quota?)", e);
+    }
+
+    // 2. Save to IndexedDB (Best effort, async)
+    if (!isIdbBroken) {
+        idbService.save(progress).catch(e => {
+            console.warn("IDB Write Failed", e);
+            isIdbBroken = true; // Stop using broken IDB
+        });
+    }
 };
 
 export const checkDailyReset = (progress: UserProgress): UserProgress => {
@@ -102,6 +135,7 @@ export const checkDailyReset = (progress: UserProgress): UserProgress => {
   const todayDateStr = new Date(now).toISOString().split('T')[0];
 
   if (progress.lastLoginDate !== todayDateStr) {
+       // ... (Logic same as before) ...
        if (progress.lastLoginDate) {
            const lastDate = new Date(progress.lastLoginDate);
            const current = new Date(todayDateStr);
@@ -153,13 +187,15 @@ export const syncTelegramUserData = async () => {
 };
 
 export const resetUserProgress = async (): Promise<UserProgress> => {
+    // Nuclear option: Clear EVERYTHING
     try {
-        await idbService.deleteDatabase(); // Nuclear option
-    } catch (e) {
-        console.error("IDB Delete failed", e);
-    }
+        localStorage.removeItem(STORAGE_KEY);
+    } catch (e) { console.error(e); }
+
+    try {
+        await idbService.deleteDatabase();
+    } catch (e) { console.error(e); }
     
-    localStorage.removeItem(STORAGE_KEY);
     memoryCache = { ...INITIAL_PROGRESS };
     return memoryCache;
 };
@@ -175,12 +211,8 @@ export const completeOnboarding = async (name?: string): Promise<UserProgress> =
 
 export const logoutUser = async (): Promise<void> => {
     const progress = await getUserProgress();
-    
-    // INSTANT LOGOUT: No cloud wait.
     progress.hasSeenOnboarding = false;
-    await idbService.save(progress);
-    
-    console.log("✅ Local logout successful.");
+    await saveUserProgress(progress, true);
 };
 
 export const toggleDarkMode = async () => {
@@ -189,8 +221,6 @@ export const toggleDarkMode = async () => {
     await saveUserProgress(progress);
     return progress;
 };
-
-// --- MANUAL BACKUP (Copy/Paste) - SMART MERGE MODE ---
 
 export const exportUserData = async (): Promise<string> => {
     try {
@@ -214,17 +244,14 @@ export const importUserData = async (inputCode: string): Promise<{success: boole
         
         if (!importedData.wordProgress) throw new Error("Неверный формат данных");
 
-        // --- SMART MERGE LOGIC ---
-        const currentData = await idbService.load() || INITIAL_PROGRESS;
-
+        // Merge logic
+        let currentData: UserProgress | null = null;
+        try { currentData = await getUserProgress(); } catch(e) {}
+        
         const mergedData: UserProgress = {
-            ...importedData, // Start with everything from the backup
-            
-            // PRESERVE IDENTITY of the current device user
-            userName: currentData.userName || importedData.userName, 
-            photoUrl: currentData.photoUrl || importedData.photoUrl,
-            
-            // Update timestamps
+            ...importedData,
+            userName: currentData?.userName || importedData.userName, 
+            photoUrl: currentData?.photoUrl || importedData.photoUrl,
             lastLocalUpdate: Date.now(),
             hasSeenOnboarding: true 
         };
@@ -232,10 +259,10 @@ export const importUserData = async (inputCode: string): Promise<{success: boole
         memoryCache = mergedData;
         await saveUserProgress(mergedData, true);
 
-        return { success: true, message: "Прогресс восстановлен! Ваш профиль сохранен." };
+        return { success: true, message: "Прогресс восстановлен!" };
     } catch (e: any) {
         console.error(e);
-        return { success: false, message: "Ошибка кода: убедитесь, что скопировали весь текст." };
+        return { success: false, message: "Ошибка кода." };
     }
 };
 

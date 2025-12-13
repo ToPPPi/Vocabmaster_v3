@@ -5,7 +5,8 @@ const DB_NAME = 'VocabMaster_LocalDB';
 const DB_VERSION = 1;
 const STORE_NAME = 'user_data';
 const KEY_PROGRESS = 'main_progress';
-const TIMEOUT_MS = 2000; // 2 seconds max wait time
+// REDUCED TIMEOUT: Mobile WebViews are slow. If it takes >1.5s, assume it's broken and fallback.
+const TIMEOUT_MS = 1500; 
 
 // Helper: Timeout Promise
 const withTimeout = <T>(promise: Promise<T>, ms: number, errorMsg: string): Promise<T> => {
@@ -26,6 +27,12 @@ const withTimeout = <T>(promise: Promise<T>, ms: number, errorMsg: string): Prom
 // Helper to open DB
 const openDB = (): Promise<IDBDatabase> => {
     return new Promise((resolve, reject) => {
+        // Check if IDB exists
+        if (!('indexedDB' in window)) {
+            reject("IndexedDB not supported");
+            return;
+        }
+
         const request = indexedDB.open(DB_NAME, DB_VERSION);
 
         request.onerror = () => reject("Error opening IndexedDB");
@@ -56,8 +63,8 @@ export const idbService = {
                 request.onerror = () => reject("Error saving to IndexedDB");
             }), TIMEOUT_MS, "DB Save Timeout");
         } catch (e) {
-            console.error("IDB Save Failed:", e);
-            // Non-blocking error for save
+            console.warn("IDB Save Skipped (Mobile Fallback Active)");
+            // Non-blocking error
         }
     },
 
@@ -76,7 +83,7 @@ export const idbService = {
             }), TIMEOUT_MS, "DB Load Timeout");
         } catch (e) {
             console.error("IDB Load Failed/Timeout:", e);
-            return null; // Fail gracefully to null so app can start empty
+            return null; // Return null so Core can use LocalStorage
         }
     },
 
@@ -95,13 +102,12 @@ export const idbService = {
         }
     },
     
-    // Nuclear option: Delete the database file entirely
     deleteDatabase: async (): Promise<void> => {
         return new Promise((resolve, reject) => {
             const req = indexedDB.deleteDatabase(DB_NAME);
             req.onsuccess = () => resolve();
-            req.onerror = () => resolve(); // Resolve anyway
-            req.onblocked = () => resolve(); // Resolve anyway
+            req.onerror = () => resolve(); 
+            req.onblocked = () => resolve(); 
         });
     }
 };

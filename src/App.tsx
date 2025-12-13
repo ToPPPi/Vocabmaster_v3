@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { Loader2, LayoutGrid, Layers, BarChart3, Library, User as UserIcon, Zap, AlertTriangle, RefreshCw } from 'lucide-react';
+import { Loader2, LayoutGrid, Layers, BarChart3, Library, User as UserIcon, AlertTriangle, RefreshCw } from 'lucide-react';
 import { ProficiencyLevel, ViewState, UserProgress } from './types';
-import { initUserProgress, downloadCloudData, saveUserProgress, completeOnboarding, syncTelegramUserData, logoutUser, resetUserProgress } from './services/storageService'; // Updated imports
+import { initUserProgress, downloadCloudData, saveUserProgress, completeOnboarding, syncTelegramUserData, logoutUser, resetUserProgress } from './services/storageService'; 
 import { triggerHaptic } from './utils/uiHelpers';
 
 // Components
@@ -19,7 +19,7 @@ import { BlitzGame } from './components/BlitzGame';
 import { ShopView } from './components/ShopView';
 import { RewardOverlay, RewardType } from './components/RewardOverlay';
 import { DataManagementView } from './components/DataManagementView';
-import { SyncConflictModal } from './components/SyncConflictModal'; // Import new modal
+import { SyncConflictModal } from './components/SyncConflictModal'; 
 
 const App: React.FC = () => {
   const [progress, setProgress] = useState<UserProgress | null>(null);
@@ -27,20 +27,15 @@ const App: React.FC = () => {
   const [activeLevel, setActiveLevel] = useState<ProficiencyLevel | null>(null);
   const [levelsMode, setLevelsMode] = useState<'learn' | 'browse' | 'blitz'>('browse');
   
-  // Conflict State
   const [conflictData, setConflictData] = useState<{localDate: number, cloudDate: number} | null>(null);
-  
-  // Reward State
   const [reward, setReward] = useState<RewardType | null>(null);
-  
-  // Navigation State
   const [scrollToPremium, setScrollToPremium] = useState(false);
 
   // Loading State with Emergency Reset
   const [showEmergencyReset, setShowEmergencyReset] = useState(false);
 
   useEffect(() => {
-      // Emergency timer: Show reset button faster (3 seconds)
+      // If loading takes > 3 seconds, assume database is stuck and show Reset button
       const timer = setTimeout(() => {
           if (!progress) {
               setShowEmergencyReset(true);
@@ -49,7 +44,7 @@ const App: React.FC = () => {
 
       const load = async () => {
           try {
-              // Init logic wrapped in try-catch
+              // Try to init (now with hybrid fallback)
               const { data, hasConflict, cloudDate } = await initUserProgress();
               
               if (hasConflict && cloudDate) {
@@ -70,8 +65,8 @@ const App: React.FC = () => {
                 window.Telegram.WebApp.setBackgroundColor('#F1F5F9');
             }
           } catch (e) {
-              console.error("Initialization failed:", e);
-              setShowEmergencyReset(true);
+              console.error("Initialization CRASHED:", e);
+              setShowEmergencyReset(true); // Show button immediately on error
           }
       };
       load();
@@ -97,60 +92,32 @@ const App: React.FC = () => {
   };
 
   const handleEmergencyReset = async () => {
-      const c = window.confirm("Данные приложения повреждены. Выполнить полный сброс и перезапуск?");
-      if (c) {
+      if (window.confirm("Это удалит локальные данные и перезапустит приложение. Нажмите ОК, если приложение зависло.")) {
           await resetUserProgress();
           window.location.reload();
       }
   };
 
+  // ... (Gesture and BackButton handlers remain the same) ...
   useEffect(() => {
-    const handleGestureStart = (e: any) => {
-        e.preventDefault();
-    };
+    const handleGestureStart = (e: any) => e.preventDefault();
     document.addEventListener('gesturestart', handleGestureStart);
-    let lastTouchEnd = 0;
-    const handleTouchEnd = (e: any) => {
-        const now = (new Date()).getTime();
-        if (now - lastTouchEnd <= 300) {
-            if(e.target && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-                e.preventDefault();
-            }
-        }
-        lastTouchEnd = now;
-    };
-    document.addEventListener('touchend', handleTouchEnd, false);
-    return () => {
-        document.removeEventListener('gesturestart', handleGestureStart);
-        document.removeEventListener('touchend', handleTouchEnd);
-    };
+    return () => document.removeEventListener('gesturestart', handleGestureStart);
   }, []);
 
   useEffect(() => {
       const tg = window.Telegram?.WebApp;
       if (!tg) return;
-
       const handleBack = () => {
-          if (view !== 'dashboard' && view !== 'onboarding') {
-              setView('dashboard');
-          }
+          if (view !== 'dashboard' && view !== 'onboarding') setView('dashboard');
       };
-
-      if (tg.BackButton) {
-         tg.BackButton.onClick(handleBack);
-      }
-
-      if (view !== 'dashboard' && view !== 'onboarding') {
-          tg.BackButton?.show();
-      } else {
-          tg.BackButton?.hide();
-      }
-
-      return () => {
-          if(tg.BackButton) tg.BackButton.offClick(handleBack);
-      };
+      if (tg.BackButton) tg.BackButton.onClick(handleBack);
+      if (view !== 'dashboard' && view !== 'onboarding') tg.BackButton?.show();
+      else tg.BackButton?.hide();
+      return () => { if(tg.BackButton) tg.BackButton.offClick(handleBack); };
   }, [view]);
 
+  // ... (Action handlers) ...
   const refreshProgress = async () => {
       const { data } = await initUserProgress();
       setProgress({ ...data });
@@ -165,35 +132,21 @@ const App: React.FC = () => {
   
   const handleLevelSelect = (level: ProficiencyLevel) => {
       setActiveLevel(level);
-      if (levelsMode === 'learn') {
-          setView('learn_daily');
-      } else {
-          setView('level_browser');
-      }
+      if (levelsMode === 'learn') setView('learn_daily');
+      else setView('level_browser');
   };
 
   const handleLogout = async () => {
       triggerHaptic('medium');
-      try {
-          await logoutUser();
-          await refreshProgress();
-      } catch (e) {
-          console.error("Logout failed:", e);
-      } finally {
-          setView('onboarding');
-      }
+      try { await logoutUser(); await refreshProgress(); } 
+      catch (e) { console.error("Logout failed:", e); } 
+      finally { setView('onboarding'); }
   };
 
-  const handleGoToPremium = () => {
-      setScrollToPremium(true);
-      setView('profile');
-  };
+  const handleGoToPremium = () => { setScrollToPremium(true); setView('profile'); };
+  const handleTabChange = (target: any) => { setScrollToPremium(false); setView(target); };
 
-  const handleTabChange = (target: any) => {
-      setScrollToPremium(false);
-      setView(target);
-  };
-
+  // --- LOADING SCREEN ---
   if (!progress) {
       return (
           <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 p-6 text-center">
@@ -206,10 +159,10 @@ const App: React.FC = () => {
                               <AlertTriangle className="w-8 h-8 text-rose-500" />
                           </div>
                           <p className="text-sm font-bold text-rose-700 dark:text-rose-300 mb-1">
-                              Долгая загрузка
+                              Приложение не загружается?
                           </p>
                           <p className="text-xs text-rose-600 dark:text-rose-400 leading-snug">
-                              База данных не отвечает. Нажмите ниже, чтобы сбросить данные и починить приложение.
+                              Вероятно, база данных повреждена. Сброс данных поможет запустить приложение.
                           </p>
                       </div>
                       <button 
@@ -217,7 +170,7 @@ const App: React.FC = () => {
                           className="w-full py-4 bg-slate-900 dark:bg-slate-800 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform"
                       >
                           <RefreshCw className="w-4 h-4" />
-                          Сброс и запуск
+                          Сбросить и Запустить
                       </button>
                   </div>
               )}
@@ -248,7 +201,6 @@ const App: React.FC = () => {
     <div className={progress.darkMode ? 'dark' : ''}>
         <div className={`max-w-md mx-auto h-[100dvh] ${isFullScreen ? 'bg-slate-900' : 'bg-slate-50 dark:bg-slate-950'} flex flex-col font-sans relative shadow-2xl md:shadow-none overflow-hidden transition-colors duration-300`}>
             
-            {/* Conflict Modal Overlay */}
             {conflictData && (
                 <SyncConflictModal 
                     localDate={conflictData.localDate} 
@@ -266,10 +218,7 @@ const App: React.FC = () => {
                     <Dashboard 
                         progress={progress} 
                         setViewState={setView} 
-                        onStartDaily={() => { 
-                            setLevelsMode('learn'); 
-                            setView('levels'); 
-                        }} 
+                        onStartDaily={() => { setLevelsMode('learn'); setView('levels'); }} 
                         onStartReview={() => setView('learn_review')} 
                         onUpdate={refreshProgress} 
                     />
@@ -299,10 +248,7 @@ const App: React.FC = () => {
                         progress={progress} 
                         mode="blitz" 
                         onBack={() => setView('dashboard')} 
-                        onSelectLevel={(lvl) => {
-                            setActiveLevel(lvl);
-                            setView('blitz_game'); 
-                        }} 
+                        onSelectLevel={(lvl) => { setActiveLevel(lvl); setView('blitz_game'); }} 
                     />
                 )}
                 
@@ -357,12 +303,7 @@ const App: React.FC = () => {
                     <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-slate-200/60 dark:border-slate-800 pb-safe transition-colors duration-300">
                         <div className="flex justify-around items-center h-16 px-1">
                             <TabButton target="dashboard" icon={LayoutGrid} label="Главная" />
-                            <TabButton 
-                                target="levels" 
-                                icon={Layers} 
-                                label="Уровни" 
-                                customAction={() => setLevelsMode('browse')}
-                            />
+                            <TabButton target="levels" icon={Layers} label="Уровни" customAction={() => setLevelsMode('browse')} />
                             <TabButton target="progress_stats" icon={BarChart3} label="Прогресс" />
                             <TabButton target="dictionary" icon={Library} label="Словарь" />
                             <TabButton target="profile" icon={UserIcon} label="Профиль" />
