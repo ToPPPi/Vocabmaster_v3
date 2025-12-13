@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Loader2, LayoutGrid, Layers, BarChart3, Library, User as UserIcon, Zap } from 'lucide-react';
 import { ProficiencyLevel, ViewState, UserProgress } from './types';
-import { initUserProgress, downloadCloudData, saveUserProgress, completeOnboarding, syncTelegramUserData, logoutUser } from './services/storageService'; // Updated imports
+import { initUserProgress, downloadCloudData, saveUserProgress, completeOnboarding, syncTelegramUserData, logoutUser, nukeEverything } from './services/storageService'; // Updated imports
 import { triggerHaptic } from './utils/uiHelpers';
 
 // Components
@@ -38,27 +38,47 @@ const App: React.FC = () => {
 
   useEffect(() => {
       const load = async () => {
-          // Use new init function that checks for conflicts
-          const { data, hasConflict, cloudDate } = await initUserProgress();
-          
-          if (hasConflict && cloudDate) {
-              // Pause loading, show conflict modal
-              setConflictData({ localDate: data.lastLocalUpdate, cloudDate: cloudDate });
-              setProgress(data); // Show local momentarily behind modal
-          } else {
-              setProgress(data);
-              if (data.hasSeenOnboarding) setView('dashboard');
-              else setView('onboarding');
-          }
+          try {
+              // --- EMERGENCY RESET CHECK ---
+              // If user opens with ?startapp=reset, we wipe everything before loading
+              const startParam = window.Telegram?.WebApp?.initDataUnsafe?.start_param;
+              if (startParam === 'reset') {
+                  console.log("🚨 EMERGENCY RESET TRIGGERED via Start Param");
+                  await nukeEverything();
+                  // Remove param from URL cleanly if possible, or just proceed
+              }
 
-          await syncTelegramUserData(); // Sync name and photo
-          
-          if (window.Telegram?.WebApp) {
-            window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand();
-            window.Telegram.WebApp.setHeaderColor('#F1F5F9'); 
-            window.Telegram.WebApp.setBackgroundColor('#F1F5F9');
-        }
+              // Use new init function that checks for conflicts
+              const { data, hasConflict, cloudDate } = await initUserProgress();
+              
+              if (hasConflict && cloudDate) {
+                  // Pause loading, show conflict modal
+                  setConflictData({ localDate: data.lastLocalUpdate, cloudDate: cloudDate });
+                  setProgress(data); // Show local momentarily behind modal
+              } else {
+                  setProgress(data);
+                  if (data.hasSeenOnboarding) setView('dashboard');
+                  else setView('onboarding');
+              }
+
+              try {
+                  await syncTelegramUserData(); // Sync name and photo
+              } catch (e) {
+                  console.warn("Telegram sync failed:", e);
+              }
+          } catch (e) {
+              console.error("Critical app initialization failure:", e);
+              // In case of critical failure, retry with a fresh init or just let ErrorBoundary catch rendering
+              // However, since initUserProgress now has a try-catch fallback, we shouldn't reach here often.
+          } finally {
+              // Always signal Ready to Telegram, otherwise app might hang on loading screen
+              if (window.Telegram?.WebApp) {
+                window.Telegram.WebApp.ready();
+                window.Telegram.WebApp.expand();
+                window.Telegram.WebApp.setHeaderColor('#F1F5F9'); 
+                window.Telegram.WebApp.setBackgroundColor('#F1F5F9');
+            }
+          }
       };
       load();
   }, []);

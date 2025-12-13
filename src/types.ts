@@ -121,6 +121,7 @@ declare global {
       WebApp: {
         initData?: string;
         initDataUnsafe?: {
+          query_id?: string;
           user?: {
             id: number;
             first_name: string;
@@ -128,6 +129,9 @@ declare global {
             username?: string;
             photo_url?: string;
           };
+          auth_date?: number;
+          hash?: string;
+          start_param?: string;
         };
         ready: () => void;
         expand: () => void;
