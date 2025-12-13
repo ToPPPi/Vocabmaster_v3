@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Check, Crown, BarChart3, Sparkles, Zap, Clock, Star, Infinity, Loader2, Database, Download, Upload, Users, Share2, MessageCircle, LogOut, Calendar, BookOpen, Flame, Wrench, KeyRound, Gift, Ticket, X, TestTube, Moon, Sun } from 'lucide-react';
 import { Header } from './Header';
 import { ProficiencyLevel, UserProgress } from '../types';
-import { buyPremium, isUserPremium, exportUserData, importUserData, resetUserProgress, getSecureNow, togglePremium, redeemPromoCode, dev_UnlockLevel, dev_PopulateReview, toggleDarkMode } from '../services/storageService';
+import { buyPremium, isUserPremium, exportUserData, importUserData, resetUserProgress, getSecureNow, togglePremium, redeemPromoCode, dev_UnlockRealWords, dev_PopulateReview, toggleDarkMode } from '../services/storageService';
 import { triggerHaptic, shareApp } from '../utils/uiHelpers';
 import { RewardType } from './RewardOverlay';
 
@@ -43,7 +43,6 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
     const [actionStatus, setActionStatus] = useState<{success?: boolean, msg?: string} | null>(null);
     
     // Dev Tools State
-    const [selectedDevLevel, setSelectedDevLevel] = useState<ProficiencyLevel>(ProficiencyLevel.A1);
     const [isDevLoading, setIsDevLoading] = useState(false);
     const [loadingProgress, setLoadingProgress] = useState(0); // 0-100
     const [loadingText, setLoadingText] = useState("");
@@ -114,17 +113,16 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
         alert("Developer Premium Granted!");
     };
 
-    const handleDevUnlockLevel = async () => {
-        const confirm = window.confirm(`СТРЕСС-ТЕСТ: Добавить 1000 слов (включая синтетические) в уровень ${selectedDevLevel}? \n\nЭто может занять некоторое время.`);
+    const handleDevUnlockWords = async () => {
+        const confirm = window.confirm(`Добавить 1000 реальных слов в словарь? \n\nЕсли слов меньше 1000, будут добавлены все доступные.`);
         if(!confirm) return;
         
         setIsDevLoading(true);
-        setLoadingText("Генерация данных...");
+        setLoadingText("Поиск слов в базе...");
         setLoadingProgress(0);
 
         try {
-            // Changed from 100 to 1000 for Stress Testing
-            await dev_UnlockLevel(selectedDevLevel, 1000, (percent) => {
+            await dev_UnlockRealWords(1000, (percent) => {
                 setLoadingProgress(percent);
                 if (percent > 90) setLoadingText("Сохранение в облако...");
                 else if (percent > 50) setLoadingText("Добавление слов...");
@@ -133,14 +131,14 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
             triggerHaptic('success');
         } catch (e) {
             console.error(e);
-            alert("Ошибка при генерации.");
+            alert("Ошибка при добавлении.");
         } finally {
             setIsDevLoading(false);
         }
     };
 
     const handleDevPopulateReview = async () => {
-        const confirm = window.confirm(`Сгенерировать 100 слов для тестирования интервальных повторений?`);
+        const confirm = window.confirm(`Сгенерировать 100 слов для повторения с разными интервалами (от 5 дней до 1 года)?`);
         if(!confirm) return;
 
         setIsDevLoading(true);
@@ -315,7 +313,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                                 <Share2 className="w-5 h-5 text-violet-500" />
                                 Пригласить друга
                             </button>
-                            <button onClick={() => window.Telegram?.WebApp.openTelegramLink('https://t.me/vocabmaster_news')} className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 flex flex-col items-center gap-1 active:scale-95 transition-transform hover:bg-slate-100 dark:hover:bg-slate-700">
+                            <button onClick={() => window.Telegram?.WebApp.openTelegramLink('https://t.me/vocabmasters_bot')} className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 flex flex-col items-center gap-1 active:scale-95 transition-transform hover:bg-slate-100 dark:hover:bg-slate-700">
                                 <MessageCircle className="w-5 h-5 text-sky-500" />
                                 Наш канал
                             </button>
@@ -560,20 +558,13 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                         </button>
 
                         <div className="flex gap-2">
-                            <select 
-                                value={selectedDevLevel}
-                                onChange={(e) => setSelectedDevLevel(e.target.value as ProficiencyLevel)}
-                                className="bg-white border border-slate-300 text-slate-700 text-xs rounded-xl p-2 w-1/3 outline-none font-bold"
-                            >
-                                {Object.values(ProficiencyLevel).map(l => <option key={l} value={l}>{l}</option>)}
-                            </select>
                             <button 
-                                onClick={handleDevUnlockLevel}
+                                onClick={handleDevUnlockWords}
                                 disabled={isDevLoading}
                                 className="flex-1 py-2 bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-sm active:scale-95 flex items-center justify-center gap-2"
                             >
                                 {isDevLoading ? <Loader2 className="w-3 h-3 animate-spin"/> : <TestTube className="w-3 h-3"/>}
-                                Learn 1000 ({selectedDevLevel})
+                                Add 1000 Real Words (Database Only)
                             </button>
                         </div>
 
@@ -583,7 +574,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                             className="w-full py-2 bg-amber-500 text-white text-xs font-bold rounded-xl shadow-sm active:scale-95 flex items-center justify-center gap-2"
                         >
                             {isDevLoading ? <Loader2 className="w-3 h-3 animate-spin"/> : <Clock className="w-3 h-3"/>}
-                            [DEV] Populate Review Queue (100 Mixed)
+                            [DEV] Populate Review Queue (5d - 1y)
                         </button>
                     </div>
                 </div>

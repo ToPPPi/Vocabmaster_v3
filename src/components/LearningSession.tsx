@@ -24,6 +24,9 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
     
     const [localLearnedCount, setLocalLearnedCount] = useState(progress.wordsLearnedToday);
 
+    // Refs for scrolling
+    const backCardRef = useRef<HTMLDivElement>(null);
+
     const loadWords = async () => {
         setIsLoading(true);
         setCompleted(false);
@@ -92,11 +95,19 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
     
     const currentWord = sessionWords[currentIndex];
 
+    // Scroll to top when card changes or is flipped
     useEffect(() => { 
         setIsFlipped(false); 
         setAiData(null); 
         setAiError(null);
     }, [currentIndex]);
+
+    // Reset scroll on the back card when it becomes visible
+    useEffect(() => {
+        if (isFlipped && backCardRef.current) {
+            backCardRef.current.scrollTop = 0;
+        }
+    }, [isFlipped, currentIndex]);
 
     const handleSpeak = (text: string) => {
         setIsPlaying(true);
@@ -340,7 +351,7 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
                     </div>
 
                     {/* BACK */}
-                    <div className="absolute inset-0 bg-white dark:bg-slate-900 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-slate-950/50 flex flex-col w-full backface-hidden border border-slate-100 dark:border-slate-800 rotate-y-180 overflow-hidden z-20">
+                    <div ref={backCardRef} className="absolute inset-0 bg-white dark:bg-slate-900 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-slate-950/50 flex flex-col w-full backface-hidden border border-slate-100 dark:border-slate-800 rotate-y-180 overflow-hidden z-20">
                         <div className="flex-1 overflow-y-auto p-6 space-y-6">
                              <div className="flex justify-between items-start pb-4 border-b border-slate-50 dark:border-slate-800">
                                 <div>

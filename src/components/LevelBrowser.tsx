@@ -28,6 +28,7 @@ export const LevelBrowser: React.FC<LevelBrowserProps> = ({ level, progress, onB
     // CRITICAL FIX: Sort words by ID.
     // This ensures the list order is DETERMINISTIC.
     useEffect(() => {
+        window.scrollTo(0, 0); // Reset scroll
         const load = async () => {
             const words = await getWordsByLevelAsync(level);
             // Sort by ID to guarantee same order every time
@@ -114,11 +115,12 @@ export const LevelBrowser: React.FC<LevelBrowserProps> = ({ level, progress, onB
                     displayWords.map((word) => {
                         const isKnown = knownWords.has(word.id);
                         return (
-                            <div key={word.id} className="bg-white dark:bg-slate-900 px-5 py-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between gap-3 transition-colors">
+                            <div key={word.id} className="bg-white dark:bg-slate-900 px-5 py-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between gap-3 transition-colors h-auto min-h-[90px]">
                                 <div className="flex-1 min-w-0">
                                     <div className="flex flex-col mb-1.5">
                                         <span className="font-bold text-slate-900 dark:text-white text-lg">{word.term}</span>
-                                        <span className="text-sm font-bold text-violet-600 bg-violet-50 dark:bg-violet-900/30 dark:text-violet-300 px-2 py-1 rounded-md mt-1 w-fit whitespace-normal break-words leading-snug">
+                                        {/* FIX: Removed w-fit to allow full width expansion */}
+                                        <span className="text-sm font-bold text-violet-600 bg-violet-50 dark:bg-violet-900/30 dark:text-violet-300 px-2 py-1 rounded-md mt-1 whitespace-normal break-words leading-snug inline-block">
                                             {word.translation}
                                         </span>
                                     </div>

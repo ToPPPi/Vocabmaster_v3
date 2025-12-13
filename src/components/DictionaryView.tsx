@@ -176,6 +176,9 @@ export const DictionaryView: React.FC<DictionaryViewProps> = ({ progress, onBack
                             <div className="pr-4 w-full">
                                 <h2 className="text-3xl font-black text-slate-900 leading-tight break-words">{selectedWord.term}</h2>
                                 {selectedWord.transcription && <span className="text-sm text-slate-400 font-mono mt-1 block">{selectedWord.transcription}</span>}
+                                {selectedWord.russianTransliteration && (
+                                    <span className="text-sm text-slate-500 font-medium mt-1 block">[{selectedWord.russianTransliteration}]</span>
+                                )}
                                 <p className="text-xl text-violet-600 font-bold mt-2">{selectedWord.translation}</p>
                             </div>
                         </div>
@@ -196,7 +199,9 @@ export const DictionaryView: React.FC<DictionaryViewProps> = ({ progress, onBack
                         {/* Definition */}
                         <div>
                             <span className="text-xs font-bold text-slate-400 uppercase block mb-2 tracking-wide">Определение</span>
-                            <p className="text-slate-800 text-lg leading-relaxed font-medium">{selectedWord.definition}</p>
+                            <p className="text-slate-800 text-lg leading-relaxed font-medium">
+                                {selectedWord.definition || "Определение отсутствует."}
+                            </p>
                         </div>
                     </div>
 
@@ -211,7 +216,20 @@ export const DictionaryView: React.FC<DictionaryViewProps> = ({ progress, onBack
                         </div>
                     )}
 
-                    {/* Note Input in Detail View */}
+                    {/* Examples (Moved UP) */}
+                    <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+                        <span className="text-xs font-bold text-slate-400 uppercase block mb-3 tracking-wide">Примеры</span>
+                        <div className="space-y-4">
+                            {selectedWord.examples.map((ex, i) => (
+                                <div key={i} className="pl-3 border-l-2 border-violet-200">
+                                    <p className="text-slate-900 font-medium mb-1">"{ex.en}"</p>
+                                    <p className="text-slate-500 text-sm">{ex.ru}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Note Input (Moved DOWN) */}
                     <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
                         <span className="text-xs font-bold text-slate-400 uppercase block mb-3 tracking-wide">Моя заметка</span>
                         {isEditing ? (
@@ -245,19 +263,6 @@ export const DictionaryView: React.FC<DictionaryViewProps> = ({ progress, onBack
                                 )}
                             </div>
                         )}
-                    </div>
-
-                    {/* Examples */}
-                    <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
-                        <span className="text-xs font-bold text-slate-400 uppercase block mb-3 tracking-wide">Примеры</span>
-                        <div className="space-y-4">
-                            {selectedWord.examples.map((ex, i) => (
-                                <div key={i} className="pl-3 border-l-2 border-violet-200">
-                                    <p className="text-slate-900 font-medium mb-1">"{ex.en}"</p>
-                                    <p className="text-slate-500 text-sm">{ex.ru}</p>
-                                </div>
-                            ))}
-                        </div>
                     </div>
 
                     <button 

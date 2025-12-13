@@ -21,6 +21,7 @@ export const LevelsScreen: React.FC<LevelsScreenProps> = ({ progress, mode, onBa
     const [learnedCounts, setLearnedCounts] = useState<Record<string, number>>({});
 
     useEffect(() => {
+        window.scrollTo(0, 0); // Reset scroll on mount
         const load = async () => {
             const all = await getAllWords();
             const c: Record<string, number> = {};
