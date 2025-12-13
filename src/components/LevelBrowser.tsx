@@ -119,8 +119,8 @@ export const LevelBrowser: React.FC<LevelBrowserProps> = ({ level, progress, onB
                                 <div className="flex-1 min-w-0">
                                     <div className="flex flex-col mb-1.5">
                                         <span className="font-bold text-slate-900 dark:text-white text-lg">{word.term}</span>
-                                        {/* FIX: Removed w-fit to allow full width expansion */}
-                                        <span className="text-sm font-bold text-violet-600 bg-violet-50 dark:bg-violet-900/30 dark:text-violet-300 px-2 py-1 rounded-md mt-1 whitespace-normal break-words leading-snug inline-block">
+                                        {/* FIX: Changed inline-block to block and w-full to ensure expansion for long text */}
+                                        <span className="text-sm font-bold text-violet-600 bg-violet-50 dark:bg-violet-900/30 dark:text-violet-300 px-2 py-1 rounded-md mt-1 whitespace-normal break-words leading-snug block w-full">
                                             {word.translation}
                                         </span>
                                     </div>

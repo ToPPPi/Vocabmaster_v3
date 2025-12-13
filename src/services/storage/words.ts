@@ -106,6 +106,7 @@ export const rateWord = async (wordId: string, rating: 'easy' | 'medium' | 'hard
   const today = new Date(now).toISOString().split('T')[0];
   const isPremium = progress.premiumStatus;
   
+  // Login/Streak Logic
   if (progress.lastLoginDate !== today) {
       if (progress.lastLoginDate === new Date(now - 86400000).toISOString().split('T')[0]) {
           progress.streak += 1;
@@ -118,11 +119,16 @@ export const rateWord = async (wordId: string, rating: 'easy' | 'medium' | 'hard
       progress.lastLoginDate = today;
   }
 
+  // --- DETERMINE IF NEW WORD ---
+  // We use the count of keys before and after to strictly determine if the word is new to the dictionary.
+  // This prevents double-counting words that might be re-rated in the same session.
+  const initialCount = Object.keys(progress.wordProgress).length;
+
   // Ensure wordProgress exists
   let wp = progress.wordProgress[wordId];
   
   if (!wp) {
-      // New word logic
+      // Create new record
       wp = {
         easeFactor: 2.5,
         interval: 0,
@@ -132,8 +138,6 @@ export const rateWord = async (wordId: string, rating: 'easy' | 'medium' | 'hard
         stability: 0
       };
       
-      progress.wordsLearnedToday += 1;
-      progress.dailyProgressByLevel[level] = (progress.dailyProgressByLevel[level] || 0) + 1;
       progress.xp += 10;
       progress.wallet.coins += 5; 
   }
@@ -173,7 +177,18 @@ export const rateWord = async (wordId: string, rating: 'easy' | 'medium' | 'hard
     wp.nextReviewDate = now + (wp.interval * 86400000);
   }
 
+  // Update object
   progress.wordProgress[wordId] = wp;
+
+  // --- UPDATE COUNTERS ---
+  const finalCount = Object.keys(progress.wordProgress).length;
+  
+  // Only increment if the dictionary actually grew
+  if (finalCount > initialCount) {
+      progress.wordsLearnedToday += 1;
+      progress.dailyProgressByLevel[level] = (progress.dailyProgressByLevel[level] || 0) + 1;
+  }
+
   await saveUserProgress(progress);
   return progress;
 };

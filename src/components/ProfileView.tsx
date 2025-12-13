@@ -390,7 +390,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                                 icon={Clock} 
                                 title="Система повторений" 
                                 free="Линейная (+3 дня)" 
-                                premium="Умная (FSRS/Anki)" 
+                                premium="Умная (FSRS)" 
                                 highlight={true}
                             />
                         </div>

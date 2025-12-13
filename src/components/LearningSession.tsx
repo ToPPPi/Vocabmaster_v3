@@ -95,19 +95,24 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
     
     const currentWord = sessionWords[currentIndex];
 
-    // Scroll to top when card changes or is flipped
+    // Scroll to top when card changes
     useEffect(() => { 
         setIsFlipped(false); 
         setAiData(null); 
         setAiError(null);
+        
+        // Force scroll reset on the back card whenever index changes
+        if (backCardRef.current) {
+            backCardRef.current.scrollTop = 0;
+        }
     }, [currentIndex]);
 
-    // Reset scroll on the back card when it becomes visible
+    // Also ensure scroll is reset when flipping, just in case
     useEffect(() => {
         if (isFlipped && backCardRef.current) {
             backCardRef.current.scrollTop = 0;
         }
-    }, [isFlipped, currentIndex]);
+    }, [isFlipped]);
 
     const handleSpeak = (text: string) => {
         setIsPlaying(true);
