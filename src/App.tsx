@@ -31,22 +31,23 @@ const App: React.FC = () => {
   const [reward, setReward] = useState<RewardType | null>(null);
   const [scrollToPremium, setScrollToPremium] = useState(false);
 
-  // Loading State with Emergency Reset
+  // Loading State
   const [showEmergencyReset, setShowEmergencyReset] = useState(false);
 
   useEffect(() => {
-      // If loading takes > 3 seconds, assume database is stuck and show Reset button
+      // Emergency timer: Force show Reset button if JS thread is alive but waiting
       const timer = setTimeout(() => {
           if (!progress) {
               setShowEmergencyReset(true);
           }
-      }, 3000);
+      }, 2500);
 
       const load = async () => {
           try {
-              // Try to init (now with hybrid fallback)
+              // 1. Init Data (Fast Boot Strategy)
               const { data, hasConflict, cloudDate } = await initUserProgress();
               
+              // 2. Render UI immediately
               if (hasConflict && cloudDate) {
                   setConflictData({ localDate: data.lastLocalUpdate, cloudDate: cloudDate });
                   setProgress(data); 
@@ -56,7 +57,8 @@ const App: React.FC = () => {
                   else setView('onboarding');
               }
 
-              await syncTelegramUserData();
+              // 3. Post-render tasks
+              syncTelegramUserData().catch(console.warn);
               
               if (window.Telegram?.WebApp) {
                 window.Telegram.WebApp.ready();
@@ -65,8 +67,8 @@ const App: React.FC = () => {
                 window.Telegram.WebApp.setBackgroundColor('#F1F5F9');
             }
           } catch (e) {
-              console.error("Initialization CRASHED:", e);
-              setShowEmergencyReset(true); // Show button immediately on error
+              console.error("Init Failed:", e);
+              setShowEmergencyReset(true);
           }
       };
       load();
@@ -92,13 +94,13 @@ const App: React.FC = () => {
   };
 
   const handleEmergencyReset = async () => {
-      if (window.confirm("Это удалит локальные данные и перезапустит приложение. Нажмите ОК, если приложение зависло.")) {
+      if (window.confirm("Приложение не запускается? Сброс данных исправит это.")) {
           await resetUserProgress();
           window.location.reload();
       }
   };
 
-  // ... (Gesture and BackButton handlers remain the same) ...
+  // Prevent Pull-to-Refresh on Mobile
   useEffect(() => {
     const handleGestureStart = (e: any) => e.preventDefault();
     document.addEventListener('gesturestart', handleGestureStart);
@@ -117,7 +119,6 @@ const App: React.FC = () => {
       return () => { if(tg.BackButton) tg.BackButton.offClick(handleBack); };
   }, [view]);
 
-  // ... (Action handlers) ...
   const refreshProgress = async () => {
       const { data } = await initUserProgress();
       setProgress({ ...data });
@@ -146,34 +147,29 @@ const App: React.FC = () => {
   const handleGoToPremium = () => { setScrollToPremium(true); setView('profile'); };
   const handleTabChange = (target: any) => { setScrollToPremium(false); setView(target); };
 
-  // --- LOADING SCREEN ---
   if (!progress) {
       return (
           <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 p-6 text-center">
               <Loader2 className="w-10 h-10 animate-spin text-violet-600 mb-6"/>
               
-              {showEmergencyReset && (
-                  <div className="animate-in fade-in zoom-in duration-500 w-full max-w-xs space-y-4">
+              <div className={`transition-opacity duration-1000 ${showEmergencyReset ? 'opacity-100' : 'opacity-0'}`}>
+                  <div className="w-full max-w-xs space-y-4">
                       <div className="bg-rose-50 dark:bg-rose-900/20 p-4 rounded-2xl border border-rose-100 dark:border-rose-800">
-                          <div className="flex justify-center mb-2">
-                              <AlertTriangle className="w-8 h-8 text-rose-500" />
-                          </div>
                           <p className="text-sm font-bold text-rose-700 dark:text-rose-300 mb-1">
-                              Приложение не загружается?
+                              Долгая загрузка?
                           </p>
-                          <p className="text-xs text-rose-600 dark:text-rose-400 leading-snug">
-                              Вероятно, база данных повреждена. Сброс данных поможет запустить приложение.
+                          <p className="text-xs text-rose-600 dark:text-rose-400">
+                              Если приложение зависло, нажмите кнопку ниже для сброса.
                           </p>
                       </div>
                       <button 
                           onClick={handleEmergencyReset}
-                          className="w-full py-4 bg-slate-900 dark:bg-slate-800 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform"
+                          className="w-full py-3 bg-slate-900 dark:bg-slate-800 text-white rounded-xl font-bold text-sm shadow-lg active:scale-95 transition-transform"
                       >
-                          <RefreshCw className="w-4 h-4" />
                           Сбросить и Запустить
                       </button>
                   </div>
-              )}
+              </div>
           </div>
       );
   }
