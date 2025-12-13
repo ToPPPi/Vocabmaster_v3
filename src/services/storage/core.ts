@@ -11,7 +11,6 @@ export const INITIAL_PROGRESS: UserProgress = {
   lastLoginDate: '', 
   lastLocalUpdate: Date.now(),
   lastCloudSync: 0,
-  lastTelegramBackup: 0,
   wordsLearnedToday: 0,
   aiGenerationsToday: 0,
   darkMode: false,
@@ -48,33 +47,22 @@ export const getSecureNow = () => Date.now();
 // --- CORE FUNCTIONS (LOCAL ONLY MODE) ---
 
 export const initUserProgress = async (): Promise<{ data: UserProgress, hasConflict: boolean, cloudDate?: number }> => {
-    try {
-        // 1. Load Local Data only
-        let localData = await idbService.load();
-        
-        // 2. If no local data, start fresh
-        if (!localData) {
-            console.log("No local data found. Starting fresh.");
-            memoryCache = { ...INITIAL_PROGRESS };
-            return { data: memoryCache, hasConflict: false };
-        }
-
-        // 3. Use local data
-        memoryCache = localData;
-        
-        // Check triggers
-        checkAutoBackup(localData);
-
-        return { 
-            data: checkDailyReset(localData), 
-            hasConflict: false 
-        };
-    } catch (e) {
-        console.warn("Storage initialization failed (likely private mode or restricted), falling back to memory:", e);
-        // Fallback to fresh start if DB is corrupted/inaccessible
+    // 1. Load Local Data only
+    let localData = await idbService.load();
+    
+    // 2. If no local data, start fresh
+    if (!localData) {
+        console.log("No local data found. Starting fresh.");
         memoryCache = { ...INITIAL_PROGRESS };
         return { data: memoryCache, hasConflict: false };
     }
+
+    // 3. Use local data
+    memoryCache = localData;
+    return { 
+        data: checkDailyReset(localData), 
+        hasConflict: false 
+    };
 };
 
 export const getUserProgress = async (): Promise<UserProgress> => {
@@ -93,11 +81,7 @@ export const saveUserProgress = async (progress: UserProgress, forceCloudUpload 
     memoryCache = progress;
     
     // INSTANT SAVE: Only write to local IndexedDB
-    try {
-        await idbService.save(progress);
-    } catch (e) {
-        console.warn("Failed to save to storage (non-critical):", e);
-    }
+    await idbService.save(progress);
     
     // Cloud sync logic removed for performance
 };
@@ -143,47 +127,25 @@ export const checkDailyReset = (progress: UserProgress): UserProgress => {
 export const syncTelegramUserData = async () => {
     const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
     if (tgUser) {
-        try {
-            const progress = await getUserProgress();
-            let changed = false;
-            if (tgUser.first_name && (!progress.userName || progress.userName === 'User')) {
-                progress.userName = tgUser.first_name;
-                changed = true;
-            }
-            if (tgUser.photo_url && progress.photoUrl !== tgUser.photo_url) {
-                progress.photoUrl = tgUser.photo_url;
-                changed = true;
-            }
-            if (changed) await saveUserProgress(progress);
-        } catch (e) {
-            console.warn("Error syncing Telegram user data:", e);
+        const progress = await getUserProgress();
+        let changed = false;
+        if (tgUser.first_name && (!progress.userName || progress.userName === 'User')) {
+            progress.userName = tgUser.first_name;
+            changed = true;
         }
+        if (tgUser.photo_url && progress.photoUrl !== tgUser.photo_url) {
+            progress.photoUrl = tgUser.photo_url;
+            changed = true;
+        }
+        if (changed) await saveUserProgress(progress);
     }
 };
 
 export const resetUserProgress = async (): Promise<UserProgress> => {
-    try {
-        await idbService.clear();
-    } catch(e) {
-        console.warn("Failed to clear DB:", e);
-    }
+    await idbService.clear();
     localStorage.removeItem(STORAGE_KEY);
     memoryCache = { ...INITIAL_PROGRESS };
     return memoryCache;
-};
-
-// NUCLEAR OPTION: Guaranteed cleanup
-export const nukeEverything = async () => {
-    console.warn("☢️ NUKING ALL DATA...");
-    try { await idbService.clear(); } catch(e) {}
-    try { localStorage.clear(); } catch(e) {}
-    try { sessionStorage.clear(); } catch(e) {}
-    
-    // Attempt to clear specific keys if global clear fails
-    localStorage.removeItem(STORAGE_KEY);
-    
-    memoryCache = { ...INITIAL_PROGRESS };
-    return true;
 };
 
 export const completeOnboarding = async (name?: string): Promise<UserProgress> => {
@@ -200,11 +162,7 @@ export const logoutUser = async (): Promise<void> => {
     
     // INSTANT LOGOUT: No cloud wait.
     progress.hasSeenOnboarding = false;
-    try {
-        await idbService.save(progress);
-    } catch(e) {
-        console.warn("Failed to save logout state:", e);
-    }
+    await idbService.save(progress);
     
     console.log("✅ Local logout successful.");
 };
@@ -230,45 +188,6 @@ export const exportUserData = async (): Promise<string> => {
     }
 };
 
-// --- AUTOMATIC TELEGRAM BACKUP ---
-const BACKUP_INTERVAL = 3 * 24 * 60 * 60 * 1000; // 3 Days
-
-const checkAutoBackup = async (progress: UserProgress) => {
-    const now = Date.now();
-    const lastBackup = progress.lastTelegramBackup || 0;
-    const initData = window.Telegram?.WebApp?.initData;
-
-    // Must be in Telegram, and interval must have passed
-    if (initData && (now - lastBackup > BACKUP_INTERVAL)) {
-        console.log("📦 Starting Automatic Backup to Telegram Chat...");
-        try {
-            const code = await exportUserData();
-            const dateStr = new Date().toLocaleDateString('ru-RU');
-            
-            // Send to backend proxy
-            const response = await fetch('/api/backup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    initData, 
-                    backupData: code,
-                    filename: `vocabmaster_backup_${dateStr}.txt`
-                })
-            });
-
-            if (response.ok) {
-                progress.lastTelegramBackup = now;
-                await saveUserProgress(progress);
-                console.log("✅ Backup sent successfully");
-            } else {
-                console.error("Backup failed", await response.json());
-            }
-        } catch (e) {
-            console.error("Auto backup error:", e);
-        }
-    }
-};
-
 export const importUserData = async (inputCode: string): Promise<{success: boolean, message: string}> => {
     try {
         let cleanCode = inputCode.trim();
@@ -284,8 +203,7 @@ export const importUserData = async (inputCode: string): Promise<{success: boole
         // We want to keep the current user's Identity (Name, Photo)
         // But overwrite the Learning Data (Words, Score, Money) with the imported data.
         
-        let currentData = await idbService.load();
-        if (!currentData) currentData = { ...INITIAL_PROGRESS };
+        const currentData = await idbService.load() || INITIAL_PROGRESS;
 
         const mergedData: UserProgress = {
             ...importedData, // Start with everything from the backup (Words, Money, Stats)

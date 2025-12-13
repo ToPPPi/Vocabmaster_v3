@@ -63,7 +63,6 @@ export interface UserProgress {
   // Sync Meta
   lastLocalUpdate: number; // When was the DB last touched locally
   lastCloudSync: number;   // When was the last successful upload to Telegram Cloud
-  lastTelegramBackup?: number; // Timestamp of last file sent to bot chat
   
   wordsLearnedToday: number;
   aiGenerationsToday: number;
@@ -122,7 +121,6 @@ declare global {
       WebApp: {
         initData?: string;
         initDataUnsafe?: {
-          query_id?: string;
           user?: {
             id: number;
             first_name: string;
@@ -130,9 +128,6 @@ declare global {
             username?: string;
             photo_url?: string;
           };
-          auth_date?: number;
-          hash?: string;
-          start_param?: string;
         };
         ready: () => void;
         expand: () => void;
