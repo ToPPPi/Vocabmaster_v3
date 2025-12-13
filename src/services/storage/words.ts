@@ -195,7 +195,7 @@ export const rateWord = async (wordId: string, rating: 'easy' | 'medium' | 'hard
 
 // --- DEV TOOLS ---
 
-export const dev_UnlockRealWords = async (count: number = 1000, onProgress?: (percent: number) => void) => {
+export const dev_UnlockRealWords = async (count: number = 500, onProgress?: (percent: number) => void) => {
     // 1. Load ALL words from database (A1-C2)
     if (onProgress) onProgress(10);
     const allWords = await loadAllWords();
@@ -248,7 +248,7 @@ export const dev_UnlockRealWords = async (count: number = 1000, onProgress?: (pe
     return wordsToAdd.length;
 };
 
-export const dev_PopulateReview = async (count: number = 100, onProgress?: (percent: number) => void) => {
+export const dev_PopulateReview = async (count: number = 15, onProgress?: (percent: number) => void) => {
     if (onProgress) onProgress(10);
     const allWords = await loadAllWords();
     if (onProgress) onProgress(20);
@@ -257,7 +257,7 @@ export const dev_PopulateReview = async (count: number = 100, onProgress?: (perc
     const now = getSecureNow();
     const DAY = 86400000;
 
-    // Shuffle and pick 100 words (can be existing ones or new ones)
+    // Shuffle and pick 15 words (can be existing ones or new ones)
     const shuffled = allWords.sort(() => 0.5 - Math.random()).slice(0, count);
     
     for(let index = 0; index < shuffled.length; index++) {
@@ -290,12 +290,10 @@ export const dev_PopulateReview = async (count: number = 100, onProgress?: (perc
             stability: interval
         };
 
-        if (index % 10 === 0) {
-            await new Promise(r => setTimeout(r, 0));
-            if (onProgress) {
-                const percent = 20 + Math.floor((index / count) * 70);
-                onProgress(percent);
-            }
+        // UI Update for small batch
+        if (onProgress) {
+            const percent = 20 + Math.floor((index / count) * 70);
+            onProgress(percent);
         }
     }
 

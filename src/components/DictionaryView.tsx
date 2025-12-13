@@ -30,7 +30,9 @@ export const DictionaryView: React.FC<DictionaryViewProps> = ({ progress, onBack
     useEffect(() => {
         const load = async () => {
             const w = await getAllWords();
-            setAllWords(w);
+            // Sort alphabetically (A-Z) by the English term
+            const sortedWords = w.sort((a, b) => a.term.localeCompare(b.term));
+            setAllWords(sortedWords);
             setIsLoading(false);
         };
         load();
@@ -80,9 +82,7 @@ export const DictionaryView: React.FC<DictionaryViewProps> = ({ progress, onBack
     const paginatedWords = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
     const handleDelete = async (wordId: string) => {
-        const confirm = window.confirm("Удалить это слово из изученных?");
-        if (!confirm) return;
-
+        // Immediate deletion without confirmation
         triggerHaptic('medium');
         if (selectedWord?.id === wordId) setSelectedWord(null);
         await deleteWordFromProgress(wordId);
@@ -243,6 +243,9 @@ export const DictionaryView: React.FC<DictionaryViewProps> = ({ progress, onBack
                                 />
                                 <div className="flex gap-2 justify-end">
                                     <button onClick={() => handleSaveComment(selectedWord.id)} className="px-4 py-2 bg-emerald-100 text-emerald-600 rounded-lg font-bold text-xs flex items-center gap-1"><Save className="w-3 h-3"/> Сохранить</button>
+                                    {userComment && (
+                                        <button onClick={() => handleDeleteComment(selectedWord.id)} className="px-4 py-2 bg-rose-100 text-rose-600 rounded-lg font-bold text-xs flex items-center gap-1"><Trash2 className="w-3 h-3"/> Удалить</button>
+                                    )}
                                     <button onClick={handleCancelEdit} className="px-4 py-2 bg-slate-100 text-slate-500 rounded-lg font-bold text-xs">Отмена</button>
                                 </div>
                             </div>

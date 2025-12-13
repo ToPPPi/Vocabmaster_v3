@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Lock, CheckCircle, BookOpen, GraduationCap, Clock, Zap, Play } from 'lucide-react';
+import { Lock, Medal, BookOpen, GraduationCap, Clock, Zap, Play } from 'lucide-react';
 import { Header } from './Header';
 import { ProficiencyLevel, UserProgress } from '../types';
 import { getAllWords } from '../services/storageService';
@@ -82,7 +82,7 @@ export const LevelsScreen: React.FC<LevelsScreenProps> = ({ progress, mode, onBa
                         <div key={lvl} className={`bg-white p-5 rounded-3xl border border-slate-100 flex items-center justify-between shadow-sm transition-all ${isLocked ? 'opacity-70 grayscale' : 'hover:shadow-md'}`}>
                             <div className="flex items-center gap-5">
                                 <div className={`w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl shadow-sm relative ${isLocked ? 'bg-slate-100 text-slate-400' : mode === 'blitz' ? 'bg-yellow-100 text-yellow-600' : isComplete ? 'bg-emerald-100 text-emerald-600' : 'bg-violet-100 text-violet-600'}`}>
-                                    {isComplete && mode !== 'blitz' && <div className="absolute -top-2 -right-2 bg-emerald-500 rounded-full p-1 border-2 border-white"><CheckCircle className="w-3 h-3 text-white" /></div>}
+                                    {isComplete && mode !== 'blitz' && <div className="absolute -top-2 -right-2 bg-emerald-500 rounded-full p-1 border-2 border-white"><Medal className="w-3 h-3 text-white fill-white" /></div>}
                                     {lvl}
                                 </div>
                                 <div>
@@ -104,7 +104,7 @@ export const LevelsScreen: React.FC<LevelsScreenProps> = ({ progress, mode, onBa
                                 <Lock className="w-6 h-6 text-slate-300" />
                             ) : isComplete && mode === 'learn' ? (
                                 <div className="px-4 py-2 bg-emerald-50 text-emerald-600 font-bold text-sm rounded-xl flex items-center gap-1">
-                                    <CheckCircle className="w-4 h-4" />
+                                    <Medal className="w-4 h-4 fill-emerald-600" />
                                     Готово
                                 </div>
                             ) : (

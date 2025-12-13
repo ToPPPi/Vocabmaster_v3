@@ -25,14 +25,13 @@ export const LevelBrowser: React.FC<LevelBrowserProps> = ({ level, progress, onB
     // Initial known state from props
     const [knownWords, setKnownWords] = useState<Set<string>>(new Set());
 
-    // CRITICAL FIX: Sort words by ID.
-    // This ensures the list order is DETERMINISTIC.
+    // CRITICAL FIX: Sort words by TERM (Alphabetical).
     useEffect(() => {
         window.scrollTo(0, 0); // Reset scroll
         const load = async () => {
             const words = await getWordsByLevelAsync(level);
-            // Sort by ID to guarantee same order every time
-            const sortedWords = [...words].sort((a, b) => a.id.localeCompare(b.id));
+            // Sort alphabetically (A-Z) by the English term
+            const sortedWords = [...words].sort((a, b) => a.term.localeCompare(b.term));
             
             setAllWords(sortedWords);
             // Initialize known state only once on mount
@@ -124,7 +123,7 @@ export const LevelBrowser: React.FC<LevelBrowserProps> = ({ level, progress, onB
                                             {word.translation}
                                         </span>
                                     </div>
-                                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-snug font-medium line-clamp-2">
+                                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-snug font-medium whitespace-normal">
                                         {word.definition}
                                     </p>
                                 </div>

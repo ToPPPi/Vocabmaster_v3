@@ -114,7 +114,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
     };
 
     const handleDevUnlockWords = async () => {
-        const confirm = window.confirm(`Добавить 1000 реальных слов в словарь? \n\nЕсли слов меньше 1000, будут добавлены все доступные.`);
+        const confirm = window.confirm(`Добавить 500 реальных слов в словарь?`);
         if(!confirm) return;
         
         setIsDevLoading(true);
@@ -122,7 +122,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
         setLoadingProgress(0);
 
         try {
-            await dev_UnlockRealWords(1000, (percent) => {
+            await dev_UnlockRealWords(500, (percent) => {
                 setLoadingProgress(percent);
                 if (percent > 90) setLoadingText("Сохранение в облако...");
                 else if (percent > 50) setLoadingText("Добавление слов...");
@@ -138,7 +138,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
     };
 
     const handleDevPopulateReview = async () => {
-        const confirm = window.confirm(`Сгенерировать 100 слов для повторения с разными интервалами (от 5 дней до 1 года)?`);
+        const confirm = window.confirm(`Сгенерировать 15 слов для повторения?`);
         if(!confirm) return;
 
         setIsDevLoading(true);
@@ -146,7 +146,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
         setLoadingProgress(0);
 
         try {
-            await dev_PopulateReview(100, (percent) => {
+            await dev_PopulateReview(15, (percent) => {
                 setLoadingProgress(percent);
                 if (percent > 80) setLoadingText("Сохранение...");
             });
@@ -564,7 +564,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                                 className="flex-1 py-2 bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-sm active:scale-95 flex items-center justify-center gap-2"
                             >
                                 {isDevLoading ? <Loader2 className="w-3 h-3 animate-spin"/> : <TestTube className="w-3 h-3"/>}
-                                Add 1000 Real Words (Database Only)
+                                Add 500 Real Words (Database Only)
                             </button>
                         </div>
 
@@ -574,7 +574,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                             className="w-full py-2 bg-amber-500 text-white text-xs font-bold rounded-xl shadow-sm active:scale-95 flex items-center justify-center gap-2"
                         >
                             {isDevLoading ? <Loader2 className="w-3 h-3 animate-spin"/> : <Clock className="w-3 h-3"/>}
-                            [DEV] Populate Review Queue (5d - 1y)
+                            [DEV] Populate Review Queue (15 words)
                         </button>
                     </div>
                 </div>
