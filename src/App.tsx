@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { Loader2, LayoutGrid, Layers, BarChart3, Library, User as UserIcon, Zap } from 'lucide-react';
+import { Loader2, LayoutGrid, Layers, BarChart3, Library, User as UserIcon, AlertTriangle, RefreshCw } from 'lucide-react';
 import { ProficiencyLevel, ViewState, UserProgress } from './types';
-import { initUserProgress, downloadCloudData, saveUserProgress, completeOnboarding, syncTelegramUserData, logoutUser, nukeEverything, INITIAL_PROGRESS } from './services/storageService'; // Updated imports
+import { initUserProgress, downloadCloudData, saveUserProgress, completeOnboarding, syncTelegramUserData, logoutUser, nukeEverything } from './services/storageService'; 
 import { triggerHaptic } from './utils/uiHelpers';
 
 // Components
@@ -19,13 +19,16 @@ import { BlitzGame } from './components/BlitzGame';
 import { ShopView } from './components/ShopView';
 import { RewardOverlay, RewardType } from './components/RewardOverlay';
 import { DataManagementView } from './components/DataManagementView';
-import { SyncConflictModal } from './components/SyncConflictModal'; // Import new modal
+import { SyncConflictModal } from './components/SyncConflictModal'; 
 
 const App: React.FC = () => {
   const [progress, setProgress] = useState<UserProgress | null>(null);
   const [view, setView] = useState<ViewState | 'level_browser' | 'progress_stats'>('onboarding');
   const [activeLevel, setActiveLevel] = useState<ProficiencyLevel | null>(null);
   const [levelsMode, setLevelsMode] = useState<'learn' | 'browse' | 'blitz'>('browse');
+  
+  // Loading & Recovery State
+  const [showRepair, setShowRepair] = useState(false);
   
   // Conflict State
   const [conflictData, setConflictData] = useState<{localDate: number, cloudDate: number} | null>(null);
@@ -42,7 +45,7 @@ const App: React.FC = () => {
       // 1. MAIN LOAD LOGIC
       const load = async () => {
           try {
-              // Emergency Reset Check
+              // Emergency Reset Check via URL param
               const startParam = window.Telegram?.WebApp?.initDataUnsafe?.start_param;
               if (startParam === 'reset') {
                   console.log("🚨 EMERGENCY RESET TRIGGERED via Start Param");
@@ -70,10 +73,8 @@ const App: React.FC = () => {
               }
           } catch (e) {
               console.error("Critical app initialization failure:", e);
-              if (isMounted && !progress) {
-                  // Final fallback if init crashes
-                  setProgress({ ...INITIAL_PROGRESS });
-              }
+              // We do NOT force default state here automatically anymore.
+              // We let the 'Repair' button logic handle user intervention.
           } finally {
               if (window.Telegram?.WebApp) {
                 window.Telegram.WebApp.ready();
@@ -86,23 +87,20 @@ const App: React.FC = () => {
 
       load();
 
-      // 2. SAFETY TIMEOUT (FAILSAFE)
-      // If DB hangs for more than 3 seconds (even with internal timeout), force load defaults
-      // This solves the "Endless Loading" on corrupted Android caches
-      const failsafeTimer = setTimeout(() => {
+      // 2. LONG LOADING TIMER
+      // Only show the reset button if it takes longer than 10 seconds.
+      const longLoadTimer = setTimeout(() => {
           if (!progress) {
-              console.warn("⚠️ App Load Timeout - Forcing Default State");
-              setProgress({ ...INITIAL_PROGRESS });
-              setView('onboarding');
-              if (window.Telegram?.WebApp) window.Telegram.WebApp.ready();
+              console.warn("⚠️ App taking long to load - showing repair option");
+              setShowRepair(true);
           }
-      }, 3000);
+      }, 10000);
 
       return () => { 
           isMounted = false; 
-          clearTimeout(failsafeTimer);
+          clearTimeout(longLoadTimer);
       };
-  }, []);
+  }, [progress]); // Depend on progress to clear timer conceptually, though useEffect runs once.
 
   const handleConflictResolve = async (useCloud: boolean) => {
       setConflictData(null);
@@ -119,6 +117,13 @@ const App: React.FC = () => {
           }
           if (progress?.hasSeenOnboarding) setView('dashboard');
           else setView('onboarding');
+      }
+  };
+
+  const handleEmergencyRepair = async () => {
+      if (window.confirm("Это удалит локальные данные и перезагрузит приложение. Используйте, если приложение зависло. Продолжить?")) {
+          await nukeEverything();
+          window.location.reload();
       }
   };
 
@@ -212,7 +217,35 @@ const App: React.FC = () => {
       setView(target);
   };
 
-  if (!progress) return <div className="min-h-screen flex items-center justify-center bg-slate-50"><Loader2 className="w-8 h-8 animate-spin text-violet-600"/></div>;
+  // LOADING SCREEN
+  if (!progress) {
+      return (
+          <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 gap-6 p-6 text-center">
+              <Loader2 className="w-10 h-10 animate-spin text-violet-600"/>
+              <p className="text-slate-400 text-sm font-medium animate-pulse">Загрузка данных...</p>
+              
+              {/* Show repair button only if loading takes > 10s */}
+              {showRepair && (
+                  <div className="mt-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 max-w-xs mx-auto mb-4">
+                          <div className="flex items-center justify-center gap-2 text-amber-700 font-bold text-sm mb-2">
+                              <AlertTriangle className="w-4 h-4" />
+                              <span>Долгая загрузка?</span>
+                          </div>
+                          <p className="text-xs text-amber-600 mb-0">Если приложение зависло, вы можете сбросить кэш.</p>
+                      </div>
+                      <button 
+                          onClick={handleEmergencyRepair}
+                          className="px-6 py-3 bg-white border border-slate-200 text-rose-500 font-bold rounded-xl shadow-sm active:scale-95 transition-all flex items-center gap-2 mx-auto text-sm"
+                      >
+                          <RefreshCw className="w-4 h-4" />
+                          Сбросить и восстановить
+                      </button>
+                  </div>
+              )}
+          </div>
+      );
+  }
 
   const TabButton = ({ target, icon: Icon, label, customAction }: { target: any, icon: any, label: string, customAction?: () => void }) => {
       const isActive = view === target;
