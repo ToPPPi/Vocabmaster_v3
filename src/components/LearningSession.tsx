@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Loader2, Check, X, Volume2, Brain, Sparkles, Zap, ThumbsUp, Tag, ArrowRight, Crown, RotateCcw, GraduationCap, Quote, WifiOff, Lightbulb } from 'lucide-react';
+import { Loader2, Check, X, Volume2, Brain, Sparkles, Zap, ThumbsUp, Tag, ArrowRight, Crown, RotateCcw, GraduationCap, Quote, WifiOff, Lightbulb, Split } from 'lucide-react';
 import { ProficiencyLevel, UserProgress, Word, AIExplanation } from '../types';
 import { getWordsByLevelAsync, getAllWords, getWordsDueForReview, rateWord, getUserProgress, lockDailySession, incrementAIUsage, checkAIUsageLimit, togglePremium } from '../services/storageService';
 import { explainWordWithAI } from '../services/aiService';
@@ -415,6 +415,32 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
                                     ))}
                                 </div>
                             </div>
+
+                            {/* SECONDARY MEANINGS BLOCK - NEW ADDITION */}
+                            {currentWord.secondaryMeanings && currentWord.secondaryMeanings.length > 0 && (
+                                <div className="pt-2">
+                                    <div className="flex items-center gap-2 mb-3 text-slate-400 dark:text-slate-500">
+                                        <Split className="w-4 h-4" />
+                                        <span className="text-xs font-bold uppercase tracking-wide">Другие значения</span>
+                                    </div>
+                                    <div className="space-y-3">
+                                        {currentWord.secondaryMeanings.map((meaning, idx) => (
+                                            <div key={idx} className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-3 border border-slate-100 dark:border-slate-800">
+                                                <div className="flex justify-between items-start mb-1">
+                                                    <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">{meaning.translation}</span>
+                                                    <span className="text-[10px] text-slate-400 bg-white dark:bg-slate-700 px-1.5 py-0.5 rounded border border-slate-100 dark:border-slate-600">Alt</span>
+                                                </div>
+                                                <p className="text-xs text-slate-500 dark:text-slate-400 mb-2 leading-tight">{meaning.meaning}</p>
+                                                {meaning.example && (
+                                                    <div className="pl-2 border-l-2 border-slate-300 dark:border-slate-600">
+                                                        <p className="text-xs text-slate-600 dark:text-slate-300 italic">"{meaning.example.en}"</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
                             {/* AI Content */}
                             {aiData && (

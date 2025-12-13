@@ -13,19 +13,26 @@ export interface WordExample {
   ru: string;
 }
 
+export interface SecondaryMeaning {
+  meaning: string; // The specific definition (e.g. "To manage a business")
+  translation: string; // (e.g. "Управлять")
+  example?: WordExample; // Optional example for this specific meaning
+}
+
 export interface Word {
   id: string;
   term: string;
   transcription?: string; // e.g. /rɪp/
   russianTransliteration?: string; // e.g. "рип"
-  translation: string;
+  translation: string; // PRIMARY translation
   level: ProficiencyLevel;
   partOfSpeech: string;
   frequency?: 'High' | 'Medium' | 'Low';
   register?: 'Formal' | 'Informal' | 'Neutral' | 'Slang' | 'Literary';
-  definition: string;
+  definition: string; // PRIMARY definition
   usageContext?: string; // Text description of contexts (Business, Legal, etc.)
-  examples: WordExample[];
+  examples: WordExample[]; // Examples for the PRIMARY meaning
+  secondaryMeanings?: SecondaryMeaning[]; // NEW: List of other common meanings
   isCustom?: boolean;
 }
 
