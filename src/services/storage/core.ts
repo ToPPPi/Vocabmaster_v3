@@ -3,8 +3,9 @@ import { UserProgress } from '../../types';
 
 export const STORAGE_KEY = 'vocabmaster_user_v5_ru';
 // Telegram CloudStorage limits: 4096 bytes per key. 
-// UTF-8 chars can be up to 4 bytes. 2000 chars is a safe limit to avoid overflow.
-const CHUNK_SIZE = 2000; 
+// UTF-8 chars can be up to 4 bytes. 
+// Increased to 2500 to reduce total key count for 10k words (approx 1.5MB / 2500 ~ 600 keys)
+const CHUNK_SIZE = 2500; 
 
 export const INITIAL_PROGRESS: UserProgress = {
   xp: 0,
@@ -12,6 +13,7 @@ export const INITIAL_PROGRESS: UserProgress = {
   lastLoginDate: '', 
   wordsLearnedToday: 0,
   aiGenerationsToday: 0,
+  darkMode: false, // Default
   premiumStatus: false,
   premiumExpiration: null,
   wordProgress: {},
@@ -137,22 +139,35 @@ const cloudAdapter = {
     // 2. Async Save to CloudStorage (Background)
     if (!tgStorage.isSupported()) return;
 
-    // We don't await this in the main thread to prevent UI blocking
-    // But we need to handle it carefully to avoid overlapping writes
     try {
+        console.time("cloud_save");
         const chunks: string[] = [];
         for (let i = 0; i < value.length; i += CHUNK_SIZE) {
             chunks.push(value.substring(i, i + CHUNK_SIZE));
         }
 
         const metaSaved = await tgStorage.setItem(`${key}_meta`, JSON.stringify({ count: chunks.length, timestamp: Date.now() }));
-        if (!metaSaved) return;
+        if (!metaSaved) {
+            console.warn("Failed to save metadata to cloud");
+            return;
+        }
 
-        const promises = chunks.map((chunk, index) => 
-            tgStorage.setItem(`${key}_chunk_${index}`, chunk)
-        );
+        // BATCH SAVING STRATEGY (Optimization for Large Datasets)
+        // Instead of firing all promises at once (which might hit rate limits or timeout for 10k words),
+        // we process them in batches of 10.
+        const BATCH_SIZE = 10;
+        for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
+            const batchPromises = [];
+            for (let j = 0; j < BATCH_SIZE && (i + j) < chunks.length; j++) {
+                const chunkIndex = i + j;
+                batchPromises.push(tgStorage.setItem(`${key}_chunk_${chunkIndex}`, chunks[chunkIndex]));
+            }
+            await Promise.all(batchPromises);
+        }
+        
+        console.timeEnd("cloud_save");
+        console.log(`Saved ${chunks.length} chunks to cloud.`);
 
-        await Promise.all(promises);
     } catch (e) {
         console.error("Cloud save failed", e);
     }
@@ -175,21 +190,30 @@ const cloudAdapter = {
         const meta = JSON.parse(metaStr);
         const count = meta.count;
         
-        const keys = Array.from({ length: count }, (_, i) => `${key}_chunk_${i}`);
-        
-        const values = await tgStorage.getItems(keys);
-        
-        if (!values) {
-            return localStorage.getItem(key);
-        }
-
+        // BATCH LOADING
+        // We can request multiple keys at once, but getItems has limits too.
+        // Let's request in batches of 20.
         let fullString = "";
-        for (let i = 0; i < count; i++) {
-            const chunk = values[`${key}_chunk_${i}`];
-            if (typeof chunk !== 'string') {
-                return localStorage.getItem(key);
+        const BATCH_SIZE = 20;
+        
+        for (let i = 0; i < count; i += BATCH_SIZE) {
+            const keys = [];
+            for (let j = 0; j < BATCH_SIZE && (i + j) < count; j++) {
+                keys.push(`${key}_chunk_${i + j}`);
             }
-            fullString += chunk;
+            
+            const values = await tgStorage.getItems(keys);
+            if (!values) return localStorage.getItem(key); // Fallback on partial failure
+
+            // Append in order
+            for (const k of keys) {
+                if (typeof values[k] === 'string') {
+                    fullString += values[k];
+                } else {
+                    console.warn(`Missing chunk ${k}`);
+                    return localStorage.getItem(key);
+                }
+            }
         }
 
         localStorage.setItem(key, fullString);
@@ -272,6 +296,7 @@ export const getUserProgress = async (): Promise<UserProgress> => {
   if (!memoryCache.customWords) memoryCache.customWords = [];
   if (!memoryCache.dailyProgressByLevel) memoryCache.dailyProgressByLevel = {};
   if (typeof memoryCache.aiGenerationsToday === 'undefined') memoryCache.aiGenerationsToday = 0;
+  if (typeof memoryCache.darkMode === 'undefined') memoryCache.darkMode = false;
   if (!memoryCache.wallet) memoryCache.wallet = { coins: 100 };
   if (!memoryCache.inventory) memoryCache.inventory = { streakFreeze: 0, timeFreeze: 1, bomb: 1 };
   if (!memoryCache.blitzHighScores) memoryCache.blitzHighScores = {};
@@ -284,7 +309,7 @@ export const getUserProgress = async (): Promise<UserProgress> => {
 };
 
 // Helper to handle daily resets on the progress object
-const checkDailyReset = async (progress: UserProgress): Promise<UserProgress> => {
+export const checkDailyReset = async (progress: UserProgress): Promise<UserProgress> => {
   const now = getSecureNow();
   const todayDateStr = new Date(now).toISOString().split('T')[0];
 
@@ -416,4 +441,11 @@ export const importUserData = async (backupCode: string): Promise<{success: bool
         console.error(e);
         return { success: false, message: "Ошибка чтения кода." };
     }
+};
+
+export const toggleDarkMode = async () => {
+    const progress = await getUserProgress();
+    progress.darkMode = !progress.darkMode;
+    await saveUserProgress(progress);
+    return progress;
 };

@@ -5,14 +5,16 @@ import { Header } from './Header';
 import { UserProgress } from '../types';
 import { buyItem } from '../services/storageService';
 import { triggerHaptic } from '../utils/uiHelpers';
+import { RewardType } from './RewardOverlay';
 
 interface ShopViewProps {
     progress: UserProgress;
     onBack: () => void;
     onUpdate: () => void;
+    onShowReward?: (type: RewardType) => void;
 }
 
-export const ShopView: React.FC<ShopViewProps> = ({ progress, onBack, onUpdate }) => {
+export const ShopView: React.FC<ShopViewProps> = ({ progress, onBack, onUpdate, onShowReward }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleBuy = async (item: keyof UserProgress['inventory'], price: number) => {
@@ -22,9 +24,13 @@ export const ShopView: React.FC<ShopViewProps> = ({ progress, onBack, onUpdate }
         }
         triggerHaptic('medium');
         setIsLoading(true);
-        await buyItem(item, price);
+        const success = await buyItem(item, price);
         await onUpdate();
         setIsLoading(false);
+        
+        if (success && onShowReward) {
+            onShowReward('shop_buy');
+        }
     };
 
     const items = [

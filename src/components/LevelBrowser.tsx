@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import { Loader2, BookOpen, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Loader2, BookOpen, Heart, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { Header } from './Header';
 import { ProficiencyLevel, UserProgress, Word } from '../types';
 import { getWordsByLevelAsync, toggleKnownStatus } from '../services/storageService';
-import { forceSave } from '../services/storage/core'; // Import forceSave
+import { forceSave } from '../services/storage/core'; 
 import { triggerHaptic } from '../utils/uiHelpers';
 
 const PAGE_SIZE = 20;
@@ -20,6 +20,7 @@ export const LevelBrowser: React.FC<LevelBrowserProps> = ({ level, progress, onB
     const [page, setPage] = useState(0);
     const [allWords, setAllWords] = useState<Word[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [search, setSearch] = useState("");
     
     // Initial known state from props
     const [knownWords, setKnownWords] = useState<Set<string>>(new Set());
@@ -39,6 +40,11 @@ export const LevelBrowser: React.FC<LevelBrowserProps> = ({ level, progress, onB
         };
         load();
     }, [level]); 
+
+    // Reset page on search
+    useEffect(() => {
+        setPage(0);
+    }, [search]);
 
     const handleToggleKnown = async (wordId: string) => {
         triggerHaptic('selection');
@@ -69,45 +75,60 @@ export const LevelBrowser: React.FC<LevelBrowserProps> = ({ level, progress, onB
         onBack();
     };
 
-    if (isLoading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-violet-600"/></div>;
+    if (isLoading) return <div className="min-h-screen flex items-center justify-center dark:bg-slate-900"><Loader2 className="w-8 h-8 animate-spin text-violet-600"/></div>;
 
-    const totalPages = Math.ceil(allWords.length / PAGE_SIZE);
-    const displayWords = allWords.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+    const filteredWords = allWords.filter(w => w.term.toLowerCase().includes(search.toLowerCase()) || w.translation.toLowerCase().includes(search.toLowerCase()));
+    const totalPages = Math.ceil(filteredWords.length / PAGE_SIZE);
+    const displayWords = filteredWords.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
     return (
-        <div className="bg-slate-50 min-h-screen pb-32">
+        <div className="bg-slate-50 dark:bg-slate-950 min-h-screen pb-32 transition-colors duration-300">
             <Header 
                 title={`Уровень ${level}`} 
                 subtitle={`Стр ${page + 1} из ${totalPages || 1}`}
                 onBack={handleBack} 
-                rightContent={<div className="text-xs font-bold text-violet-600 bg-violet-50 px-3 py-1.5 rounded-full">{allWords.length} слов</div>}
+                rightContent={<div className="text-xs font-bold text-violet-600 bg-violet-50 dark:bg-violet-900/30 dark:text-violet-300 px-3 py-1.5 rounded-full">{filteredWords.length} слов</div>}
             />
+
+            {/* Search Bar */}
+            <div className="px-4 py-2 sticky top-20 z-30 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-sm pb-4">
+                 <div className="relative">
+                    <Search className="absolute left-4 top-4 text-slate-400 w-5 h-5" />
+                    <input 
+                        type="text" 
+                        placeholder="Поиск..." 
+                        value={search} 
+                        onChange={(e) => setSearch(e.target.value)} 
+                        className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100 dark:focus:ring-violet-900 text-slate-900 dark:text-white font-medium shadow-sm transition-colors" 
+                    />
+                 </div>
+            </div>
 
             <div className="p-4 space-y-3">
                 {displayWords.length === 0 ? (
-                    <div className="text-center py-20 text-slate-400">
+                    <div className="text-center py-20 text-slate-400 dark:text-slate-600">
                         <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-30" />
-                        <p className="text-lg font-medium">Слов пока нет.</p>
+                        <p className="text-lg font-medium">Ничего не найдено.</p>
                     </div>
                 ) : (
                     displayWords.map((word) => {
                         const isKnown = knownWords.has(word.id);
                         return (
-                            <div key={word.id} className="bg-white px-5 py-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between gap-3">
+                            <div key={word.id} className="bg-white dark:bg-slate-900 px-5 py-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between gap-3 transition-colors">
                                 <div className="flex-1 min-w-0">
                                     <div className="flex flex-col mb-1.5">
-                                        <span className="font-bold text-slate-900 text-lg">{word.term}</span>
-                                        <span className="text-sm font-bold text-violet-600 bg-violet-50 px-2 py-1 rounded-md mt-1 w-fit whitespace-normal break-words leading-snug">
+                                        <span className="font-bold text-slate-900 dark:text-white text-lg">{word.term}</span>
+                                        <span className="text-sm font-bold text-violet-600 bg-violet-50 dark:bg-violet-900/30 dark:text-violet-300 px-2 py-1 rounded-md mt-1 w-fit whitespace-normal break-words leading-snug">
                                             {word.translation}
                                         </span>
                                     </div>
-                                    <p className="text-sm text-slate-500 leading-snug font-medium">
+                                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-snug font-medium line-clamp-2">
                                         {word.definition}
                                     </p>
                                 </div>
                                 <button 
                                     onClick={() => handleToggleKnown(word.id)}
-                                    className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all shadow-sm shrink-0 ${isKnown ? 'bg-violet-500 text-white shadow-violet-200 scale-105' : 'bg-slate-100 text-slate-300 hover:bg-slate-200'}`}
+                                    className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all shadow-sm shrink-0 ${isKnown ? 'bg-violet-500 text-white shadow-violet-200 dark:shadow-none scale-105' : 'bg-slate-100 dark:bg-slate-800 text-slate-300 dark:text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700'}`}
                                 >
                                     <Heart className={`w-6 h-6 ${isKnown ? 'fill-current' : ''}`} />
                                 </button>
@@ -118,21 +139,21 @@ export const LevelBrowser: React.FC<LevelBrowserProps> = ({ level, progress, onB
             </div>
 
             <div className="fixed bottom-24 left-0 right-0 px-6 flex justify-center pointer-events-none z-30">
-                 <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-6 pointer-events-auto">
+                 <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md px-4 py-2 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 flex items-center gap-6 pointer-events-auto">
                     <button 
                         onClick={() => { triggerHaptic('light'); setPage(p => Math.max(0, p - 1)); }}
                         disabled={page === 0}
-                        className="w-12 h-12 flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-600"
+                        className="w-12 h-12 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:opacity-50 text-slate-600 dark:text-slate-300"
                     >
                         <ChevronLeft className="w-6 h-6" />
                     </button>
-                    <span className="text-sm font-bold text-slate-500 min-w-[3rem] text-center">
+                    <span className="text-sm font-bold text-slate-500 dark:text-slate-400 min-w-[3rem] text-center">
                         {page + 1} / {Math.max(1, totalPages)}
                     </span>
                     <button 
                         onClick={() => { triggerHaptic('light'); setPage(p => Math.min(totalPages - 1, p + 1)); }}
                         disabled={page >= totalPages - 1}
-                        className="w-12 h-12 flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-600"
+                        className="w-12 h-12 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:opacity-50 text-slate-600 dark:text-slate-300"
                     >
                         <ChevronRight className="w-6 h-6" />
                     </button>

@@ -56,6 +56,9 @@ export interface UserProgress {
   wordsLearnedToday: number;
   aiGenerationsToday: number; // Track AI usage limits
   
+  // Settings
+  darkMode: boolean;
+
   premiumStatus: boolean; // True if Lifetime
   premiumExpiration: number | null; // Timestamp if Monthly (null if free or lifetime)
 
