@@ -30,55 +30,14 @@ export const INITIAL_PROGRESS: UserProgress = {
   blitzHighScores: {}
 };
 
-// --- COMPRESSION (LZW) ---
-// This keeps our payload tiny (approx 100kb for 5000 words)
-const LZW = {
-    compress: (s: string) => {
-        if (!s) return "";
-        var dict: any = {};
-        var data = (s + "").split("");
-        var out = [];
-        var currChar;
-        var phrase = data[0];
-        var code = 256;
-        for (var i = 1; i < data.length; i++) {
-            currChar = data[i];
-            if (dict[phrase + currChar] != null) {
-                phrase += currChar;
-            } else {
-                out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
-                dict[phrase + currChar] = code;
-                code++;
-                phrase = currChar;
-            }
-        }
-        out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
-        return out.map(c => String.fromCharCode(c)).join("");
-    },
-    decompress: (s: string) => {
-        if (!s) return "";
-        var dict: any = {};
-        var data = (s + "").split("");
-        var currChar = data[0];
-        var oldPhrase = currChar;
-        var out = [currChar];
-        var code = 256;
-        var phrase;
-        for (var i = 1; i < data.length; i++) {
-            var currCode = data[i].charCodeAt(0);
-            if (currCode < 256) {
-                phrase = data[i];
-            } else {
-                phrase = dict[currCode] ? dict[currCode] : (oldPhrase + currChar);
-            }
-            out.push(phrase);
-            currChar = phrase.charAt(0);
-            dict[code] = oldPhrase + currChar;
-            code++;
-            oldPhrase = phrase;
-        }
-        return out.join("");
-    }
+// --- ENCODING UTILS (UTF-8 Safe) ---
+// Standard btoa/atob fails with Russian characters. We use this wrapper.
+const safeEncode = (str: string): string => {
+    return window.btoa(unescape(encodeURIComponent(str)));
+};
+
+const safeDecode = (str: string): string => {
+    return decodeURIComponent(escape(window.atob(str)));
 };
 
 // --- STATE ---
@@ -93,7 +52,6 @@ export const getSecureNow = () => Date.now();
 const tgCloud = {
     isSupported: () => {
         const tg = window.Telegram?.WebApp;
-        // CloudStorage was introduced in version 6.9
         return tg && 
                typeof tg.isVersionAtLeast === 'function' && 
                tg.isVersionAtLeast('6.9') && 
@@ -104,8 +62,8 @@ const tgCloud = {
         if (!tgCloud.isSupported()) return false;
         try {
             const jsonStr = JSON.stringify(data);
-            const compressed = LZW.compress(jsonStr);
-            const finalValue = "LZ:" + window.btoa(compressed);
+            // Use safe encoding instead of LZW to prevent crashes with Cyrillic
+            const finalValue = "B64:" + safeEncode(jsonStr);
             
             const chunks: string[] = [];
             for (let i = 0; i < finalValue.length; i += CHUNK_SIZE) {
@@ -121,10 +79,9 @@ const tgCloud = {
             await Promise.all(promises);
 
             // Update Metadata
-            // We save timestamp separately so we can check it quickly without downloading the whole DB
             const meta = { 
                 count: chunks.length, 
-                timestamp: data.lastLocalUpdate, // Cloud timestamp matches the data version
+                timestamp: data.lastLocalUpdate, 
                 device: navigator.userAgent 
             };
             
@@ -136,7 +93,6 @@ const tgCloud = {
         }
     },
 
-    // Fast check just for timestamp
     getMetadata: async (): Promise<{ timestamp: number } | null> => {
         if (!tgCloud.isSupported()) return null;
         return new Promise(resolve => {
@@ -172,13 +128,22 @@ const tgCloud = {
             let fullString = "";
             for(const k of keys) fullString += values[k] || "";
 
-            if (fullString.startsWith("LZ:")) {
-                const base64 = fullString.substring(3);
-                const compressed = window.atob(base64);
-                const json = LZW.decompress(compressed);
-                return JSON.parse(json) as UserProgress;
+            let jsonStr = "";
+            
+            // Handle new format
+            if (fullString.startsWith("B64:")) {
+                const base64 = fullString.substring(4);
+                jsonStr = safeDecode(base64);
+            } 
+            // Fallback for legacy (might fail with cyrillic, but we keep it just in case)
+            else if (fullString.startsWith("LZ:")) {
+                // Legacy LZW path - likely to fail for current user, but good for cleanup
+                return null; 
+            } else {
+                return null;
             }
-            return null;
+
+            return JSON.parse(jsonStr) as UserProgress;
         } catch (e) {
             console.error("Cloud load error", e);
             return null;
@@ -188,20 +153,10 @@ const tgCloud = {
 
 // --- CORE FUNCTIONS ---
 
-/**
- * Loads data and checks for conflicts.
- * Returns:
- * - data: The active data to use (usually local)
- * - conflict: If true, it means Cloud has NEWER data than local. The UI should ask user.
- */
 export const initUserProgress = async (): Promise<{ data: UserProgress, hasConflict: boolean, cloudDate?: number }> => {
-    // 1. Load Local (Fastest)
     let localData = await idbService.load();
-    
-    // 2. Check Cloud Metadata (Fast check)
     const cloudMeta = await tgCloud.getMetadata();
     
-    // SCENARIO 1: No local data, but Cloud exists (New install or cleared cache)
     if (!localData && cloudMeta) {
         console.log("No local data, downloading cloud backup...");
         const cloudData = await tgCloud.load();
@@ -212,17 +167,13 @@ export const initUserProgress = async (): Promise<{ data: UserProgress, hasConfl
         }
     }
 
-    // SCENARIO 2: No data anywhere
     if (!localData) {
         memoryCache = { ...INITIAL_PROGRESS };
         return { data: memoryCache, hasConflict: false };
     }
 
-    // SCENARIO 3: Conflict Check
-    // If Cloud is significantly newer than Local (e.g., > 5 mins difference), flag a conflict
     let hasConflict = false;
     if (cloudMeta && localData.lastLocalUpdate) {
-        // If Cloud is newer by at least 1 minute
         if (cloudMeta.timestamp > localData.lastLocalUpdate + 60000) {
             console.warn("Cloud data is newer than local!");
             hasConflict = true;
@@ -254,27 +205,18 @@ export const downloadCloudData = async (): Promise<UserProgress | null> => {
 };
 
 export const saveUserProgress = async (progress: UserProgress, forceCloudUpload = false) => {
-    // 1. Always update Timestamp
     progress.lastLocalUpdate = Date.now();
     memoryCache = progress;
-
-    // 2. Instant Local Save (IndexedDB is fast)
     await idbService.save(progress);
 
-    // 3. Cloud Upload Strategy: THROTTLING
-    // We only auto-upload if:
-    // a) `forceCloudUpload` is true (e.g. Session Finished, Purchase made)
-    // b) It's been > 5 minutes since last cloud sync
-    
     const timeSinceLastSync = Date.now() - (progress.lastCloudSync || 0);
-    const MIN_SYNC_INTERVAL = 5 * 60 * 1000; // 5 minutes
+    const MIN_SYNC_INTERVAL = 5 * 60 * 1000; 
 
     if (forceCloudUpload || timeSinceLastSync > MIN_SYNC_INTERVAL) {
         scheduleCloudUpload(progress);
     }
 };
 
-// Debounced Cloud Upload to prevent network spam
 const scheduleCloudUpload = (progress: UserProgress) => {
     if (cloudUploadTimer) clearTimeout(cloudUploadTimer);
     
@@ -287,12 +229,12 @@ const scheduleCloudUpload = (progress: UserProgress) => {
         
         if (success) {
             progress.lastCloudSync = Date.now();
-            await idbService.save(progress); // Update the sync timestamp locally
+            await idbService.save(progress);
             console.log("✅ Cloud Sync OK");
         }
         
         isUploading = false;
-    }, 3000); // 3 sec delay to gather rapid changes
+    }, 3000);
 };
 
 export const checkDailyReset = (progress: UserProgress): UserProgress => {
@@ -300,7 +242,6 @@ export const checkDailyReset = (progress: UserProgress): UserProgress => {
   const todayDateStr = new Date(now).toISOString().split('T')[0];
 
   if (progress.lastLoginDate !== todayDateStr) {
-       // Streak Logic
        if (progress.lastLoginDate) {
            const lastDate = new Date(progress.lastLoginDate);
            const current = new Date(todayDateStr);
@@ -323,7 +264,6 @@ export const checkDailyReset = (progress: UserProgress): UserProgress => {
        progress.dailyProgressByLevel = {}; 
        progress.nextSessionUnlockTime = undefined;
        progress.lastLoginDate = todayDateStr;
-       // We force save on date change
        saveUserProgress(progress, true);
   } else if (progress.nextSessionUnlockTime && now >= progress.nextSessionUnlockTime) {
       progress.wordsLearnedToday = 0;
@@ -334,8 +274,6 @@ export const checkDailyReset = (progress: UserProgress): UserProgress => {
   
   return progress;
 };
-
-// ... (Rest of exports like syncTelegramUserData, resetUserProgress remain mostly same)
 
 export const syncTelegramUserData = async () => {
     const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
@@ -382,7 +320,6 @@ export const completeOnboarding = async (name?: string): Promise<UserProgress> =
 
 export const logoutUser = async (): Promise<void> => {
     const progress = await getUserProgress();
-    // Force sync before logout
     await tgCloud.save(progress); 
     progress.hasSeenOnboarding = false;
     await idbService.save(progress);
@@ -395,35 +332,42 @@ export const toggleDarkMode = async () => {
     return progress;
 };
 
-// Export Helpers
+// --- MANUAL BACKUP (Copy/Paste) ---
+
 export const exportUserData = async (): Promise<string> => {
     try {
         const progress = await getUserProgress();
         const jsonStr = JSON.stringify(progress);
-        const encoded = LZW.compress(jsonStr);
-        return "VM5:" + window.btoa(encoded);
+        // Use safeEncode to handle Cyrillic characters correctly
+        const encoded = safeEncode(jsonStr);
+        return "VM5:" + encoded;
     } catch (e) {
+        console.error("Export failed", e);
         return "";
     }
 };
 
 export const importUserData = async (inputCode: string): Promise<{success: boolean, message: string}> => {
     try {
-        let cleanCode = inputCode.replace(/[\s\n\r]/g, '');
+        let cleanCode = inputCode.trim();
         if (cleanCode.startsWith("VM5:")) cleanCode = cleanCode.substring(4);
         
-        const compressed = window.atob(cleanCode);
-        const jsonStr = LZW.decompress(compressed);
+        // Use safeDecode to handle Cyrillic characters correctly
+        const jsonStr = safeDecode(cleanCode);
         const data = JSON.parse(jsonStr);
         
-        if (!data.wordProgress) throw new Error("Invalid data");
+        if (!data.wordProgress) throw new Error("Неверный формат данных");
 
+        // Restore date to avoid issues
+        data.lastLocalUpdate = Date.now();
+        
         memoryCache = data;
         await saveUserProgress(data, true);
 
-        return { success: true, message: "Данные восстановлены!" };
+        return { success: true, message: "Данные успешно восстановлены!" };
     } catch (e: any) {
-        return { success: false, message: "Ошибка: " + e.message };
+        console.error(e);
+        return { success: false, message: "Ошибка кода: убедитесь, что скопировали весь текст." };
     }
 };
 

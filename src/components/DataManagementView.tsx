@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect } from 'react';
-import { Upload, Cloud, HardDrive, Copy, Check, Trash2, AlertTriangle, FileText, CheckCircle, Smartphone, X, Loader2, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Upload, Cloud, HardDrive, Copy, Check, Trash2, AlertTriangle, FileText, CheckCircle, Smartphone, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
 import { Header } from './Header';
 import { UserProgress } from '../types';
 import { exportUserData, importUserData, forceSave, resetUserProgress } from '../services/storage/core';
@@ -16,13 +16,14 @@ export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress
     const [lastSyncTime, setLastSyncTime] = useState<string>('Никогда');
     const [dbSize, setDbSize] = useState<string>('0 KB');
     
-    // UI States
-    const [activeModal, setActiveModal] = useState<'none' | 'export' | 'import'>('none');
+    // UI States: 'none', 'export', 'import'
+    const [expandedSection, setExpandedSection] = useState<'none' | 'export' | 'import'>('none');
     
     // Export State
     const [generatedCode, setGeneratedCode] = useState('');
     const [isGenerating, setIsGenerating] = useState(false);
     const [isCopied, setIsCopied] = useState(false);
+    const exportAreaRef = useRef<HTMLTextAreaElement>(null);
 
     // Import State
     const [importInput, setImportInput] = useState('');
@@ -48,47 +49,67 @@ export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress
     };
 
     // --- EXPORT LOGIC ---
-    const handleGenerateCode = async () => {
+    const toggleExport = async () => {
+        if (expandedSection === 'export') {
+            setExpandedSection('none');
+            return;
+        }
+
         setIsGenerating(true);
+        setExpandedSection('export'); 
+        setGeneratedCode(''); 
         triggerHaptic('medium');
+
         try {
-            await forceSave(); // Ensure data is fresh
-            const code = await exportUserData();
-            setGeneratedCode(code);
-            setActiveModal('export');
-            
-            // Try auto-copy immediately
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(code).then(() => setIsCopied(true)).catch(() => {});
-            }
+            await forceSave(); 
+            // Give UI a moment to expand
+            setTimeout(async () => {
+                const code = await exportUserData();
+                if (code) {
+                    setGeneratedCode(code);
+                } else {
+                    alert("Ошибка: Не удалось сгенерировать код. Возможно, данных слишком много.");
+                }
+                setIsGenerating(false);
+            }, 300);
         } catch (e) {
             alert("Ошибка генерации кода");
-        } finally {
             setIsGenerating(false);
         }
     };
 
     const handleManualCopy = () => {
         triggerHaptic('selection');
-        const textArea = document.getElementById('backup-code-area') as HTMLTextAreaElement;
-        if (textArea) {
-            textArea.select();
-            textArea.setSelectionRange(0, 99999); // For mobile
+        if (exportAreaRef.current) {
+            exportAreaRef.current.select();
+            exportAreaRef.current.setSelectionRange(0, 99999);
+            
             try {
-                document.execCommand('copy'); // Fallback
-                if (navigator.clipboard) {
+                document.execCommand('copy');
+                if (navigator.clipboard && window.isSecureContext) {
                     navigator.clipboard.writeText(generatedCode);
                 }
                 setIsCopied(true);
                 triggerHaptic('success');
                 setTimeout(() => setIsCopied(false), 3000);
             } catch (err) {
-                alert("Не удалось скопировать. Пожалуйста, выделите текст и скопируйте вручную.");
+                alert("Не удалось скопировать автоматически. Выделите текст и скопируйте вручную.");
             }
         }
     };
 
     // --- IMPORT LOGIC ---
+    const toggleImport = () => {
+        if (expandedSection === 'import') {
+            setExpandedSection('none');
+        } else {
+            triggerHaptic('light');
+            setExpandedSection('import');
+            setImportStatus('idle');
+            setImportInput('');
+        }
+    };
+
     const handleRestore = async () => {
         if (!importInput.trim()) return;
         
@@ -99,7 +120,6 @@ export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress
         setImportProgress(0);
         triggerHaptic('medium');
 
-        // Simulate progress for UX (since actual JSON parse is instant but we want user to feel weight)
         const progressInterval = setInterval(() => {
             setImportProgress(prev => {
                 if (prev >= 90) {
@@ -111,9 +131,7 @@ export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress
         }, 100);
 
         try {
-            // Give UI time to render loading state
             await new Promise(r => setTimeout(r, 500));
-            
             const res = await importUserData(importInput);
             
             clearInterval(progressInterval);
@@ -153,7 +171,7 @@ export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress
     };
 
     return (
-        <div className="bg-slate-50 dark:bg-slate-950 min-h-screen pb-32 relative">
+        <div className="bg-slate-50 dark:bg-slate-950 min-h-screen pb-32">
             <Header title="Данные и Бэкап" onBack={onBack} />
             
             <div className="p-5 space-y-6">
@@ -189,7 +207,7 @@ export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress
                     </div>
                 </div>
 
-                {/* 2. ACTIONS */}
+                {/* 2. MANUAL BACKUP ACTIONS */}
                 <div>
                     <h3 className="font-bold text-slate-900 dark:text-white px-2 mb-2 text-sm flex items-center gap-2">
                         <FileText className="w-4 h-4 text-slate-400"/>
@@ -200,45 +218,141 @@ export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress
                     </p>
 
                     <div className="space-y-3">
-                        {/* GENERATE BUTTON */}
-                        <button 
-                            onClick={handleGenerateCode}
-                            disabled={isGenerating}
-                            className="w-full p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-center justify-between shadow-sm active:scale-[0.98] transition-all"
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-violet-100 dark:bg-violet-900/30 rounded-full flex items-center justify-center text-violet-600 dark:text-violet-400">
-                                    {isGenerating ? <Loader2 className="w-5 h-5 animate-spin"/> : <Copy className="w-5 h-5"/>}
+                        {/* --- EXPORT SECTION --- */}
+                        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all shadow-sm">
+                            <button 
+                                onClick={toggleExport}
+                                className="w-full p-4 flex items-center justify-between active:bg-slate-50 dark:active:bg-slate-800 transition-colors"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${expandedSection === 'export' ? 'bg-violet-100 text-violet-600' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}`}>
+                                        <Copy className="w-5 h-5"/>
+                                    </div>
+                                    <div className="text-left">
+                                        <span className="text-sm font-bold text-slate-900 dark:text-white block">Получить код</span>
+                                        <span className="text-[10px] text-slate-500">Скопировать текущий прогресс</span>
+                                    </div>
                                 </div>
-                                <div className="text-left">
-                                    <span className="text-sm font-bold text-slate-900 dark:text-white block">Получить код</span>
-                                    <span className="text-[10px] text-slate-500">Скопировать текущий прогресс</span>
-                                </div>
-                            </div>
-                            <ArrowRight className="w-5 h-5 text-slate-300" />
-                        </button>
+                                {expandedSection === 'export' ? <ChevronUp className="w-5 h-5 text-slate-400"/> : <ChevronDown className="w-5 h-5 text-slate-400"/>}
+                            </button>
 
-                        {/* RESTORE BUTTON */}
-                        <button 
-                            onClick={() => setActiveModal('import')}
-                            className="w-full p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-center justify-between shadow-sm active:scale-[0.98] transition-all"
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-                                    <Upload className="w-5 h-5"/>
+                            {/* INLINE EXPORT CONTENT */}
+                            {expandedSection === 'export' && (
+                                <div className="px-4 pb-4 pt-0 animate-in slide-in-from-top-2">
+                                    <div className="bg-slate-50 dark:bg-slate-950 rounded-xl p-3 border border-slate-100 dark:border-slate-800 mt-2">
+                                        {isGenerating ? (
+                                            <div className="flex flex-col items-center justify-center py-6 text-slate-400">
+                                                <Loader2 className="w-6 h-6 animate-spin mb-2 text-violet-500" />
+                                                <span className="text-xs">Генерация кода (сжимаем данные)...</span>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <p className="text-[10px] text-slate-400 mb-2">
+                                                    Скопируйте этот код и сохраните его в надежном месте (например, в "Избранном" Telegram).
+                                                </p>
+                                                <textarea
+                                                    ref={exportAreaRef}
+                                                    readOnly
+                                                    value={generatedCode}
+                                                    onClick={(e) => (e.target as HTMLTextAreaElement).select()}
+                                                    placeholder="Код появится здесь..."
+                                                    className="w-full h-24 p-3 text-[10px] font-mono bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 rounded-lg border border-slate-200 dark:border-slate-700 resize-none focus:outline-none mb-3"
+                                                />
+                                                <button 
+                                                    onClick={handleManualCopy}
+                                                    disabled={!generatedCode}
+                                                    className={`w-full py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95 ${isCopied ? 'bg-emerald-500 text-white' : 'bg-slate-900 dark:bg-violet-600 text-white disabled:opacity-50 disabled:cursor-not-allowed'}`}
+                                                >
+                                                    {isCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                                                    {isCopied ? 'Скопировано!' : 'Скопировать в буфер'}
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
                                 </div>
-                                <div className="text-left">
-                                    <span className="text-sm font-bold text-slate-900 dark:text-white block">Ввести код</span>
-                                    <span className="text-[10px] text-slate-500">Восстановить данные из буфера</span>
+                            )}
+                        </div>
+
+                        {/* --- IMPORT SECTION --- */}
+                        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all shadow-sm">
+                            <button 
+                                onClick={toggleImport}
+                                className="w-full p-4 flex items-center justify-between active:bg-slate-50 dark:active:bg-slate-800 transition-colors"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${expandedSection === 'import' ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}`}>
+                                        <Upload className="w-5 h-5"/>
+                                    </div>
+                                    <div className="text-left">
+                                        <span className="text-sm font-bold text-slate-900 dark:text-white block">Ввести код</span>
+                                        <span className="text-[10px] text-slate-500">Восстановить из буфера</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <ArrowRight className="w-5 h-5 text-slate-300" />
-                        </button>
+                                {expandedSection === 'import' ? <ChevronUp className="w-5 h-5 text-slate-400"/> : <ChevronDown className="w-5 h-5 text-slate-400"/>}
+                            </button>
+
+                            {/* INLINE IMPORT CONTENT */}
+                            {expandedSection === 'import' && (
+                                <div className="px-4 pb-4 pt-0 animate-in slide-in-from-top-2">
+                                    <div className="bg-slate-50 dark:bg-slate-950 rounded-xl p-3 border border-slate-100 dark:border-slate-800 mt-2">
+                                        {importStatus === 'idle' || importStatus === 'error' ? (
+                                            <>
+                                                <p className="text-[10px] text-slate-400 mb-2">
+                                                    Вставьте код (начинается с VM5:...), который вы сохранили ранее.
+                                                </p>
+                                                <textarea
+                                                    value={importInput}
+                                                    onChange={(e) => setImportInput(e.target.value)}
+                                                    placeholder="Вставьте код сюда..."
+                                                    className="w-full h-24 p-3 text-[10px] font-mono bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-lg border border-slate-200 dark:border-slate-700 resize-none focus:ring-2 focus:ring-violet-500 outline-none mb-3"
+                                                />
+                                                
+                                                {importStatus === 'error' && (
+                                                    <div className="bg-rose-50 text-rose-600 text-[10px] p-2 rounded-lg mb-3 flex items-center gap-2">
+                                                        <AlertTriangle className="w-3 h-3" /> {importError}
+                                                    </div>
+                                                )}
+
+                                                <button 
+                                                    onClick={handleRestore}
+                                                    disabled={!importInput}
+                                                    className="w-full py-3 bg-emerald-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95"
+                                                >
+                                                    <Upload className="w-4 h-4" />
+                                                    Восстановить данные
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <div className="py-4 text-center">
+                                                {importStatus === 'processing' && (
+                                                    <>
+                                                        <div className="w-10 h-10 border-4 border-slate-200 border-t-violet-600 rounded-full animate-spin mx-auto mb-3"></div>
+                                                        <h4 className="font-bold text-slate-900 dark:text-white text-xs mb-2">Обработка...</h4>
+                                                        <div className="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden max-w-[150px] mx-auto">
+                                                            <div className="h-full bg-violet-600 transition-all duration-300" style={{ width: `${importProgress}%` }}></div>
+                                                        </div>
+                                                    </>
+                                                )}
+                                                {importStatus === 'success' && (
+                                                    <div className="animate-in zoom-in duration-300">
+                                                        <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mx-auto mb-2">
+                                                            <Check className="w-6 h-6" />
+                                                        </div>
+                                                        <h4 className="font-bold text-slate-900 dark:text-white text-sm">Готово!</h4>
+                                                        <p className="text-slate-500 text-[10px]">Перезагрузка...</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
 
                 {/* 4. DANGER ZONE */}
-                <div className="pt-12 pb-4 text-center">
+                <div className="pt-8 pb-4 text-center">
                     <button 
                         onClick={handleResetTap} 
                         className={`w-full py-4 border-2 border-dashed rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-95 ${resetTaps > 0 ? 'bg-rose-50 border-rose-300 text-rose-600' : 'border-slate-200 text-slate-400 hover:bg-rose-50 hover:border-rose-200 hover:text-rose-500'}`}
@@ -257,104 +371,6 @@ export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress
                     </button>
                 </div>
             </div>
-
-            {/* --- MODAL: EXPORT --- */}
-            {activeModal === 'export' && (
-                <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl border-t border-slate-100 dark:border-slate-800 animate-in slide-in-from-bottom-10 duration-300">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Ваш Backup Code</h3>
-                            <button onClick={() => setActiveModal('none')} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-500 hover:text-slate-800">
-                                <X className="w-5 h-5" />
-                            </button>
-                        </div>
-                        
-                        <p className="text-xs text-slate-500 mb-3">
-                            Этот код содержит весь ваш прогресс. Сохраните его в заметках или отправьте в "Избранное" Telegram.
-                        </p>
-
-                        <div className="relative mb-4">
-                            <textarea
-                                id="backup-code-area"
-                                readOnly
-                                value={generatedCode}
-                                className="w-full h-32 p-3 text-[10px] font-mono bg-slate-100 dark:bg-slate-950 text-slate-600 dark:text-slate-300 rounded-xl border border-slate-200 dark:border-slate-800 resize-none focus:outline-none"
-                                onClick={(e) => (e.target as HTMLTextAreaElement).select()}
-                            />
-                        </div>
-
-                        <button 
-                            onClick={handleManualCopy}
-                            className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 ${isCopied ? 'bg-emerald-500 text-white' : 'bg-slate-900 dark:bg-violet-600 text-white'}`}
-                        >
-                            {isCopied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                            {isCopied ? 'Скопировано!' : 'Скопировать в буфер'}
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {/* --- MODAL: IMPORT --- */}
-            {activeModal === 'import' && (
-                <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl border-t border-slate-100 dark:border-slate-800 animate-in slide-in-from-bottom-10 duration-300">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Восстановление</h3>
-                            <button onClick={() => { setActiveModal('none'); setImportStatus('idle'); setImportInput(''); }} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-500 hover:text-slate-800">
-                                <X className="w-5 h-5" />
-                            </button>
-                        </div>
-
-                        {importStatus === 'idle' || importStatus === 'error' ? (
-                            <>
-                                <p className="text-xs text-slate-500 mb-3">
-                                    Вставьте код (начинается с VM5:...), который вы сохранили ранее.
-                                </p>
-                                <textarea
-                                    value={importInput}
-                                    onChange={(e) => setImportInput(e.target.value)}
-                                    placeholder="Вставьте код сюда..."
-                                    className="w-full h-32 p-3 text-[10px] font-mono bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white rounded-xl border border-slate-200 dark:border-slate-800 resize-none focus:ring-2 focus:ring-violet-500 outline-none mb-2"
-                                />
-                                {importStatus === 'error' && (
-                                    <div className="bg-rose-50 text-rose-600 text-xs p-3 rounded-xl mb-3 flex items-center gap-2">
-                                        <AlertTriangle className="w-4 h-4" /> {importError}
-                                    </div>
-                                )}
-                                <button 
-                                    onClick={handleRestore}
-                                    disabled={!importInput}
-                                    className="w-full py-4 bg-emerald-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95"
-                                >
-                                    <Upload className="w-5 h-5" />
-                                    Восстановить данные
-                                </button>
-                            </>
-                        ) : (
-                            <div className="py-8 text-center">
-                                {importStatus === 'processing' && (
-                                    <>
-                                        <div className="w-16 h-16 border-4 border-slate-100 border-t-violet-600 rounded-full animate-spin mx-auto mb-4"></div>
-                                        <h4 className="font-bold text-slate-900 dark:text-white mb-2">Обработка данных...</h4>
-                                        <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden max-w-[200px] mx-auto">
-                                            <div className="h-full bg-violet-600 transition-all duration-300" style={{ width: `${importProgress}%` }}></div>
-                                        </div>
-                                    </>
-                                )}
-                                {importStatus === 'success' && (
-                                    <div className="animate-in zoom-in duration-300">
-                                        <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mx-auto mb-4">
-                                            <Check className="w-8 h-8" />
-                                        </div>
-                                        <h4 className="font-bold text-slate-900 dark:text-white text-lg">Готово!</h4>
-                                        <p className="text-slate-500 text-xs">Приложение перезагружается...</p>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
