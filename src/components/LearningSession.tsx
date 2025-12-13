@@ -1,289 +1,500 @@
-import React, { useState, useEffect } from 'react';
-import { Volume2, Sparkles, Check, Loader2, ArrowRight, Brain } from 'lucide-react';
-import { Header } from './Header';
-import { Word, ProficiencyLevel, UserProgress, AIExplanation } from '../types';
-import { getWordsDueForReview, rateWord, lockDailySession, getWordsByLevelAsync, getAllWords, checkAIUsageLimit, incrementAIUsage, isUserPremium } from '../services/storageService';
+
+import React, { useState, useEffect, useRef } from 'react';
+import { Loader2, Check, X, Volume2, Brain, Sparkles, Zap, ThumbsUp, Tag, ArrowRight, Crown, RotateCcw, GraduationCap, Quote, WifiOff, Lightbulb } from 'lucide-react';
+import { ProficiencyLevel, UserProgress, Word, AIExplanation } from '../types';
+import { getWordsByLevelAsync, getAllWords, getWordsDueForReview, rateWord, getUserProgress, lockDailySession, incrementAIUsage, checkAIUsageLimit, togglePremium } from '../services/storageService';
 import { explainWordWithAI } from '../services/aiService';
-import { triggerHaptic, speak } from '../utils/uiHelpers';
+import { triggerHaptic, speak, shuffleArray } from '../utils/uiHelpers';
+
+const DAILY_LIMIT_FREE = 10;
+const DAILY_LIMIT_PREMIUM = 8000;
 
 interface LearningSessionProps {
     mode: 'daily' | 'review';
     level?: ProficiencyLevel;
     progress: UserProgress;
     onComplete: () => void;
-    onBuyPremium: () => void;
+    onBuyPremium?: () => void; 
 }
 
 export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, progress, onComplete, onBuyPremium }) => {
-    const [queue, setQueue] = useState<Word[]>([]);
+    const [sessionWords, setSessionWords] = useState<Word[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [levelCompleted, setLevelCompleted] = useState(false);
+    
+    const [localLearnedCount, setLocalLearnedCount] = useState(progress.wordsLearnedToday);
+
+    const loadWords = async () => {
+        setIsLoading(true);
+        setCompleted(false);
+        setLevelCompleted(false);
+        setCurrentIndex(0);
+        
+        const currentProgress = await getUserProgress();
+        setLocalLearnedCount(currentProgress.wordsLearnedToday);
+        
+        const limitToday = currentProgress.premiumStatus ? DAILY_LIMIT_PREMIUM : DAILY_LIMIT_FREE;
+        
+        if (mode === 'daily' && !currentProgress.premiumStatus && currentProgress.wordsLearnedToday >= limitToday) {
+             onComplete();
+             return;
+        }
+
+        let words: Word[] = [];
+        
+        if (mode === 'daily') {
+            const lvl = level || ProficiencyLevel.A1;
+            const allLvlWords = await getWordsByLevelAsync(lvl);
+            const available = allLvlWords.filter(w => !currentProgress.wordProgress[w.id]);
+            
+            if (available.length === 0 && allLvlWords.length > 0) {
+                 setLevelCompleted(true);
+                 setIsLoading(false);
+                 return;
+            }
+            
+            const wordsLeftForFreeUser = limitToday - currentProgress.wordsLearnedToday;
+            const batchSize = currentProgress.premiumStatus ? 20 : Math.min(10, wordsLeftForFreeUser);
+            
+            // SHUFFLE LOGIC APPLIED HERE
+            // We shuffle the entire available pool before picking the batch.
+            const shuffledAvailable = shuffleArray(available);
+            
+            words = shuffledAvailable.slice(0, Math.max(1, batchSize));
+            
+        } else {
+            const allWords = await getAllWords();
+            const allWordIds = Object.keys(currentProgress.wordProgress);
+            const dueIds = await getWordsDueForReview(allWordIds);
+            words = allWords.filter(w => dueIds.includes(w.id));
+            
+            // Optionally shuffle review words too to mix up topics
+            words = shuffleArray(words);
+        }
+        
+        setSessionWords(words);
+        setIsLoading(false);
+        
+        if (words.length === 0 && !levelCompleted) {
+             setCompleted(true);
+        }
+    };
+
+    useEffect(() => {
+        loadWords();
+    }, [mode, level]); 
+
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isFlipped, setIsFlipped] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
     const [aiData, setAiData] = useState<AIExplanation | null>(null);
-    const [isAiLoading, setIsAiLoading] = useState(false);
+    const [isLoadingAI, setIsLoadingAI] = useState(false);
+    const [completed, setCompleted] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [aiError, setAiError] = useState<string | null>(null);
+    const [isProcessingRating, setIsProcessingRating] = useState(false);
     
-    // Limits
-    const isPremium = isUserPremium(progress);
-    const dailyLimit = 10;
-    
-    useEffect(() => {
-        const load = async () => {
-            setIsLoading(true);
-            let words: Word[] = [];
+    const currentWord = sessionWords[currentIndex];
+
+    useEffect(() => { 
+        setIsFlipped(false); 
+        setAiData(null); 
+        setAiError(null);
+    }, [currentIndex]);
+
+    const handleSpeak = (text: string) => {
+        setIsPlaying(true);
+        speak(text);
+        setTimeout(() => setIsPlaying(false), 1500); 
+    };
+
+    const getNextIntervalLabel = (rating: 'hard' | 'medium' | 'easy') => {
+        if (!currentWord) return '';
+        const wp = progress.wordProgress[currentWord.id] || { interval: 0, easeFactor: 2.5 };
+        let days = 0;
+
+        if (rating === 'hard') return '< 1 мин';
+        else if (rating === 'medium') days = 1;
+        else if (rating === 'easy') {
+            if (wp.interval === 0) days = 3;
+            else if (wp.interval === 1) days = 5;
+            else days = Math.round(wp.interval * wp.easeFactor);
+        }
+        return days === 1 ? '1 день' : `${days} дн.`;
+    };
+
+    const handleRating = async (rating: 'easy' | 'medium' | 'hard') => {
+        if (!currentWord || isProcessingRating) return;
+        setIsProcessingRating(true);
+        triggerHaptic('medium');
+        
+        const wordId = currentWord.id;
+        const wordLevel = currentWord.level;
+        const isLastCard = currentIndex >= sessionWords.length - 1;
+
+        try {
+            const updatedProgress = await rateWord(wordId, rating, wordLevel);
+            setLocalLearnedCount(updatedProgress.wordsLearnedToday);
+
+            const limitNow = updatedProgress.premiumStatus ? DAILY_LIMIT_PREMIUM : DAILY_LIMIT_FREE;
             
-            if (mode === 'review') {
-                const allWords = await getAllWords();
-                const dueIds = await getWordsDueForReview(Object.keys(progress.wordProgress));
-                words = allWords.filter(w => dueIds.includes(w.id));
-                // Randomize review order and cap session
-                words = words.sort(() => 0.5 - Math.random()).slice(0, 20); 
+            if (mode === 'daily' && !updatedProgress.premiumStatus && updatedProgress.wordsLearnedToday >= limitNow) {
+                 await lockDailySession();
+            }
+
+            if (!isLastCard) {
+                setTimeout(() => {
+                    setIsFlipped(false);
+                    setCurrentIndex(prev => prev + 1);
+                    setIsProcessingRating(false);
+                }, 150);
             } else {
-                // Daily Learning
-                if (!isPremium && progress.wordsLearnedToday >= dailyLimit) {
-                    onComplete();
-                    return;
-                }
-                
-                const lvl = level || ProficiencyLevel.A1;
-                const lvlWords = await getWordsByLevelAsync(lvl);
-                const learnedIds = Object.keys(progress.wordProgress);
-                
-                const newWords = lvlWords.filter(w => !learnedIds.includes(w.id));
-                
-                const limit = isPremium ? 20 : Math.min(10, dailyLimit - progress.wordsLearnedToday);
-                words = newWords.slice(0, limit);
+                setCompleted(true);
+                setIsProcessingRating(false);
             }
-            
-            setQueue(words);
-            setIsLoading(false);
-        };
-        load();
-    }, [mode, level, progress]);
+        } catch (e) {
+            console.error(e);
+            setIsProcessingRating(false);
+        }
+    };
 
-    const currentWord = queue[currentIndex];
-
-    const handleNext = async (rating: 'easy' | 'medium' | 'hard') => {
-        if (!currentWord) return;
+    const handleAI = async () => {
+        if (!currentWord || isLoadingAI) return;
         
-        // Save progress
-        await rateWord(currentWord.id, rating, currentWord.level);
-        
-        triggerHaptic(rating === 'hard' ? 'error' : 'success');
+        if (!navigator.onLine) {
+            triggerHaptic('error');
+            setAiError("Нет интернета. AI-тьютор не работает оффлайн.");
+            return;
+        }
 
-        if (currentIndex < queue.length - 1) {
-            setAiData(null);
-            setIsFlipped(false);
-            setCurrentIndex(prev => prev + 1);
+        const canUse = await checkAIUsageLimit();
+        if (!canUse) {
+            triggerHaptic('heavy');
+            setAiError("Лимит ИИ на сегодня исчерпан. Обновитесь до Premium!");
+            return;
+        }
+
+        triggerHaptic('medium');
+        setIsLoadingAI(true);
+        setAiError(null);
+        
+        try {
+            const data = await explainWordWithAI(currentWord.term, currentWord.level);
+            if (data) {
+                await incrementAIUsage();
+                setAiData(data);
+            } else {
+                setAiError("Не удалось получить ответ от ИИ.");
+            }
+        } catch (e: any) {
+            console.error(e);
+            setAiError(e.message || "Ошибка ИИ.");
+        }
+        setIsLoadingAI(false);
+    };
+
+    const handleFinish = () => {
+        triggerHaptic('heavy');
+        onComplete();
+    };
+    
+    const handleContinue = async () => {
+        triggerHaptic('medium');
+        await loadWords();
+    };
+    
+    const handleBuyPremiumAction = async () => {
+        triggerHaptic('medium');
+        if (onBuyPremium) {
+            onBuyPremium();
         } else {
-            // End of session
-            if (mode === 'daily' && !isPremium) {
-                // Force lock check if limit potentially reached
-                await lockDailySession(); 
-            }
             onComplete();
         }
     };
 
-    const handleExplainAI = async () => {
-        if (!currentWord) return;
-        triggerHaptic('medium');
-        
-        const canUse = await checkAIUsageLimit();
-        if (!canUse) {
-            if (!isPremium) onBuyPremium();
-            else alert("Достигнут дневной лимит AI запросов.");
-            return;
-        }
-
-        setIsAiLoading(true);
-        try {
-            await incrementAIUsage();
-            const explanation = await explainWordWithAI(currentWord.term, currentWord.level);
-            setAiData(explanation);
-        } catch (e) {
-            console.error(e);
-            alert("Ошибка AI сервиса");
-        } finally {
-            setIsAiLoading(false);
-        }
+    const getRegisterBadgeClass = (register?: string) => {
+        if (!register) return 'bg-slate-100 text-slate-500';
+        if (register === 'Slang') return 'bg-pink-100 text-pink-700 border border-pink-200';
+        if (register === 'Rude') return 'bg-red-100 text-red-700 border border-red-200';
+        if (register === 'Spoken' || register === 'Informal') return 'bg-cyan-100 text-cyan-800';
+        if (register === 'Literary') return 'bg-amber-100 text-amber-800';
+        if (register === 'Formal') return 'bg-indigo-100 text-indigo-700';
+        return 'bg-violet-50 text-violet-600';
     };
 
-    if (isLoading) return <div className="h-full flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-violet-600"/></div>;
+    if (isLoading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-violet-600"/></div>;
 
-    if (queue.length === 0) {
+    if (levelCompleted) {
         return (
-            <div className="h-full flex flex-col items-center justify-center p-6 text-center">
-                <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mb-6">
-                    <Check className="w-10 h-10 text-emerald-600" />
+            <div className="h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-violet-900 to-slate-900 z-0"></div>
+                <div className="relative z-20 w-full max-w-sm flex flex-col items-center">
+                    <div className="w-40 h-40 bg-gradient-to-br from-yellow-300 via-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-2xl relative mb-8">
+                        <Crown className="w-20 h-20 text-white drop-shadow-md" />
+                    </div>
+                    <h2 className="text-sm font-bold text-indigo-300 uppercase tracking-[0.2em] mb-2">Поздравляем!</h2>
+                    <h1 className="text-5xl font-black text-white mb-6">Уровень {level}<br/>Пройден</h1>
+                    <button onClick={handleFinish} className="w-full py-4 bg-white text-indigo-900 rounded-2xl font-black text-lg shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2">
+                        <span>Продолжить путь</span><ArrowRight className="w-6 h-6" />
+                    </button>
                 </div>
-                <h2 className="text-2xl font-bold text-slate-900 mb-2">Все выполнено!</h2>
-                <p className="text-slate-500 mb-8">
-                    {mode === 'review' ? 'Слов для повторения пока нет.' : 'Вы выучили все слова этого уровня или достигли лимита.'}
-                </p>
-                <button onClick={onComplete} className="px-8 py-3 bg-slate-900 text-white rounded-xl font-bold">
-                    Вернуться
-                </button>
             </div>
         );
     }
 
-    // Progress Bar
-    const progressPercent = ((currentIndex) / queue.length) * 100;
+    if (!currentWord && !completed) {
+        setCompleted(true);
+    }
+
+    if (completed) {
+        const isLimitReached = !progress.premiumStatus && localLearnedCount >= DAILY_LIMIT_FREE;
+        const canContinue = mode === 'daily' && !isLimitReached;
+
+        return (
+            <div className="h-screen bg-white flex flex-col items-center justify-center p-8 text-center relative">
+                <div className="w-24 h-24 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-6 mx-auto shadow-lg animate-bounce">
+                    <Check className="w-12 h-12" />
+                </div>
+                <h2 className="text-3xl font-extrabold text-slate-900 mb-2">Сессия завершена!</h2>
+                
+                {isLimitReached && mode === 'daily' ? (
+                     <div className="bg-amber-50 p-4 rounded-2xl border border-amber-100 mb-8 max-w-xs mx-auto animate-in fade-in zoom-in duration-300">
+                        <p className="text-amber-800 font-bold text-sm mb-1">Дневной лимит исчерпан</p>
+                        <p className="text-amber-600 text-xs">Возвращайтесь завтра. Сегодня сессия завершена.</p>
+                     </div>
+                ) : (
+                    <p className="text-slate-500 mb-8 max-w-xs mx-auto">
+                        {mode === 'daily' ? `Вы отлично справились с порцией из ${sessionWords.length} слов.` : "Вы повторили все запланированные слова."}
+                    </p>
+                )}
+                
+                <div className="w-full max-w-xs space-y-3">
+                    {canContinue && (
+                        <button onClick={handleContinue} className="w-full px-6 py-4 bg-violet-600 text-white rounded-2xl font-bold text-lg shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-2">
+                            <RotateCcw className="w-5 h-5" /> Учить еще
+                        </button>
+                    )}
+                    
+                    {isLimitReached && (
+                         <button onClick={handleBuyPremiumAction} className="w-full px-6 py-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-2xl font-bold text-lg shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-2">
+                            <Crown className="w-5 h-5" /> Снять лимиты (Premium)
+                        </button>
+                    )}
+                    
+                    <button onClick={handleFinish} className={`w-full px-6 py-4 rounded-2xl font-bold text-lg active:scale-95 transition-transform ${canContinue || isLimitReached ? 'bg-slate-100 text-slate-600' : 'bg-slate-900 text-white shadow-xl'}`}>
+                        В меню
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    if (!currentWord) return null;
 
     return (
-        <div className="bg-slate-50 min-h-screen pb-10 flex flex-col">
-            <Header 
-                title={mode === 'review' ? 'Повторение' : 'Новые слова'} 
-                subtitle={`${currentIndex + 1} из ${queue.length}`}
-                onBack={onComplete}
-                rightContent={
-                    <div className="w-24 h-1.5 bg-slate-200 rounded-full overflow-hidden">
-                        <div className="h-full bg-violet-600 transition-all duration-300" style={{ width: `${progressPercent}%` }}></div>
+        <div className="h-screen flex flex-col bg-slate-50 relative pb-safe overflow-hidden">
+            {/* Header */}
+            <div className="px-6 pt-6 pb-2 flex justify-between items-center z-20">
+                <button onClick={handleFinish} className="text-slate-400 hover:text-slate-600 p-2">
+                    <X className="w-6 h-6" />
+                </button>
+                <div className="flex gap-1.5 flex-1 mx-4 max-w-[200px]">
+                    <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                         <div className="h-full bg-violet-600 transition-all duration-300" style={{ width: `${((currentIndex) / sessionWords.length) * 100}%` }}></div>
                     </div>
-                }
-            />
+                </div>
+                <div className="w-10"></div>
+            </div>
 
-            <div className="flex-1 px-5 pt-4 pb-24 overflow-y-auto no-scrollbar">
-                <div className="relative perspective-1000 min-h-[400px]">
-                     <div 
-                        onClick={() => !isFlipped && setIsFlipped(true)}
-                        className={`relative w-full bg-white rounded-[2rem] shadow-xl border border-slate-100 transition-all duration-500 transform-style-3d p-6 flex flex-col items-center justify-center text-center min-h-[400px] ${!isFlipped ? 'cursor-pointer active:scale-[0.98]' : ''}`}
-                     >
-                        {!isFlipped ? (
-                            <div className="animate-in zoom-in duration-300">
-                                <span className="inline-block px-3 py-1 bg-slate-100 rounded-lg text-xs font-bold text-slate-500 uppercase mb-6 tracking-wide">
-                                    {currentWord.partOfSpeech}
-                                </span>
-                                <h2 className="text-5xl font-black text-slate-900 mb-4 break-words">{currentWord.term}</h2>
-                                <button 
-                                    onClick={(e) => { e.stopPropagation(); speak(currentWord.term); }}
-                                    className="w-14 h-14 bg-violet-50 text-violet-600 rounded-2xl flex items-center justify-center mx-auto hover:bg-violet-100 transition-colors"
-                                >
-                                    <Volume2 className="w-7 h-7" />
-                                </button>
-                                <p className="mt-8 text-slate-400 text-sm font-medium">Нажмите, чтобы перевернуть</p>
+            {/* Card */}
+            <div className="flex-1 px-4 py-2 flex flex-col relative w-full perspective-1000">
+                <div 
+                    className={`relative w-full h-full transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}
+                    onClick={() => { triggerHaptic('light'); setIsFlipped(!isFlipped); }}
+                >
+                    {/* FRONT */}
+                    <div className="absolute inset-0 bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 flex flex-col items-center justify-center text-center backface-hidden border border-slate-100 p-6 z-20">
+                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-auto pt-4">Нажмите, чтобы перевернуть</span>
+                        
+                        <div className="my-auto w-full">
+                            <h1 className="text-5xl font-extrabold text-slate-900 mb-3 tracking-tight">{currentWord.term}</h1>
+                            {currentWord.transcription && (
+                                <p className="text-violet-500 font-medium text-xl opacity-80 mb-8">{currentWord.transcription}</p>
+                            )}
+                            {/* Front Examples */}
+                            <div className="space-y-3 w-full text-left bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                                    {currentWord.examples.slice(0, 3).map((ex, i) => (
+                                        <div key={i} className="flex gap-3">
+                                            <div className="w-1.5 h-1.5 bg-violet-400 rounded-full mt-2 shrink-0"></div>
+                                            <p className="text-slate-700 text-base font-medium leading-snug">"{ex.en}"</p>
+                                        </div>
+                                    ))}
                             </div>
-                        ) : (
-                            <div className="w-full text-left animate-in fade-in duration-300">
-                                <div className="flex justify-between items-start mb-4">
-                                    <div>
-                                        <h2 className="text-3xl font-bold text-slate-900">{currentWord.term}</h2>
-                                        <p className="text-sm text-slate-400 font-mono">{currentWord.transcription}</p>
-                                    </div>
-                                    <button 
-                                        onClick={() => speak(currentWord.term)}
-                                        className="w-10 h-10 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center"
-                                    >
-                                        <Volume2 className="w-5 h-5" />
-                                    </button>
-                                </div>
-                                
-                                <div className="mb-6">
-                                    <h3 className="text-2xl font-bold text-violet-600 mb-2">{currentWord.translation}</h3>
-                                    <p className="text-slate-600 text-sm leading-relaxed font-medium">{currentWord.definition}</p>
-                                </div>
+                        </div>
 
-                                <div className="space-y-3 mb-6">
-                                    {currentWord.examples.slice(0, 2).map((ex, i) => (
-                                        <div key={i} className="pl-3 border-l-2 border-slate-200">
-                                            <p className="text-slate-800 text-sm font-medium">"{ex.en}"</p>
-                                            <p className="text-slate-500 text-xs">{ex.ru}</p>
+                         <div className="mt-auto pb-4">
+                            <button 
+                                onClick={(e) => { e.stopPropagation(); triggerHaptic('light'); handleSpeak(currentWord.term); }}
+                                className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${isPlaying ? 'bg-violet-600 text-white scale-110' : 'bg-violet-50 text-violet-600 hover:bg-violet-100'}`}
+                            >
+                                <Volume2 className="w-7 h-7" />
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* BACK */}
+                    <div className="absolute inset-0 bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 flex flex-col w-full backface-hidden border border-slate-100 rotate-y-180 overflow-hidden z-20">
+                        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                             <div className="flex justify-between items-start pb-4 border-b border-slate-50">
+                                <div>
+                                    <h2 className="text-3xl font-bold text-slate-900">{currentWord.term}</h2>
+                                    <p className="text-xl text-violet-600 font-bold mt-1">{currentWord.translation}</p>
+                                </div>
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); handleSpeak(currentWord.term); }}
+                                    className="p-3 border border-slate-100 rounded-xl active:bg-slate-50"
+                                >
+                                    <Volume2 className="w-6 h-6 text-slate-600" />
+                                </button>
+                            </div>
+
+                            <div className="flex gap-2 flex-wrap">
+                                {currentWord.register && (
+                                    <span className={`px-2 py-1 text-xs font-bold rounded-lg uppercase flex items-center gap-1 ${getRegisterBadgeClass(currentWord.register)}`}>
+                                        <Tag className="w-3 h-3"/> {currentWord.register}
+                                    </span>
+                                )}
+                                <span className="px-2 py-1 bg-slate-100 text-slate-500 text-xs font-bold rounded-lg uppercase">{currentWord.partOfSpeech}</span>
+                                {currentWord.frequency && (
+                                    <span className="px-2 py-1 bg-slate-100 text-slate-500 text-xs font-bold rounded-lg uppercase">{currentWord.frequency} FREQ</span>
+                                )}
+                            </div>
+
+                            <div>
+                                <span className="text-xs font-bold text-slate-400 uppercase block mb-2 tracking-wide">Определение</span>
+                                <p className="text-slate-800 text-lg leading-relaxed font-medium">{currentWord.definition}</p>
+                            </div>
+
+                            {/* Usage Context */}
+                            {currentWord.usageContext && (
+                                <div className="bg-emerald-50 rounded-2xl p-4 border border-emerald-100">
+                                    <div className="flex items-center gap-2 mb-2 text-emerald-700">
+                                        <Lightbulb className="w-4 h-4" />
+                                        <span className="font-bold text-xs uppercase">Контекст использования</span>
+                                    </div>
+                                    <p className="text-sm text-slate-700 whitespace-pre-line leading-relaxed">{currentWord.usageContext}</p>
+                                </div>
+                            )}
+
+                            {/* Examples on Back */}
+                            <div>
+                                <span className="text-xs font-bold text-slate-400 uppercase block mb-3 tracking-wide">Примеры</span>
+                                <div className="space-y-4">
+                                    {currentWord.examples.map((ex, i) => (
+                                        <div key={i} className="pl-3 border-l-2 border-violet-200">
+                                            <p className="text-slate-900 font-medium mb-1">"{ex.en}"</p>
+                                            <p className="text-slate-500 text-sm">{ex.ru}</p>
                                         </div>
                                     ))}
                                 </div>
+                            </div>
 
-                                {/* AI Explanation Section */}
-                                {aiData ? (
-                                    <div className="bg-indigo-50/50 rounded-2xl p-4 border border-indigo-100 animate-in slide-in-from-bottom-2">
-                                        <div className="flex items-center gap-2 mb-3">
-                                            <Brain className="w-4 h-4 text-indigo-600" />
-                                            <span className="text-xs font-bold text-indigo-700 uppercase">AI Тьютор</span>
+                            {/* AI Content */}
+                            {aiData && (
+                                <div className="space-y-4 animate-in fade-in zoom-in duration-500 pt-6 border-t border-slate-100">
+                                    <div className="bg-violet-50 rounded-2xl p-5 border border-violet-100">
+                                        <div className="flex items-center gap-2 mb-3 text-violet-700">
+                                            <GraduationCap className="w-5 h-5" />
+                                            <span className="font-bold text-sm uppercase">AI Разбор</span>
                                         </div>
+                                        <p className="text-sm text-slate-900 leading-relaxed mb-3">{aiData.detailedExplanation}</p>
                                         
-                                        <p className="text-sm text-slate-800 mb-3 leading-relaxed">{aiData.detailedExplanation}</p>
-                                        
-                                        {aiData.mnemonic && (
-                                            <div className="bg-white/60 p-3 rounded-xl mb-3">
-                                                <span className="text-[10px] font-bold text-indigo-400 uppercase block mb-1">Мнемотехника</span>
-                                                <p className="text-xs text-indigo-900 font-medium italic">"{aiData.mnemonic}"</p>
-                                            </div>
-                                        )}
-
-                                        {aiData.collocations && aiData.collocations.length > 0 && (
-                                            <div className="flex flex-wrap gap-2">
-                                                {aiData.collocations.slice(0,3).map((col, idx) => (
-                                                    <span key={idx} className="text-[10px] px-2 py-1 bg-white border border-indigo-100 rounded-md text-slate-600">
-                                                        {col.en}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        )}
-
-                                        {aiData.extraExamples && aiData.extraExamples.length > 0 && (
-                                            <div className="mt-4 pt-4 border-t border-indigo-100/50">
-                                                <span className="text-[10px] font-bold text-indigo-400 uppercase block mb-2">Еще примеры</span>
-                                                <div className="space-y-2">
-                                                    {aiData.extraExamples.map((ex, i) => (
-                                                        <div key={i} className="pl-2 border-l-2 border-indigo-200">
-                                                            <p className="text-slate-800 text-xs font-medium">"{ex.en}"</p>
-                                                            <p className="text-slate-500 text-[10px]">{ex.ru}</p>
-                                                        </div>
-                                                    ))}
-                                                </div>
+                                        {aiData.nuance && (
+                                            <div className="mt-3 pt-3 border-t border-violet-200/50">
+                                                <span className="text-xs font-bold text-violet-500 uppercase block mb-1">Нюансы</span>
+                                                <p className="text-sm text-slate-700">{aiData.nuance}</p>
                                             </div>
                                         )}
                                     </div>
-                                ) : (
-                                    <button 
-                                        onClick={handleExplainAI}
-                                        disabled={isAiLoading}
-                                        className="w-full py-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors border border-indigo-100 border-dashed"
-                                    >
-                                        {isAiLoading ? <Loader2 className="w-4 h-4 animate-spin"/> : <Sparkles className="w-4 h-4" />}
-                                        {isAiLoading ? 'Генерирую...' : 'Объяснить с помощью AI'}
-                                    </button>
+
+                                    {aiData.collocations && aiData.collocations.length > 0 && (
+                                        <div className="bg-sky-50 rounded-2xl p-4 border border-sky-100">
+                                            <div className="flex items-center gap-2 mb-2 text-sky-700">
+                                                <Quote className="w-4 h-4" />
+                                                <span className="font-bold text-xs uppercase">Устойчивые фразы</span>
+                                            </div>
+                                            <ul className="space-y-2">
+                                                {aiData.collocations.map((col, i) => (
+                                                    <li key={i} className="text-sm text-slate-700">
+                                                        <span className="font-bold text-sky-800">{col.en}</span> - {col.ru}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+
+                                    <div className="bg-amber-50 rounded-2xl p-4 border border-amber-100">
+                                            <div className="flex items-center gap-2 mb-2 text-amber-700">
+                                            <Brain className="w-4 h-4" />
+                                            <span className="font-bold text-xs uppercase">Запоминалка</span>
+                                        </div>
+                                        <p className="text-sm text-slate-800 italic font-medium">"{aiData.mnemonic}"</p>
+                                    </div>
+
+                                    {/* Moved Extra Examples to the bottom */}
+                                    {aiData.extraExamples && aiData.extraExamples.length > 0 && (
+                                        <div className="bg-violet-50 rounded-2xl p-5 border border-violet-100">
+                                            <span className="text-xs font-bold text-violet-500 uppercase block mb-2">Еще примеры</span>
+                                            <div className="space-y-3">
+                                                {aiData.extraExamples.map((ex, i) => (
+                                                    <div key={i} className="pl-2 border-l-2 border-violet-300">
+                                                        <p className="text-slate-800 text-xs font-medium mb-0.5">"{ex.en}"</p>
+                                                        <p className="text-slate-500 text-[10px]">{ex.ru}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                             {/* AI Button */}
+                            <div className="pt-4 pb-20">
+                                {aiError && (
+                                    <div className={`mb-3 p-3 border rounded-xl text-xs font-bold text-center flex items-center justify-center gap-2 ${aiError.toLowerCase().includes('limit') || aiError.toLowerCase().includes('лимит') ? 'bg-amber-50 border-amber-100 text-amber-700' : 'bg-rose-50 border-rose-100 text-rose-600'}`}>
+                                        {aiError.toLowerCase().includes('limit') || aiError.toLowerCase().includes('лимит') ? <Crown className="w-4 h-4"/> : <WifiOff className="w-4 h-4"/>} 
+                                        {aiError}
+                                    </div>
                                 )}
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); handleAI(); }}
+                                    disabled={isLoadingAI}
+                                    className={`w-full py-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform ${isLoadingAI ? 'bg-slate-100 text-slate-400' : aiData ? 'bg-white border-2 border-violet-100 text-violet-600' : 'bg-slate-900 text-white'}`}
+                                >
+                                    {isLoadingAI ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
+                                    {isLoadingAI ? 'Генерирую...' : aiData ? 'Сгенерировать еще раз' : 'AI Учитель: Полный разбор'}
+                                </button>
                             </div>
-                        )}
-                     </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {/* CONTROLS */}
-            <div className="fixed bottom-0 left-0 right-0 p-5 bg-white/90 backdrop-blur-xl border-t border-slate-200 z-40 max-w-md mx-auto">
-                {!isFlipped ? (
-                    <button 
-                        onClick={() => { triggerHaptic('light'); setIsFlipped(true); }}
-                        className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] transition-transform"
-                    >
-                        Показать ответ
+            {/* ACTION BUTTONS */}
+            <div className="px-6 pb-6 pt-2 z-30">
+                <div className="grid grid-cols-3 gap-3">
+                    <button onClick={() => handleRating('hard')} className="h-14 rounded-2xl bg-rose-50 text-rose-600 font-bold border-2 border-rose-100 active:bg-rose-100 active:scale-95 transition-all flex flex-col items-center justify-center gap-0.5">
+                        <div className="flex items-center gap-1"><Brain className="w-4 h-4" /><span className="text-[10px] uppercase">Сложно</span></div>
+                        <span className="text-[10px] opacity-70 font-medium">{getNextIntervalLabel('hard')}</span>
                     </button>
-                ) : (
-                    <div className="grid grid-cols-3 gap-3">
-                         {/* REVIEW MODE BUTTONS (SRS) or LEARNING MODE BUTTONS */}
-                         {mode === 'review' ? (
-                             <>
-                                <button onClick={() => handleNext('hard')} className="py-4 bg-rose-100 text-rose-600 rounded-2xl font-bold flex flex-col items-center justify-center gap-1 active:scale-95 transition-transform">
-                                    <span className="text-sm">Сложно</span>
-                                    <span className="text-[10px] opacity-70">Сброс</span>
-                                </button>
-                                <button onClick={() => handleNext('medium')} className="py-4 bg-amber-100 text-amber-600 rounded-2xl font-bold flex flex-col items-center justify-center gap-1 active:scale-95 transition-transform">
-                                    <span className="text-sm">Нормально</span>
-                                    <span className="text-[10px] opacity-70">1 день</span>
-                                </button>
-                                <button onClick={() => handleNext('easy')} className="py-4 bg-emerald-100 text-emerald-600 rounded-2xl font-bold flex flex-col items-center justify-center gap-1 active:scale-95 transition-transform">
-                                    <span className="text-sm">Легко</span>
-                                    <span className="text-[10px] opacity-70">3 дня</span>
-                                </button>
-                             </>
-                         ) : (
-                             // DAILY LEARNING (Simple "Next")
-                             <button onClick={() => handleNext('medium')} className="col-span-3 py-4 bg-emerald-500 text-white rounded-2xl font-bold text-lg shadow-lg shadow-emerald-200 active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
-                                 Запомнил <ArrowRight className="w-5 h-5" />
-                             </button>
-                         )}
-                    </div>
-                )}
+                    <button onClick={() => handleRating('medium')} className="h-14 rounded-2xl bg-amber-50 text-amber-600 font-bold border-2 border-amber-100 active:bg-amber-100 active:scale-95 transition-all flex flex-col items-center justify-center gap-0.5">
+                        <div className="flex items-center gap-1"><ThumbsUp className="w-4 h-4" /><span className="text-[10px] uppercase">Нормально</span></div>
+                        <span className="text-[10px] opacity-70 font-medium">{getNextIntervalLabel('medium')}</span>
+                    </button>
+                    <button onClick={() => handleRating('easy')} className="h-14 rounded-2xl bg-emerald-50 text-emerald-600 font-bold border-2 border-emerald-100 active:bg-emerald-100 active:scale-95 transition-all flex flex-col items-center justify-center gap-0.5">
+                        <div className="flex items-center gap-1"><Zap className="w-4 h-4 fill-current" /><span className="text-[10px] uppercase">Легко</span></div>
+                        <span className="text-[10px] opacity-70 font-medium">{getNextIntervalLabel('easy')}</span>
+                    </button>
+                </div>
             </div>
         </div>
     );
