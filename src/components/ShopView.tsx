@@ -34,37 +34,37 @@ export const ShopView: React.FC<ShopViewProps> = ({ progress, onBack, onUpdate, 
     };
 
     const items = [
-        { id: 'timeFreeze', name: 'Заморозка', desc: 'Останови время на 5 сек в Блице', icon: Snowflake, price: 100, color: 'text-cyan-500', bg: 'bg-cyan-100' },
-        { id: 'bomb', name: 'Бомба', desc: 'Убирает неверные ответы', icon: Bomb, price: 150, color: 'text-rose-500', bg: 'bg-rose-100' },
-        { id: 'streakFreeze', name: 'Защита серии', desc: 'Сохраняет серию при пропуске дня', icon: ShieldCheck, price: 500, color: 'text-emerald-500', bg: 'bg-emerald-100' },
+        { id: 'timeFreeze', name: 'Заморозка', desc: 'Останови время на 5 сек в Блице', icon: Snowflake, price: 100, color: 'text-cyan-500', bg: 'bg-cyan-100 dark:bg-cyan-900/30' },
+        { id: 'bomb', name: 'Бомба', desc: 'Убирает неверные ответы', icon: Bomb, price: 150, color: 'text-rose-500', bg: 'bg-rose-100 dark:bg-rose-900/30' },
+        { id: 'streakFreeze', name: 'Защита серии', desc: 'Сохраняет серию при пропуске дня', icon: ShieldCheck, price: 500, color: 'text-emerald-500', bg: 'bg-emerald-100 dark:bg-emerald-900/30' },
     ];
 
     return (
-        <div className="bg-slate-50 min-h-screen pb-32">
+        <div className="bg-slate-50 dark:bg-slate-950 min-h-screen pb-32 transition-colors duration-300">
             <Header title="Магазин" onBack={onBack} rightContent={
-                <div className="flex items-center gap-1.5 bg-yellow-100 px-3 py-1.5 rounded-full border border-yellow-200">
-                    <Coins className="w-4 h-4 text-yellow-600" />
-                    <span className="font-bold text-yellow-700 text-sm">{progress.wallet.coins}</span>
+                <div className="flex items-center gap-1.5 bg-yellow-100 dark:bg-yellow-900/30 px-3 py-1.5 rounded-full border border-yellow-200 dark:border-yellow-900/50">
+                    <Coins className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
+                    <span className="font-bold text-yellow-700 dark:text-yellow-400 text-sm">{progress.wallet.coins}</span>
                 </div>
             } />
             
             <div className="p-5 grid grid-cols-1 gap-4">
                 {items.map(item => (
-                    <div key={item.id} className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex items-center justify-between">
+                    <div key={item.id} className="bg-white dark:bg-slate-900 p-4 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${item.bg} ${item.color}`}>
                                 <item.icon className="w-7 h-7" />
                             </div>
                             <div>
-                                <h3 className="font-bold text-slate-900">{item.name}</h3>
-                                <p className="text-xs text-slate-500 max-w-[150px] leading-tight mt-0.5">{item.desc}</p>
-                                <p className="text-xs font-bold text-slate-400 mt-2 uppercase">В наличии: {(progress.inventory as any)[item.id]}</p>
+                                <h3 className="font-bold text-slate-900 dark:text-white">{item.name}</h3>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-[150px] leading-tight mt-0.5">{item.desc}</p>
+                                <p className="text-xs font-bold text-slate-400 dark:text-slate-500 mt-2 uppercase">В наличии: {(progress.inventory as any)[item.id]}</p>
                             </div>
                         </div>
                         <button 
                             onClick={() => handleBuy(item.id as any, item.price)}
                             disabled={isLoading || progress.wallet.coins < item.price}
-                            className={`px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-1 transition-all ${progress.wallet.coins >= item.price ? 'bg-slate-900 text-white active:scale-95' : 'bg-slate-100 text-slate-400'}`}
+                            className={`px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-1 transition-all ${progress.wallet.coins >= item.price ? 'bg-slate-900 dark:bg-violet-600 text-white active:scale-95' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600'}`}
                         >
                             <Coins className="w-3 h-3" />
                             {item.price}

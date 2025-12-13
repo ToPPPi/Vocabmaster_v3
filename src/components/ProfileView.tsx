@@ -16,7 +16,7 @@ interface ProfileViewProps {
 }
 
 const BenefitRow = ({ icon: Icon, title, free, premium, highlight }: any) => (
-    <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm transition-colors">
+    <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm transition-colors">
         <div className="flex items-center gap-2 mb-2">
             <Icon className="w-5 h-5 text-violet-600 dark:text-violet-400" />
             <span className="font-bold text-slate-900 dark:text-white text-sm">{title}</span>
@@ -276,7 +276,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                             </div>
                         )}
                         {isPremium && (
-                            <div className="absolute -top-1 -right-1 bg-white dark:bg-slate-800 rounded-full p-0.5 shadow-sm">
+                            <div className="absolute -top-1 -right-1 bg-white dark:bg-slate-900 rounded-full p-0.5 shadow-sm">
                                 <div className="bg-gradient-to-br from-yellow-300 to-amber-500 rounded-full w-6 h-6 flex items-center justify-center">
                                     <Crown className="w-3.5 h-3.5 text-white fill-white" />
                                 </div>
@@ -552,7 +552,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ progress, onUpdate, on
                     <div className="space-y-3">
                         <button 
                             onClick={handleDevPremium}
-                            className="w-full py-2 bg-slate-800 text-slate-200 text-xs font-mono rounded-xl opacity-80 hover:opacity-100 transition-opacity"
+                            className="w-full py-2 bg-slate-800 dark:bg-slate-800 text-slate-200 text-xs font-mono rounded-xl opacity-80 hover:opacity-100 transition-opacity"
                         >
                             [DEV] Grant Premium
                         </button>
