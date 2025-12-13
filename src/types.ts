@@ -63,6 +63,7 @@ export interface UserProgress {
   // Sync Meta
   lastLocalUpdate: number; // When was the DB last touched locally
   lastCloudSync: number;   // When was the last successful upload to Telegram Cloud
+  lastTelegramBackup?: number; // Timestamp of last file sent to bot chat
   
   wordsLearnedToday: number;
   aiGenerationsToday: number;

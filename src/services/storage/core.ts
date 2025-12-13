@@ -11,6 +11,7 @@ export const INITIAL_PROGRESS: UserProgress = {
   lastLoginDate: '', 
   lastLocalUpdate: Date.now(),
   lastCloudSync: 0,
+  lastTelegramBackup: 0,
   wordsLearnedToday: 0,
   aiGenerationsToday: 0,
   darkMode: false,
@@ -60,6 +61,10 @@ export const initUserProgress = async (): Promise<{ data: UserProgress, hasConfl
 
         // 3. Use local data
         memoryCache = localData;
+        
+        // Check triggers
+        checkAutoBackup(localData);
+
         return { 
             data: checkDailyReset(localData), 
             hasConflict: false 
@@ -222,6 +227,45 @@ export const exportUserData = async (): Promise<string> => {
     } catch (e) {
         console.error("Export failed", e);
         return "";
+    }
+};
+
+// --- AUTOMATIC TELEGRAM BACKUP ---
+const BACKUP_INTERVAL = 3 * 24 * 60 * 60 * 1000; // 3 Days
+
+const checkAutoBackup = async (progress: UserProgress) => {
+    const now = Date.now();
+    const lastBackup = progress.lastTelegramBackup || 0;
+    const initData = window.Telegram?.WebApp?.initData;
+
+    // Must be in Telegram, and interval must have passed
+    if (initData && (now - lastBackup > BACKUP_INTERVAL)) {
+        console.log("📦 Starting Automatic Backup to Telegram Chat...");
+        try {
+            const code = await exportUserData();
+            const dateStr = new Date().toLocaleDateString('ru-RU');
+            
+            // Send to backend proxy
+            const response = await fetch('/api/backup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    initData, 
+                    backupData: code,
+                    filename: `vocabmaster_backup_${dateStr}.txt`
+                })
+            });
+
+            if (response.ok) {
+                progress.lastTelegramBackup = now;
+                await saveUserProgress(progress);
+                console.log("✅ Backup sent successfully");
+            } else {
+                console.error("Backup failed", await response.json());
+            }
+        } catch (e) {
+            console.error("Auto backup error:", e);
+        }
     }
 };
 

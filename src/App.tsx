@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Loader2, LayoutGrid, Layers, BarChart3, Library, User as UserIcon, Zap } from 'lucide-react';
 import { ProficiencyLevel, ViewState, UserProgress } from './types';
-import { initUserProgress, downloadCloudData, saveUserProgress, completeOnboarding, syncTelegramUserData, logoutUser, nukeEverything } from './services/storageService'; // Updated imports
+import { initUserProgress, downloadCloudData, saveUserProgress, completeOnboarding, syncTelegramUserData, logoutUser, nukeEverything, INITIAL_PROGRESS } from './services/storageService'; // Updated imports
 import { triggerHaptic } from './utils/uiHelpers';
 
 // Components
@@ -37,24 +37,26 @@ const App: React.FC = () => {
   const [scrollToPremium, setScrollToPremium] = useState(false);
 
   useEffect(() => {
+      let isMounted = true;
+
+      // 1. MAIN LOAD LOGIC
       const load = async () => {
           try {
-              // --- EMERGENCY RESET CHECK ---
-              // If user opens with ?startapp=reset, we wipe everything before loading
+              // Emergency Reset Check
               const startParam = window.Telegram?.WebApp?.initDataUnsafe?.start_param;
               if (startParam === 'reset') {
                   console.log("🚨 EMERGENCY RESET TRIGGERED via Start Param");
                   await nukeEverything();
-                  // Remove param from URL cleanly if possible, or just proceed
               }
 
-              // Use new init function that checks for conflicts
+              // Load Progress
               const { data, hasConflict, cloudDate } = await initUserProgress();
               
+              if (!isMounted) return;
+
               if (hasConflict && cloudDate) {
-                  // Pause loading, show conflict modal
                   setConflictData({ localDate: data.lastLocalUpdate, cloudDate: cloudDate });
-                  setProgress(data); // Show local momentarily behind modal
+                  setProgress(data); 
               } else {
                   setProgress(data);
                   if (data.hasSeenOnboarding) setView('dashboard');
@@ -62,16 +64,17 @@ const App: React.FC = () => {
               }
 
               try {
-                  await syncTelegramUserData(); // Sync name and photo
+                  await syncTelegramUserData();
               } catch (e) {
                   console.warn("Telegram sync failed:", e);
               }
           } catch (e) {
               console.error("Critical app initialization failure:", e);
-              // In case of critical failure, retry with a fresh init or just let ErrorBoundary catch rendering
-              // However, since initUserProgress now has a try-catch fallback, we shouldn't reach here often.
+              if (isMounted && !progress) {
+                  // Final fallback if init crashes
+                  setProgress({ ...INITIAL_PROGRESS });
+              }
           } finally {
-              // Always signal Ready to Telegram, otherwise app might hang on loading screen
               if (window.Telegram?.WebApp) {
                 window.Telegram.WebApp.ready();
                 window.Telegram.WebApp.expand();
@@ -80,7 +83,25 @@ const App: React.FC = () => {
             }
           }
       };
+
       load();
+
+      // 2. SAFETY TIMEOUT (FAILSAFE)
+      // If DB hangs for more than 3 seconds (even with internal timeout), force load defaults
+      // This solves the "Endless Loading" on corrupted Android caches
+      const failsafeTimer = setTimeout(() => {
+          if (!progress) {
+              console.warn("⚠️ App Load Timeout - Forcing Default State");
+              setProgress({ ...INITIAL_PROGRESS });
+              setView('onboarding');
+              if (window.Telegram?.WebApp) window.Telegram.WebApp.ready();
+          }
+      }, 3000);
+
+      return () => { 
+          isMounted = false; 
+          clearTimeout(failsafeTimer);
+      };
   }, []);
 
   const handleConflictResolve = async (useCloud: boolean) => {
@@ -149,7 +170,6 @@ const App: React.FC = () => {
   }, [view]);
 
   const refreshProgress = async () => {
-      // Re-fetch using init is safe as it hits memory cache first
       const { data } = await initUserProgress();
       setProgress({ ...data });
       if(!data.hasSeenOnboarding && view !== 'onboarding') setView('onboarding');
