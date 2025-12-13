@@ -1,5 +1,6 @@
 
 import { UserProgress } from '../../types';
+// We keep the import to satisfy TS, but it's now a dummy service
 import { idbService } from './indexedDB';
 
 export const STORAGE_KEY = 'vocabmaster_user_v5_ru';
@@ -42,72 +43,34 @@ let memoryCache: UserProgress | null = null;
 // --- CORE FUNCTIONS ---
 
 export const initUserProgress = async (): Promise<{ data: UserProgress, hasConflict: boolean, cloudDate?: number }> => {
-    // STRATEGY: INSTANT BOOT
-    // 1. Try LocalStorage FIRST. It is synchronous and fast. 
-    // If we find data here, we return IMMEDIATELY to render the UI. 
-    // We do NOT wait for IndexedDB to open, as it hangs on some Android WebViews.
+    console.log("🚀 MOBILE SAFE BOOT: Initializing...");
+    
+    // STRATEGY: LOCALSTORAGE ONLY (Synchronous & Safe)
+    // We removed the race condition with IndexedDB because it freezes mobile WebViews.
     
     let localData: UserProgress | null = null;
+    
     try {
         const rawLS = localStorage.getItem(STORAGE_KEY);
         if (rawLS) {
             localData = JSON.parse(rawLS);
-            console.log("🚀 Fast Boot: Loaded from LocalStorage");
+            console.log("✅ Data loaded from LocalStorage");
         }
     } catch (e) {
-        console.warn("LocalStorage error:", e);
+        console.error("LocalStorage corrupted. Resetting.", e);
+        // If data is corrupted, we must return clean state to prevent crash
+        localStorage.removeItem(STORAGE_KEY);
     }
 
     if (localData) {
         memoryCache = localData;
-        
-        // Fire and forget: Try to sync with IDB in background, but don't block the UI
-        syncIdbInBackground(localData);
-        
         return { data: checkDailyReset(localData), hasConflict: false };
     }
 
-    // 2. Slow Path: Only if LS is empty (New user or cleared cache)
-    // We try IDB with a strict timeout race.
-    try {
-        const idbPromise = idbService.load();
-        const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1000));
-        
-        // Race: if IDB takes > 1s, we give up and start fresh
-        const idbData = await Promise.race([idbPromise, timeoutPromise]);
-        
-        if (idbData) {
-            console.log("📂 Loaded from IndexedDB (Fallback)");
-            // Save to LS for next time to be fast
-            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(idbData)); } catch(e){}
-            memoryCache = idbData;
-            return { data: checkDailyReset(idbData), hasConflict: false };
-        }
-    } catch (e) {
-        console.warn("IDB Failed completely:", e);
-    }
-
-    // 3. New User
-    console.log("🌟 New User (Fresh Start)");
+    // New User or After Clear
+    console.log("🌟 New User / Empty State");
     memoryCache = { ...INITIAL_PROGRESS };
     return { data: memoryCache, hasConflict: false };
-};
-
-// Helper to attempt IDB sync without blocking
-const syncIdbInBackground = async (currentData: UserProgress) => {
-    try {
-        // Try to load from IDB to see if it has newer data (orphaned)
-        // If IDB is broken, this will fail silently in the background
-        const idbData = await idbService.load();
-        if (idbData && idbData.lastLocalUpdate > currentData.lastLocalUpdate) {
-            console.log("⚠️ Found newer data in IDB background. Merging next save.");
-            // In a real app we might trigger a reload, but here we just accept LS as truth 
-            // to prevent loops, unless the difference is huge. 
-            // For now, we assume LS is the source of truth for this session.
-        }
-    } catch (e) {
-        // Ignore background errors
-    }
 };
 
 export const getUserProgress = async (): Promise<UserProgress> => {
@@ -122,18 +85,13 @@ export const saveUserProgress = async (progress: UserProgress, forceCloudUpload 
     progress.lastLocalUpdate = Date.now();
     memoryCache = progress;
     
-    // 1. Critical: Save to LocalStorage (Sync, Reliable)
+    // Critical: Save to LocalStorage (Sync, Reliable)
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
     } catch (e) {
         console.error("LS Save Error (Quota?)", e);
+        // On mobile, if quota exceeded, we might want to alert, but for now we just log
     }
-
-    // 2. Best Effort: Save to IndexedDB (Async)
-    // We don't await this so UI doesn't freeze
-    idbService.save(progress).catch(err => {
-        console.warn("Background IDB Save Failed", err);
-    });
 };
 
 export const checkDailyReset = (progress: UserProgress): UserProgress => {
@@ -192,8 +150,9 @@ export const syncTelegramUserData = async () => {
 };
 
 export const resetUserProgress = async (): Promise<UserProgress> => {
+    console.log("💣 FACTORY RESET TRIGGERED");
     try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-    try { await idbService.deleteDatabase(); } catch (e) {}
+    try { localStorage.clear(); } catch(e) {} // Hard clear everything
     memoryCache = { ...INITIAL_PROGRESS };
     return memoryCache;
 };

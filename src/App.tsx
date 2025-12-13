@@ -35,12 +35,12 @@ const App: React.FC = () => {
   const [showEmergencyReset, setShowEmergencyReset] = useState(false);
 
   useEffect(() => {
-      // Emergency timer: Force show Reset button if JS thread is alive but waiting
+      // Emergency timer: Force show Reset button very quickly on mobile
       const timer = setTimeout(() => {
           if (!progress) {
               setShowEmergencyReset(true);
           }
-      }, 2500);
+      }, 1000); // Reduced from 2500 to 1000ms
 
       const load = async () => {
           try {
@@ -94,8 +94,9 @@ const App: React.FC = () => {
   };
 
   const handleEmergencyReset = async () => {
-      if (window.confirm("Приложение не запускается? Сброс данных исправит это.")) {
+      if (window.confirm("Это удалит ВСЕ данные и перезапустит приложение. Продолжить?")) {
           await resetUserProgress();
+          // Force reload ignoring cache
           window.location.reload();
       }
   };
@@ -152,21 +153,21 @@ const App: React.FC = () => {
           <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 p-6 text-center">
               <Loader2 className="w-10 h-10 animate-spin text-violet-600 mb-6"/>
               
-              <div className={`transition-opacity duration-1000 ${showEmergencyReset ? 'opacity-100' : 'opacity-0'}`}>
+              <div className={`transition-opacity duration-500 ${showEmergencyReset ? 'opacity-100' : 'opacity-0'}`}>
                   <div className="w-full max-w-xs space-y-4">
                       <div className="bg-rose-50 dark:bg-rose-900/20 p-4 rounded-2xl border border-rose-100 dark:border-rose-800">
                           <p className="text-sm font-bold text-rose-700 dark:text-rose-300 mb-1">
-                              Долгая загрузка?
+                              Мобильная версия зависла?
                           </p>
                           <p className="text-xs text-rose-600 dark:text-rose-400">
-                              Если приложение зависло, нажмите кнопку ниже для сброса.
+                              Нажмите кнопку ниже, чтобы сбросить локальную базу данных.
                           </p>
                       </div>
                       <button 
                           onClick={handleEmergencyReset}
                           className="w-full py-3 bg-slate-900 dark:bg-slate-800 text-white rounded-xl font-bold text-sm shadow-lg active:scale-95 transition-transform"
                       >
-                          Сбросить и Запустить
+                          Сброс и Запуск
                       </button>
                   </div>
               </div>
