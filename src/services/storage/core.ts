@@ -66,7 +66,18 @@ const syncTime = async () => {
 
 export const getSecureNow = () => Date.now() + serverTimeOffset;
 
-// --- CLOUD STORAGE HELPERS (Promisified) ---
+// --- CLOUD STORAGE HELPERS (Promisified & Timeout Safe) ---
+
+// Helper to prevent hanging promises
+const withTimeout = <T>(promise: Promise<T>, ms: number = 3000, fallback: T): Promise<T> => {
+    return Promise.race([
+        promise,
+        new Promise<T>((resolve) => setTimeout(() => {
+            console.warn(`Storage operation timed out after ${ms}ms`);
+            resolve(fallback);
+        }, ms))
+    ]);
+};
 
 const tgStorage = {
     isSupported: () => {
@@ -74,7 +85,7 @@ const tgStorage = {
         return webApp && webApp.isVersionAtLeast && webApp.isVersionAtLeast('6.9');
     },
     setItem: (key: string, value: string): Promise<boolean> => {
-        return new Promise((resolve) => {
+        const op = new Promise<boolean>((resolve) => {
             window.Telegram!.WebApp.CloudStorage.setItem(key, value, (err, stored) => {
                 if (err) {
                     console.error('CloudStorage setItem error:', err);
@@ -84,9 +95,10 @@ const tgStorage = {
                 }
             });
         });
+        return withTimeout(op, 3000, false);
     },
     getItem: (key: string): Promise<string | null> => {
-        return new Promise((resolve) => {
+        const op = new Promise<string | null>((resolve) => {
             window.Telegram!.WebApp.CloudStorage.getItem(key, (err, value) => {
                 if (err) {
                     console.error('CloudStorage getItem error:', err);
@@ -96,9 +108,10 @@ const tgStorage = {
                 }
             });
         });
+        return withTimeout(op, 3000, null);
     },
     getItems: (keys: string[]): Promise<Record<string, string> | null> => {
-        return new Promise((resolve) => {
+        const op = new Promise<Record<string, string> | null>((resolve) => {
             window.Telegram!.WebApp.CloudStorage.getItems(keys, (err, values) => {
                 if (err) {
                     console.error('CloudStorage getItems error:', err);
@@ -108,20 +121,23 @@ const tgStorage = {
                 }
             });
         });
+        return withTimeout(op, 5000, null);
     },
     removeItem: (key: string): Promise<boolean> => {
-        return new Promise((resolve) => {
+        const op = new Promise<boolean>((resolve) => {
             window.Telegram!.WebApp.CloudStorage.removeItem(key, (err, deleted) => {
                 resolve(!err && deleted);
             });
         });
+        return withTimeout(op, 3000, false);
     },
     removeItems: (keys: string[]): Promise<boolean> => {
-        return new Promise((resolve) => {
+        const op = new Promise<boolean>((resolve) => {
             window.Telegram!.WebApp.CloudStorage.removeItems(keys, (err, deleted) => {
                 resolve(!err && deleted);
             });
         });
+        return withTimeout(op, 3000, false);
     }
 };
 
@@ -304,6 +320,8 @@ export const getUserProgress = async (): Promise<UserProgress> => {
   if (!memoryCache.usedPromoCodes) memoryCache.usedPromoCodes = [];
   if (memoryCache.photoUrl === undefined) memoryCache.photoUrl = '';
   if (memoryCache.premiumExpiration === undefined) memoryCache.premiumExpiration = null;
+  // Ensure strict boolean for onboarding
+  if (typeof memoryCache.hasSeenOnboarding === 'undefined') memoryCache.hasSeenOnboarding = false;
 
   return checkDailyReset(memoryCache);
 };
@@ -426,6 +444,9 @@ export const logoutUser = async (): Promise<void> => {
     // safely to the Landing Page logic.
     const progress = await getUserProgress();
     progress.hasSeenOnboarding = false;
+    
+    // NOTE: This will now time out after 3s if cloud is unresponsive,
+    // ensuring the UI doesn't hang forever.
     await saveUserProgress(progress, true);
 };
 

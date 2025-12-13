@@ -131,11 +131,17 @@ const App: React.FC = () => {
   };
 
   const handleLogout = async () => {
-      // Explicitly set hasSeenOnboarding to false so UI and Data are in sync
-      await logoutUser();
-      // Refresh local state to reflect this change
-      await refreshProgress();
-      setView('onboarding');
+      triggerHaptic('medium');
+      try {
+          // Force logout logic even if storage is slow
+          await logoutUser();
+          await refreshProgress();
+      } catch (e) {
+          console.error("Logout failed:", e);
+      } finally {
+          // Guaranteed view transition
+          setView('onboarding');
+      }
   };
 
   const handleGoToPremium = () => {
