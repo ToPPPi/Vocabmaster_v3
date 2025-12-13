@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Upload, Cloud, HardDrive, Copy, Check, Trash2, AlertTriangle, FileText, CheckCircle, Smartphone, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Upload, HardDrive, Copy, Check, Trash2, AlertTriangle, FileText, CheckCircle, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
 import { Header } from './Header';
 import { UserProgress } from '../types';
 import { exportUserData, importUserData, forceSave, resetUserProgress } from '../services/storage/core';
@@ -13,7 +13,6 @@ interface DataManagementViewProps {
 }
 
 export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress, onBack, onUpdate }) => {
-    const [lastSyncTime, setLastSyncTime] = useState<string>('Никогда');
     const [dbSize, setDbSize] = useState<string>('0 KB');
     
     // UI States: 'none', 'export', 'import'
@@ -39,10 +38,6 @@ export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress
     }, [progress]);
 
     const updateStats = () => {
-        if (progress.lastCloudSync) {
-            const date = new Date(progress.lastCloudSync);
-            setLastSyncTime(date.toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }));
-        }
         const json = JSON.stringify(progress);
         const bytes = new Blob([json]).size;
         setDbSize((bytes / 1024).toFixed(2) + ' KB');
@@ -62,13 +57,12 @@ export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress
 
         try {
             await forceSave(); 
-            // Give UI a moment to expand
             setTimeout(async () => {
                 const code = await exportUserData();
                 if (code) {
                     setGeneratedCode(code);
                 } else {
-                    alert("Ошибка: Не удалось сгенерировать код. Возможно, данных слишком много.");
+                    alert("Ошибка: Не удалось сгенерировать код.");
                 }
                 setIsGenerating(false);
             }, 300);
@@ -93,7 +87,7 @@ export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress
                 triggerHaptic('success');
                 setTimeout(() => setIsCopied(false), 3000);
             } catch (err) {
-                alert("Не удалось скопировать автоматически. Выделите текст и скопируйте вручную.");
+                alert("Не удалось скопировать. Выделите текст и скопируйте вручную.");
             }
         }
     };
@@ -176,34 +170,20 @@ export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress
             
             <div className="p-5 space-y-6">
                 
-                {/* 1. STATUS CARD */}
+                {/* 1. LOCAL STATUS ONLY */}
                 <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">
-                    <div className="flex items-center justify-between mb-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400">
                                 <HardDrive className="w-5 h-5" />
                             </div>
                             <div>
-                                <h3 className="font-bold text-slate-900 dark:text-white text-sm">Локально</h3>
-                                <p className="text-[10px] text-slate-500 dark:text-slate-400">Память телефона ({dbSize})</p>
+                                <h3 className="font-bold text-slate-900 dark:text-white text-sm">Локальное хранилище</h3>
+                                <p className="text-[10px] text-slate-500 dark:text-slate-400">Данные хранятся только на этом устройстве.</p>
+                                <p className="text-[10px] text-slate-400 dark:text-slate-500 font-mono mt-1">Размер БД: {dbSize}</p>
                             </div>
                         </div>
                         <CheckCircle className="w-5 h-5 text-emerald-500" />
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-sky-100 dark:bg-sky-900/30 rounded-full flex items-center justify-center text-sky-600 dark:text-sky-400">
-                                <Cloud className="w-5 h-5" />
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-slate-900 dark:text-white text-sm">Облако Telegram</h3>
-                                <p className="text-[10px] text-slate-500 dark:text-slate-400">
-                                    {lastSyncTime === 'Никогда' ? 'Ожидание синхронизации...' : `Сохранено: ${lastSyncTime}`}
-                                </p>
-                            </div>
-                        </div>
-                        <CheckCircle className="w-5 h-5 text-sky-500" />
                     </div>
                 </div>
 
@@ -211,10 +191,10 @@ export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress
                 <div>
                     <h3 className="font-bold text-slate-900 dark:text-white px-2 mb-2 text-sm flex items-center gap-2">
                         <FileText className="w-4 h-4 text-slate-400"/>
-                        Ручной перенос (Backup Code)
+                        Перенос данных (Вручную)
                     </h3>
                     <p className="px-2 mb-4 text-[10px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                        Используйте этот метод для переноса данных между устройствами, если автоматическое облако не сработало.
+                        Чтобы перенести прогресс на другое устройство или сохранить его, используйте код восстановления.
                     </p>
 
                     <div className="space-y-3">
@@ -229,8 +209,8 @@ export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress
                                         <Copy className="w-5 h-5"/>
                                     </div>
                                     <div className="text-left">
-                                        <span className="text-sm font-bold text-slate-900 dark:text-white block">Получить код</span>
-                                        <span className="text-[10px] text-slate-500">Скопировать текущий прогресс</span>
+                                        <span className="text-sm font-bold text-slate-900 dark:text-white block">Получить код (Сохранить)</span>
+                                        <span className="text-[10px] text-slate-500">Создать резервную копию</span>
                                     </div>
                                 </div>
                                 {expandedSection === 'export' ? <ChevronUp className="w-5 h-5 text-slate-400"/> : <ChevronDown className="w-5 h-5 text-slate-400"/>}
@@ -243,7 +223,7 @@ export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress
                                         {isGenerating ? (
                                             <div className="flex flex-col items-center justify-center py-6 text-slate-400">
                                                 <Loader2 className="w-6 h-6 animate-spin mb-2 text-violet-500" />
-                                                <span className="text-xs">Генерация кода (сжимаем данные)...</span>
+                                                <span className="text-xs">Генерация кода...</span>
                                             </div>
                                         ) : (
                                             <>
@@ -284,8 +264,8 @@ export const DataManagementView: React.FC<DataManagementViewProps> = ({ progress
                                         <Upload className="w-5 h-5"/>
                                     </div>
                                     <div className="text-left">
-                                        <span className="text-sm font-bold text-slate-900 dark:text-white block">Ввести код</span>
-                                        <span className="text-[10px] text-slate-500">Восстановить из буфера</span>
+                                        <span className="text-sm font-bold text-slate-900 dark:text-white block">Ввести код (Восстановить)</span>
+                                        <span className="text-[10px] text-slate-500">Загрузить данные из копии</span>
                                     </div>
                                 </div>
                                 {expandedSection === 'import' ? <ChevronUp className="w-5 h-5 text-slate-400"/> : <ChevronDown className="w-5 h-5 text-slate-400"/>}
