@@ -5,6 +5,7 @@ import { ProficiencyLevel, UserProgress, Word, AIExplanation } from '../types';
 import { getWordsByLevelAsync, getAllWords, getWordsDueForReview, rateWord, getUserProgress, lockDailySession, incrementAIUsage, checkAIUsageLimit, togglePremium } from '../services/storageService';
 import { explainWordWithAI } from '../services/aiService';
 import { triggerHaptic, speak, shuffleArray } from '../utils/uiHelpers';
+import { RewardType } from './RewardOverlay';
 
 const DAILY_LIMIT_FREE = 10;
 const DAILY_LIMIT_PREMIUM = 8000;
@@ -14,10 +15,11 @@ interface LearningSessionProps {
     level?: ProficiencyLevel;
     progress: UserProgress;
     onComplete: () => void;
-    onBuyPremium?: () => void; 
+    onBuyPremium?: () => void;
+    onShowReward?: (type: RewardType) => void;
 }
 
-export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, progress, onComplete, onBuyPremium }) => {
+export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, progress, onComplete, onBuyPremium, onShowReward }) => {
     const [sessionWords, setSessionWords] = useState<Word[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [levelCompleted, setLevelCompleted] = useState(false);
@@ -52,6 +54,12 @@ export const LearningSession: React.FC<LearningSessionProps> = ({ mode, level, p
             
             if (available.length === 0 && allLvlWords.length > 0) {
                  setLevelCompleted(true);
+                 // MEME TRIGGER: GIGACHAD for C2
+                 if (lvl === ProficiencyLevel.C2 && onShowReward) {
+                     setTimeout(() => {
+                         onShowReward('level_c2_complete');
+                     }, 500);
+                 }
                  setIsLoading(false);
                  return;
             }

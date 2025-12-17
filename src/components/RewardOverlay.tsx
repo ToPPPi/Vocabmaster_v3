@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 
-export type RewardType = 'premium_month' | 'premium_year' | 'shop_buy' | 'level_up' | 'happy_cat_test';
+export type RewardType = 'premium_month' | 'premium_year' | 'shop_buy' | 'level_up' | 'happy_cat_test' | 'locked_level' | 'level_c2_complete' | 'easter_egg_popcat';
 
 interface RewardConfig {
     gif: string;
@@ -15,7 +15,6 @@ interface RewardConfig {
 // ASSETS CONFIGURATION
 const REWARDS: Record<RewardType, RewardConfig> = {
     'premium_month': {
-        // Updated to a reliable Tenor source for Happy Cat
         gif: 'https://media.tenor.com/lCKwsD2OW1kAAAAi/happy-cat-happy-happy-cat.gif', 
         sound: 'https://www.myinstants.com/media/sounds/happy-happy-happy-cat.mp3', 
         title: 'Happy! Happy! Happy!',
@@ -49,6 +48,28 @@ const REWARDS: Record<RewardType, RewardConfig> = {
         title: 'Новый уровень!',
         subtitle: 'Вы становитесь умнее',
         volume: 0.4
+    },
+    // --- NEW MEMES ---
+    'locked_level': {
+        gif: 'https://media1.tenor.com/m/vQCHG0ZpQj4AAAAC/eric-andre-let-me-in.gif',
+        sound: 'https://www.myinstants.com/media/sounds/eric-andre-let-me-in.mp3',
+        title: 'LET ME IN!!!',
+        subtitle: 'Доступно только в Premium',
+        volume: 0.7
+    },
+    'level_c2_complete': {
+        gif: 'https://media1.tenor.com/m/TfQyC9a22s8AAAAC/gigachad-chad.gif',
+        sound: 'https://www.myinstants.com/media/sounds/can-you-feel-my-heart.mp3',
+        title: 'GIGACHAD',
+        subtitle: 'Вы прошли C2. Вы — легенда.',
+        volume: 0.6
+    },
+    'easter_egg_popcat': {
+        gif: 'https://media1.tenor.com/m/125475653457564756/pop-cat.gif',
+        sound: 'https://www.myinstants.com/media/sounds/pop-cat-original-meme_3_1.mp3',
+        title: 'POP!',
+        subtitle: 'Секрет открыт!',
+        volume: 0.6
     }
 };
 
@@ -73,10 +94,12 @@ export const RewardOverlay: React.FC<RewardOverlayProps> = ({ type, onClose }) =
             }
             audioRef.current = audio;
 
-            // Auto close after 4 seconds
+            // Auto close after 4 seconds (slightly longer for memes)
+            const duration = type === 'locked_level' ? 3000 : 4500;
+            
             const timer = setTimeout(() => {
                 onClose();
-            }, 4500);
+            }, duration);
 
             return () => {
                 clearTimeout(timer);
@@ -97,7 +120,7 @@ export const RewardOverlay: React.FC<RewardOverlayProps> = ({ type, onClose }) =
             className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md animate-in fade-in zoom-in duration-300 p-6"
             onClick={onClose}
         >
-            <div className="relative bg-slate-900 p-1 rounded-[2.5rem] shadow-2xl max-w-sm w-full overflow-hidden border-[6px] border-yellow-400">
+            <div className={`relative bg-slate-900 p-1 rounded-[2.5rem] shadow-2xl max-w-sm w-full overflow-hidden border-[6px] ${type === 'locked_level' ? 'border-rose-500' : type === 'level_c2_complete' ? 'border-slate-400' : 'border-yellow-400'}`}>
                 
                 {/* Content - Removed aspect-square to allow gif to fit naturally */}
                 <div className="relative rounded-[2rem] overflow-hidden bg-black flex items-center justify-center h-80">

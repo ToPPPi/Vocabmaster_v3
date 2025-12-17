@@ -226,6 +226,7 @@ const App: React.FC = () => {
                         progress={progress} 
                         onComplete={() => { refreshProgress(); setView('dashboard'); }} 
                         onBuyPremium={handleGoToPremium}
+                        onShowReward={(type) => setReward(type)}
                     />
                 )}
                 
@@ -235,6 +236,7 @@ const App: React.FC = () => {
                         progress={progress} 
                         onComplete={() => { refreshProgress(); setView('dashboard'); }} 
                         onBuyPremium={handleGoToPremium}
+                        onShowReward={(type) => setReward(type)}
                     />
                 )}
                 
@@ -263,7 +265,8 @@ const App: React.FC = () => {
                         progress={progress} 
                         mode={levelsMode as 'learn' | 'browse'}
                         onBack={() => setView('dashboard')} 
-                        onSelectLevel={handleLevelSelect} 
+                        onSelectLevel={handleLevelSelect}
+                        onShowReward={(type) => setReward(type)}
                     />
                 )}
                 

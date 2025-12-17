@@ -1,18 +1,37 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Crown } from 'lucide-react';
 import { UserProgress } from '../../types';
+import { triggerHaptic } from '../../utils/uiHelpers';
+import { RewardType } from '../RewardOverlay';
 
 interface UserInfoCardProps {
     progress: UserProgress;
     isPremium: boolean;
     expDate: string | null;
+    onShowReward?: (type: RewardType) => void;
 }
 
-export const UserInfoCard: React.FC<UserInfoCardProps> = ({ progress, isPremium, expDate }) => {
+export const UserInfoCard: React.FC<UserInfoCardProps> = ({ progress, isPremium, expDate, onShowReward }) => {
+    const [tapCount, setTapCount] = useState(0);
+
+    const handleAvatarClick = () => {
+        triggerHaptic('light');
+        const newCount = tapCount + 1;
+        setTapCount(newCount);
+
+        if (newCount === 5) {
+            triggerHaptic('success');
+            setTapCount(0);
+            if (onShowReward) {
+                onShowReward('easter_egg_popcat');
+            }
+        }
+    };
+
     return (
         <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex items-center gap-4 transition-colors">
-            <div className="relative shrink-0">
+            <div className="relative shrink-0 cursor-pointer active:scale-95 transition-transform" onClick={handleAvatarClick}>
                 {progress.photoUrl ? (
                     <img 
                         src={progress.photoUrl} 
