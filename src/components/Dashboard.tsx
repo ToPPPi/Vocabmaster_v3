@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Crown, Flame, Check, Target, Zap, Clock, Play, RotateCcw, Trophy, ArrowRight, Globe2, Coins, ShoppingBag, Sparkles, HelpCircle } from 'lucide-react';
 import { UserProgress, ViewState } from '../types';
-import { getLearnedCount, getWordsDueForReview, getAchievements, buyPremium, isUserPremium, calculateCoverage, getUserRank, getSecureNow } from '../services/storageService';
+import { getLearnedCount, getWordsDueForReview, getAchievements, buyPremium, isUserPremium, calculateCoverage, getUserRank, getSecureNow, triggerSmartMotivation } from '../services/storageService';
 import { triggerHaptic } from '../utils/uiHelpers';
 
 const DAILY_LIMIT = 10;
@@ -37,6 +37,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ progress, setViewState, on
             const ach = await getAchievements();
             setUnlockedCount(ach.filter(a => a.current >= a.max).length);
             setCoverage(calculateCoverage(lc));
+            
+            // SMART MOTIVATION TRIGGER
+            // Try to trigger a motivational message if user opens the app (dashboard)
+            triggerSmartMotivation(progress);
         };
         load();
         

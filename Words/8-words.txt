@@ -1,1 +1,1550 @@
-DERELICT
+GIMMICK
+
+Вот TypeScript код для списка слов от DETERMINATE до EPITOMISE, сгруппированный по уровням (B1, B2, C1, C2).
+
+code
+TypeScript
+download
+content_copy
+expand_less
+import { createRichWord } from './utils/createRichWord';
+import { ProficiencyLevel } from './enums';
+
+export const wordsBatchDtoE_Part6 = [
+  // ==============================================================================
+  // --- LEVEL B1 (Threshold) -----------------------------------------------------
+  // ==============================================================================
+
+  createRichWord('b1_doughnut', 'Doughnut', '/ˈdəʊ.nʌt/', 'доунат', 'Пончик', ProficiencyLevel.B1, 'noun', 'Medium', 'Neutral',
+    'Небольшой жареный пирожок из сладкого теста, часто в форме кольца.',
+    '- Еда: "Chocolate doughnut" (Шоколадный пончик)\n- Форма: "Ring doughnut" (Пончик в виде кольца)\n- Магазин: "Doughnut shop" (Пончиковая)',
+    [
+      { en: 'I ate a chocolate doughnut for breakfast.', ru: 'Я съел шоколадный пончик на завтрак.' },
+      { en: 'Doughnuts are very sweet and tasty.', ru: 'Пончики очень сладкие и вкусные.' },
+      { en: 'She bought a box of doughnuts for the office.', ru: 'Она купила коробку пончиков для офиса.' },
+      { en: 'My favourite type is a jam doughnut.', ru: 'Мой любимый вид — пончик с джемом.' }
+    ],
+    [
+      { meaning: "Spinning a car (slang)", translation: "Крутить «пончики» (на машине)", example: { en: "Doing doughnuts in the parking lot.", ru: "Крутить «пончики» на парковке." } }
+    ]
+  ),
+
+  // ==============================================================================
+  // --- LEVEL B2 (Vantage) -------------------------------------------------------
+  // ==============================================================================
+
+  createRichWord('b2_disobedient', 'Disobedient', '/ˌdɪs.əˈbiː.di.ənt/', 'дисобидиэнт', 'Непослушный', ProficiencyLevel.B2, 'adj', 'Medium', 'Neutral',
+    'Отказывающийся делать то, что велят; нарушающий правила.',
+    '- Дети: "Disobedient child" (Непослушный ребенок)\n- Поведение: "Disobedient act" (Акт неповиновения)\n- Школа: "Punish disobedient students" (Наказывать непослушных студентов)',
+    [
+      { en: 'The disobedient dog ran away from its owner.', ru: 'Непослушная собака убежала от хозяина.' },
+      { en: 'He was punished for being disobedient at school.', ru: 'Его наказали за непослушание в школе.' },
+      { en: 'She is rarely disobedient to her parents.', ru: 'Она редко не слушается своих родителей.' },
+      { en: 'Disobedient soldiers face severe penalties.', ru: 'Непокорным солдатам грозят суровые наказания.' }
+    ],
+    []
+  ),
+
+  createRichWord('b2_disrespect', 'Disrespect', '/ˌdɪs.rɪˈspekt/', 'дисриспект', 'Неуважение', ProficiencyLevel.B2, 'noun', 'Medium', 'Neutral',
+    'Отсутствие уважения или вежливости по отношению к кому-либо.',
+    '- Поведение: "Show disrespect" (Проявлять неуважение)\n- Отношение: "Total disrespect" (Полное неуважение)\n- Фраза: "No disrespect intended" (Без обид / Не хотел обидеть)',
+    [
+      { en: 'I meant no disrespect by my comment.', ru: 'Я не хотел проявить неуважение своим комментарием.' },
+      { en: 'Shouting at the teacher is a sign of disrespect.', ru: 'Крик на учителя — это признак неуважения.' },
+      { en: 'He treats his colleagues with total disrespect.', ru: 'Он относится к своим коллегам с полным неуважением.' },
+      { en: 'Disrespect for the law leads to chaos.', ru: 'Неуважение к закону ведет к хаосу.' }
+    ],
+    []
+  ),
+
+  createRichWord('b2_domino', 'Domino', '/ˈdɒm.ɪ.nəʊ/', 'доминоу', 'Домино', ProficiencyLevel.B2, 'noun', 'Low', 'Neutral',
+    'Небольшая прямоугольная плитка с точками, используемая в играх; сама игра.',
+    '- Игра: "Play dominoes" (Играть в домино)\n- Эффект: "Domino effect" (Эффект домино)\n- Предмет: "Knock over a domino" (Опрокинуть костяшку домино)',
+    [
+      { en: 'My grandfather taught me how to play dominoes.', ru: 'Мой дедушка научил меня играть в домино.' },
+      { en: 'The collapse of the bank caused a domino effect.', ru: 'Крах банка вызвал эффект домино.' },
+      { en: 'We lined up the dominoes and knocked them down.', ru: 'Мы выстроили домино в ряд и опрокинули их.' },
+      { en: 'One small event started a domino chain reaction.', ru: 'Одно маленькое событие запустило цепную реакцию домино.' }
+    ],
+    []
+  ),
+
+  createRichWord('b2_dude', 'Dude', '/duːd/', 'дуд', 'Чувак / Парень', ProficiencyLevel.B2, 'noun', 'High', 'Slang',
+    'Сленговое слово для обозначения мужчины или парня (часто используется как обращение).',
+    '- Обращение: "Hey dude!" (Эй, чувак!)\n- Описание: "Cool dude" (Клевый парень)\n- Реакция: "Dude, seriously?" (Чувак, серьезно?)',
+    [
+      { en: 'Hey dude, what are you doing tonight?', ru: 'Эй, чувак, что делаешь сегодня вечером?' },
+      { en: 'He is a really chill dude.', ru: 'Он реально спокойный парень.' },
+      { en: 'Dude, you won\'t believe what happened!', ru: 'Чувак, ты не поверишь, что случилось!' },
+      { en: 'Don\'t call your boss "dude".', ru: 'Не называй своего начальника "чувак".' }
+    ],
+    []
+  ),
+
+  createRichWord('b2_duet', 'Duet', '/djuˈet/', 'дъюэт', 'Дуэт', ProficiencyLevel.B2, 'noun', 'Low', 'Neutral',
+    'Музыкальное произведение для двух исполнителей.',
+    '- Музыка: "Sing a duet" (Петь дуэтом)\n- Исполнение: "Piano duet" (Фортепианный дуэт)\n- Партнерство: "Perform a duet" (Исполнять дуэт)',
+    [
+      { en: 'They sang a romantic duet together.', ru: 'Они спели романтический дуэт вместе.' },
+      { en: 'The concert featured a piano duet.', ru: 'В концерте был представлен фортепианный дуэт.' },
+      { en: 'She performed a duet with a famous star.', ru: 'Она исполнила дуэт с известной звездой.' },
+      { en: 'The song was originally written as a duet.', ru: 'Песня была изначально написана как дуэт.' }
+    ],
+    []
+  ),
+
+  // ==============================================================================
+  // --- LEVEL C1 (Advanced) ------------------------------------------------------
+  // ==============================================================================
+
+  createRichWord('c1_detest', 'Detest', '/dɪˈtest/', 'дитест', 'Ненавидеть / Питать отвращение', ProficiencyLevel.C1, 'verb', 'Low', 'Neutral',
+    'Испытывать очень сильную неприязнь к кому-то или чему-то (сильнее, чем hate).',
+    '- Еда: "Detest vegetables" (Терпеть не могу овощи)\n- Люди: "Detest hypocrisy" (Ненавидеть лицемерие)\n- Чувство: "Absolutely detest" (Совершенно не выносить)',
+    [
+      { en: 'I absolutely detest waking up early.', ru: 'Я совершенно терпеть не могу вставать рано.' },
+      { en: 'She detests people who lie.', ru: 'Она ненавидит людей, которые лгут.' },
+      { en: 'They detested each other on sight.', ru: 'Они возненавидели друг друга с первого взгляда.' },
+      { en: 'He detests being interrupted while working.', ru: 'Он терпеть не может, когда его прерывают во время работы.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_detour', 'Detour', '/ˈdiː.tʊər/', 'дитуэ', 'Объезд / Обходной путь', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Более длинный путь, используемый, когда основная дорога закрыта; отклонение от прямого курса.',
+    '- Дорога: "Make a detour" (Сделать крюк/поехать в объезд)\n- Знак: "Detour sign" (Знак объезда)\n- Путешествие: "Long detour" (Длинный объезд)',
+    [
+      { en: 'We had to take a detour because of roadworks.', ru: 'Нам пришлось поехать в объезд из-за дорожных работ.' },
+      { en: 'The detour added an hour to our journey.', ru: 'Объезд добавил час к нашему путешествию.' },
+      { en: 'We made a slight detour to visit the castle.', ru: 'Мы сделали небольшой крюк, чтобы посетить замок.' },
+      { en: 'Don\'t take a detour, go straight home.', ru: 'Не ходи окольными путями, иди прямо домой.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_disengage', 'Disengage', '/ˌdɪs.ɪnˈɡeɪdʒ/', 'дисиндейдж', 'Отсоединять / Высвобождать', ProficiencyLevel.C1, 'verb', 'Low', 'Formal',
+    'Отделять что-то от того, к чему оно прикреплено; прекращать участие в чем-то.',
+    '- Техника: "Disengage the clutch" (Отпустить сцепление)\n- Война: "Disengage from combat" (Выйти из боя)\n- Отношения: "Emotionally disengage" (Эмоционально отстраниться)',
+    [
+      { en: 'The autopilot disengaged automatically.', ru: 'Автопилот отключился автоматически.' },
+      { en: 'He tried to disengage his hand from hers.', ru: 'Он попытался высвободить свою руку из её руки.' },
+      { en: 'We should disengage from this fruitless debate.', ru: 'Нам следует прекратить эти бесплодные дебаты.' },
+      { en: 'Soldiers were ordered to disengage.', ru: 'Солдатам приказали выйти из боя.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_dissociate', 'Dissociate', '/dɪˈsəʊ.ʃi.eɪt/', 'дисоушиейт', 'Отмежеваться / Рассоединять', ProficiencyLevel.C1, 'verb', 'Low', 'Formal',
+    'Заявить о своей непричастности; рассматривать вещи как не связанные между собой.',
+    '- Связь: "Dissociate oneself from" (Отмежеваться от)\n- Психология: "Dissociate from reality" (Отрешиться от реальности)\n- Мнение: "Dissociate the two ideas" (Разделять две идеи)',
+    [
+      { en: 'I wish to dissociate myself from his comments.', ru: 'Я хочу отмежеваться от его комментариев.' },
+      { en: 'It is hard to dissociate the man from his work.', ru: 'Трудно отделить человека от его работы.' },
+      { en: 'The party tried to dissociate itself from the scandal.', ru: 'Партия пыталась дистанцироваться от скандала.' },
+      { en: 'Under stress, the mind may dissociate.', ru: 'При стрессе разум может отключаться (диссоциировать).' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_doctorate', 'Doctorate', '/ˈdɒk.tər.ət/', 'доктэрет', 'Докторская степень', ProficiencyLevel.C1, 'noun', 'Low', 'Formal',
+    'Высшая ученая степень, присуждаемая университетом (PhD).',
+    '- Образование: "Study for a doctorate" (Учиться на докторскую)\n- Титул: "Honorary doctorate" (Почетная докторская степень)\n- Наука: "Receive a doctorate" (Получить докторскую степень)',
+    [
+      { en: 'She holds a doctorate in physics.', ru: 'У нее докторская степень по физике.' },
+      { en: 'He is working on his doctorate thesis.', ru: 'Он работает над своей докторской диссертацией.' },
+      { en: 'The university awarded him an honorary doctorate.', ru: 'Университет присудил ему почетную докторскую степень.' },
+      { en: 'Completing a doctorate takes several years.', ru: 'Получение докторской степени занимает несколько лет.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_domesticate', 'Domesticate', '/dəˈmes.tɪ.keɪt/', 'доместикейт', 'Одомашнивать / Приручать', ProficiencyLevel.C1, 'verb', 'Low', 'Neutral',
+    'Приучать дикое животное жить с людьми; выращивать растения для использования людьми.',
+    '- Животные: "Domesticate dogs" (Одомашнивать собак)\n- История: "First domesticated" (Впервые одомашнен)\n- Растения: "Domesticate crops" (Окультуривать растения)',
+    [
+      { en: 'Dogs were domesticated thousands of years ago.', ru: 'Собаки были одомашнены тысячи лет назад.' },
+      { en: 'It is difficult to domesticate a wild cat.', ru: 'Трудно приручить дикую кошку.' },
+      { en: 'Humans learned to domesticate plants for food.', ru: 'Люди научились окультуривать растения для еды.' },
+      { en: 'Domesticated animals depend on humans.', ru: 'Домашние животные зависят от людей.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_drench', 'Drench', '/drentʃ/', 'дренч', 'Промочить насквозь', ProficiencyLevel.C1, 'verb', 'Low', 'Neutral',
+    'Сделать кого-то или что-то очень мокрым.',
+    '- Погода: "Drenched by rain" (Промокший под дождем)\n- Жидкость: "Drenched in sweat" (Весь в поту)\n- Действие: "Get drenched" (Промокнуть до нитки)',
+    [
+      { en: 'We were drenched by the sudden storm.', ru: 'Внезапный шторм промочил нас до нитки.' },
+      { en: 'He woke up drenched in sweat.', ru: 'Он проснулся весь в поту.' },
+      { en: 'The players drenched the coach with water.', ru: 'Игроки облили тренера водой.' },
+      { en: 'Her clothes were drenched.', ru: 'Ее одежда была насквозь мокрой.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_duel', 'Duel', '/ˈdjuː.əl/', 'дъюэл', 'Дуэль / Поединок', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Формальный бой между двумя людьми с оружием; или борьба двух людей/групп.',
+    '- История: "Fight a duel" (Драться на дуэли)\n- Оружие: "Pistol duel" (Дуэль на пистолетах)\n- Метафора: "Verbal duel" (Словесная перепалка)',
+    [
+      { en: 'Pushkin died after a duel.', ru: 'Пушкин погиб после дуэли.' },
+      { en: 'The two candidates engaged in a TV duel.', ru: 'Два кандидата вступили в теледебаты (поединок).' },
+      { en: 'He challenged him to a duel.', ru: 'Он вызвал его на дуэль.' },
+      { en: 'It was a duel of wits.', ru: 'Это была битва умов.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_edgy', 'Edgy', '/ˈedʒ.i/', 'эджи', 'Раздражительный / Острый (модный)', ProficiencyLevel.C1, 'adj', 'Low', 'Informal',
+    'Нервный и тревожный; или (о стиле) современный, провокационный и нестандартный.',
+    '- Настроение: "Feel edgy" (Быть на взводе/нервничать)\n- Стиль: "Edgy fashion" (Дерзкая мода)\n- Атмосфера: "Edgy atmosphere" (Напряженная атмосфера)',
+    [
+      { en: 'He has been edgy all day waiting for the news.', ru: 'Он весь день был на взводе, ожидая новостей.' },
+      { en: 'The band has a new, edgy sound.', ru: 'У группы новое, дерзкое звучание.' },
+      { en: 'Don\'t be so edgy, relax.', ru: 'Не будь таким нервным, расслабься.' },
+      { en: 'The movie is dark and edgy.', ru: 'Фильм мрачный и провокационный.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_edible', 'Edible', '/ˈed.ɪ.bəl/', 'едибл', 'Съедобный', ProficiencyLevel.C1, 'adj', 'Medium', 'Neutral',
+    'Пригодный для еды; безопасный для употребления в пищу.',
+    '- Еда: "Edible mushrooms" (Съедобные грибы)\n- Качество: "Barely edible" (Едва съедобный)\n- Растения: "Edible flowers" (Съедобные цветы)',
+    [
+      { en: 'Are these berries edible?', ru: 'Эти ягоды съедобны?' },
+      { en: 'The food was cold and barely edible.', ru: 'Еда была холодной и едва съедобной.' },
+      { en: 'They decorated the cake with edible gold.', ru: 'Они украсили торт съедобным золотом.' },
+      { en: 'Make sure the oil is edible.', ru: 'Убедитесь, что масло пищевое.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_eel', 'Eel', '/iːl/', 'ил', 'Угорь', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Длинная рыба, похожая на змею.',
+    '- Рыба: "Electric eel" (Электрический угорь)\n- Еда: "Smoked eel" (Копченый угорь)\n- Сравнение: "Slippery as an eel" (Скользкий как угорь)',
+    [
+      { en: 'He caught a large eel in the river.', ru: 'Он поймал большого угря в реке.' },
+      { en: 'Japanese cuisine often features grilled eel.', ru: 'В японской кухне часто используется жареный угорь.' },
+      { en: 'An electric eel can produce a strong shock.', ru: 'Электрический угорь может производить сильный разряд.' },
+      { en: 'The eel moved like a snake in the water.', ru: 'Угорь двигался в воде как змея.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_electrify', 'Electrify', '/iˈlek.trɪ.faɪ/', 'илектрифай', 'Электрифицировать / Наэлектризовать', ProficiencyLevel.C1, 'verb', 'Low', 'Formal',
+    'Провести электричество; или сильно возбудить/взволновать толпу.',
+    '- Техника: "Electrify the railway" (Электрифицировать железную дорогу)\n- Эмоции: "Electrify the audience" (Взбудоражить аудиторию)\n- Атмосфера: "Electrifying atmosphere" (Наэлектризованная атмосфера)',
+    [
+      { en: 'The railway line was electrified last year.', ru: 'Железнодорожная линия была электрифицирована в прошлом году.' },
+      { en: 'His speech electrified the crowd.', ru: 'Его речь взбудоражила толпу.' },
+      { en: 'The atmosphere in the stadium was electrifying.', ru: 'Атмосфера на стадионе была наэлектризованной.' },
+      { en: 'She gave an electrifying performance.', ru: 'Она дала потрясающее (наэлектризованное) представление.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_empress', 'Empress', '/ˈem.pres/', 'эмпрес', 'Императрица', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Женщина-правитель империи или жена императора.',
+    '- Титул: "Empress Catherine" (Императрица Екатерина)\n- Власть: "Ruling empress" (Правящая императрица)\n- История: "Empress of India" (Императрица Индии)',
+    [
+      { en: 'Catherine the Great was a famous Russian Empress.', ru: 'Екатерина Великая была известной российской императрицей.' },
+      { en: 'The Empress waved to the crowd.', ru: 'Императрица помахала толпе.' },
+      { en: 'She was crowned Empress at a young age.', ru: 'Она была коронована императрицей в юном возрасте.' },
+      { en: 'The Empress had absolute power.', ru: 'Императрица обладала абсолютной властью.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_entirety', 'Entirety', '/ɪnˈtaɪə.rə.ti/', 'интайрэти', 'Целостность / Полнота', ProficiencyLevel.C1, 'noun', 'Low', 'Formal',
+    'Состояние быть полным; вся сумма или объем чего-либо (часто "in its entirety").',
+    '- Объем: "Read in its entirety" (Прочитать целиком)\n- Владение: "Own in entirety" (Владеть полностью)\n- Вид: "View the entirety" (Видеть целиком)',
+    [
+      { en: 'I watched the film in its entirety.', ru: 'Я посмотрел фильм целиком.' },
+      { en: 'We must consider the problem in its entirety.', ru: 'Мы должны рассмотреть проблему во всей ее полноте.' },
+      { en: 'The agreement was published in its entirety.', ru: 'Соглашение было опубликовано полностью.' },
+      { en: 'He accepted responsibility in its entirety.', ru: 'Он принял ответственность в полном объеме.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_envisage', 'Envisage', '/ɪnˈvɪz.ɪdʒ/', 'инвизидж', 'Предвидеть / Представлять себе', ProficiencyLevel.C1, 'verb', 'Low', 'Formal',
+    'Представлять что-то в будущем как возможное; планировать.',
+    '- Будущее: "Envisage changes" (Предвидеть изменения)\n- План: "Envisage a plan" (Наметить план)\n- Мысль: "Hard to envisage" (Трудно представить)',
+    [
+      { en: 'I envisage a future where robots do all the work.', ru: 'Я представляю себе будущее, где роботы делают всю работу.' },
+      { en: 'It is hard to envisage how it will end.', ru: 'Трудно предвидеть, чем это закончится.' },
+      { en: 'The changes envisaged by the council are extensive.', ru: 'Изменения, предусмотренные советом, обширны.' },
+      { en: 'Do you envisage any problems with this?', ru: 'Вы предвидите какие-либо проблемы с этим?' }
+    ],
+    []
+  ),
+
+  // ==============================================================================
+  // --- LEVEL C2 (Mastery) -------------------------------------------------------
+  // ==============================================================================
+
+  createRichWord('c2_determinate', 'Determinate', '/dɪˈtɜː.mɪ.nət/', 'дитёминэт', 'Определенный / Окончательный', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Фиксированный, точный или окончательный (антоним: indeterminate).',
+    '- Срок: "Determinate sentence" (Определенный срок заключения)\n- Число: "Determinate number" (Определенное число)\n- Характер: "Determinate effect" (Определенный эффект)',
+    [
+      { en: 'A sentence of determinate length was imposed.', ru: 'Был вынесен приговор определенной длительности.' },
+      { en: 'The contract is for a determinate period.', ru: 'Контракт заключен на определенный срок.' },
+      { en: 'It has a determinate structure.', ru: 'У него есть определенная структура.' },
+      { en: 'Without a determinate goal, we drift.', ru: 'Без определенной цели мы плывем по течению.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_devout', 'Devout', '/dɪˈvaʊt/', 'диваут', 'Набожный / Преданный', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Имеющий глубокие религиозные чувства; искренне преданный делу.',
+    '- Религия: "Devout Christian" (Набожный христианин)\n- Чувство: "Devout hope" (Искренняя надежда)\n- Преданность: "Devout follower" (Преданный последователь)',
+    [
+      { en: 'She is a devout Catholic who goes to church daily.', ru: 'Она набожная католичка, которая ходит в церковь ежедневно.' },
+      { en: 'He was a devout follower of the movement.', ru: 'Он был преданным последователем движения.' },
+      { en: 'It is my devout wish that peace will return.', ru: 'Это мое искреннее (набожное) желание, чтобы мир вернулся.' },
+      { en: 'Devout believers pray regularly.', ru: 'Искренне верующие молятся регулярно.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_dew', 'Dew', '/djuː/', 'дъю', 'Роса', ProficiencyLevel.C2, 'noun', 'Low', 'Literary',
+    'Мелкие капли воды, образующиеся на поверхностях ночью.',
+    '- Утро: "Morning dew" (Утренняя роса)\n- Трава: "Wet with dew" (Мокрый от росы)\n- Свежесть: "Fresh as dew" (Свежий как роса)',
+    [
+      { en: 'The grass was wet with morning dew.', ru: 'Трава была мокрой от утренней росы.' },
+      { en: 'Dew drops sparkled in the sunlight.', ru: 'Капли росы сверкали на солнце.' },
+      { en: 'There was a heavy dew last night.', ru: 'Прошлой ночью выпала обильная роса.' },
+      { en: 'Her skin was fresh as dew.', ru: 'Ее кожа была свежей, как роса.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_dichotomy', 'Dichotomy', '/daɪˈkɒt.ə.mi/', 'дайкотэми', 'Дихотомия / Разделение', ProficiencyLevel.C2, 'noun', 'Low', 'Formal',
+    'Разделение на две противоположные или полностью разные группы.',
+    '- Противопоставление: "False dichotomy" (Ложная дихотомия)\n- Пример: "Dichotomy between theory and practice" (Разрыв между теорией и практикой)\n- Общество: "Social dichotomy" (Социальное разделение)',
+    [
+      { en: 'There is a dichotomy between what he says and does.', ru: 'Существует разрыв (дихотомия) между тем, что он говорит и делает.' },
+      { en: 'The dichotomy of good and evil is a common theme.', ru: 'Дихотомия добра и зла — распространенная тема.' },
+      { en: 'We rejected the false dichotomy presented to us.', ru: 'Мы отвергли ложную дихотомию, представленную нам.' },
+      { en: 'This creates a dichotomy in the workforce.', ru: 'Это создает разделение в рабочей силе.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_din', 'Din', '/dɪn/', 'дин', 'Грохот / Шум', ProficiencyLevel.C2, 'noun', 'Low', 'Literary',
+    'Громкий, неприятный и продолжительный шум.',
+    '- Шум: "Terrible din" (Ужасный грохот)\n- Источник: "Din of traffic" (Шум транспорта)\n- Глагол: "Make a din" (Шуметь)',
+    [
+      { en: 'I couldn\'t hear you over the din of the traffic.', ru: 'Я не слышал тебя из-за шума транспорта.' },
+      { en: 'The children were making a terrible din.', ru: 'Дети устроили ужасный грохот.' },
+      { en: 'The din of battle was deafening.', ru: 'Грохот битвы был оглушительным.' },
+      { en: 'Above the din, a voice cried out.', ru: 'Поверх шума раздался крик.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_disaffect', 'Disaffect', '/ˌdɪs.əˈfekt/', 'дисэфект', 'Вызывать недовольство / Отчуждать', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Заставить людей потерять лояльность или поддержку (обычно в пассиве: disaffected).',
+    '- Люди: "Disaffected youth" (Недовольная молодежь)\n- Политика: "Disaffected voters" (Разочарованные избиратели)\n- Чувство: "Growing disaffection" (Растущее недовольство)',
+    [
+      { en: 'The troops were disaffected by the lack of food.', ru: 'Войска были недовольны из-за нехватки еды.' },
+      { en: 'Disaffected voters may boycott the election.', ru: 'Разочарованные избиратели могут бойкотировать выборы.' },
+      { en: 'The policy disaffected many loyal supporters.', ru: 'Политика оттолкнула многих преданных сторонников.' },
+      { en: 'He wrote about the disaffected generation.', ru: 'Он писал о недовольном поколении.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_disarray', 'Disarray', '/ˌdɪs.əˈreɪ/', 'дисэрей', 'Беспорядок / Хаос', ProficiencyLevel.C2, 'noun', 'Low', 'Formal',
+    'Состояние дезорганизации или неряшливости.',
+    '- Состояние: "In disarray" (В беспорядке)\n- Причина: "Thrown into disarray" (Ввергнут в хаос)\n- Вид: "Clothing in disarray" (Одежда в беспорядке)',
+    [
+      { en: 'The room was in total disarray.', ru: 'Комната была в полном беспорядке.' },
+      { en: 'The enemy troops were in disarray.', ru: 'Вражеские войска были в замешательстве.' },
+      { en: 'Her plans were thrown into disarray.', ru: 'Ее планы были нарушены (ввергнуты в хаос).' },
+      { en: 'The organization is in administrative disarray.', ru: 'Организация находится в административном хаосе.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_disband', 'Disband', '/dɪsˈbænd/', 'дисбэнд', 'Распускать / Расформировывать', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Прекратить существование группы (музыкальной, военной и т.д.).',
+    '- Группа: "Band disbanded" (Группа распалась)\n- Армия: "Disband an army" (Расформировать армию)\n- Организация: "Disbanded the unit" (Распустили подразделение)',
+    [
+      { en: 'The famous rock band decided to disband.', ru: 'Знаменитая рок-группа решила распасться.' },
+      { en: 'The army was disbanded after the war.', ru: 'Армия была расформирована после войны.' },
+      { en: 'They disbanded the committee.', ru: 'Они распустили комитет.' },
+      { en: 'The club disbanded due to lack of interest.', ru: 'Клуб распался из-за отсутствия интереса.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_discernible', 'Discernible', '/dɪˈsɜː.nə.bəl/', 'дисёнэбл', 'Различимый / Заметный', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Способный быть увиденным или понятым.',
+    '- Вид: "Barely discernible" (Едва различимый)\n- Разница: "Discernible difference" (Заметная разница)\n- Изменение: "No discernible change" (Никаких заметных изменений)',
+    [
+      { en: 'There was no discernible difference between the two copies.', ru: 'Между двумя копиями не было заметной разницы.' },
+      { en: 'A faint light was discernible in the distance.', ru: 'Слабый свет был различим вдалеке.' },
+      { en: 'For no discernible reason, he laughed.', ru: 'Без видимой причины он засмеялся.' },
+      { en: 'The improvement is barely discernible.', ru: 'Улучшение едва различимо.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_discord', 'Discord', '/ˈdɪs.kɔːd/', 'дискод', 'Разлад / Диссонанс', ProficiencyLevel.C2, 'noun', 'Low', 'Formal',
+    'Несогласие между людьми; неприятное сочетание звуков в музыке.',
+    '- Отношения: "Marital discord" (Супружеский разлад)\n- Звук: "Musical discord" (Музыкальный диссонанс)\n- Причина: "Source of discord" (Источник раздора)',
+    [
+      { en: 'The issue caused discord within the family.', ru: 'Этот вопрос вызвал разлад в семье.' },
+      { en: 'Marital discord led to their divorce.', ru: 'Супружеский разлад привел к их разводу.' },
+      { en: 'The music ended in a harsh discord.', ru: 'Музыка закончилась резким диссонансом.' },
+      { en: 'Seeds of discord were sown.', ru: 'Семена раздора были посеяны.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_discursive', 'Discursive', '/dɪˈskɜː.sɪv/', 'дискёсив', 'Сбивчивый / Дискурсивный', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Переходящий от одной темы к другой (о речи/письме); или основанный на рассуждениях.',
+    '- Стиль: "Discursive style" (Сбивчивый стиль)\n- Эссе: "Discursive essay" (Эссе-рассуждение)\n- Мышление: "Discursive thought" (Дискурсивное мышление)',
+    [
+      { en: 'His writing style is rambling and discursive.', ru: 'Его стиль письма хаотичный и сбивчивый.' },
+      { en: 'We had a discursive conversation about life.', ru: 'У нас был долгий разговор обо всем понемногу (рассуждение о жизни).' },
+      { en: 'A discursive essay explores a subject fully.', ru: 'Эссе-рассуждение полностью исследует предмет.' },
+      { en: 'Discursive reasoning is step-by-step.', ru: 'Дискурсивное рассуждение идет шаг за шагом.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_disgruntled', 'Disgruntled', '/dɪsˈɡrʌn.təld/', 'дисгрантлд', 'Недовольный / Рассерженный', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Несчастный и раздраженный, часто из-за того, что что-то пошло не так.',
+    '- Работник: "Disgruntled employee" (Недовольный сотрудник)\n- Клиент: "Disgruntled customer" (Недовольный клиент)\n- Чувство: "Feeling disgruntled" (Чувствующий недовольство)',
+    [
+      { en: 'A disgruntled employee leaked the information.', ru: 'Недовольный сотрудник слил информацию.' },
+      { en: 'Fans were disgruntled by the team\'s loss.', ru: 'Болельщики были расстроены (недовольны) проигрышем команды.' },
+      { en: 'She looked tired and disgruntled.', ru: 'Она выглядела уставшей и недовольной.' },
+      { en: 'He received letters from disgruntled readers.', ru: 'Он получал письма от недовольных читателей.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_disinterested', 'Disinterested', '/dɪsˈɪn.trə.stɪd/', 'дисинтрестид', 'Беспристрастный', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Не имеющий личной выгоды в деле и потому способный судить честно (не путать с uninterested - незаинтересованный).',
+    '- Судья: "Disinterested observer" (Беспристрастный наблюдатель)\n- Совет: "Disinterested advice" (Бескорыстный совет)\n- Отношение: "Disinterested party" (Заинтересованная сторона - ошибка, здесь: Незаинтересованная в выгоде сторона)',
+    [
+      { en: 'A judge must be disinterested in the case.', ru: 'Судья должен быть беспристрастным в деле.' },
+      { en: 'She gave me disinterested advice.', ru: 'Она дала мне бескорыстный совет.' },
+      { en: 'We need a disinterested third party to mediate.', ru: 'Нам нужна беспристрастная третья сторона для посредничества.' },
+      { en: 'Scientists aim for disinterested observation.', ru: 'Ученые стремятся к объективному (беспристрастному) наблюдению.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_dislodge', 'Dislodge', '/dɪsˈlɒdʒ/', 'дисдодж', 'Вытеснять / Смещать', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Сдвинуть что-то с места силой; выбить кого-то с позиции.',
+    '- Предмет: "Dislodge a rock" (Сдвинуть камень)\n- Власть: "Dislodge the dictator" (Свергнуть диктатора)\n- Еда: "Dislodge food" (Вытащить застрявшую еду)',
+    [
+      { en: 'The earthquake dislodged stones from the roof.', ru: 'Землетрясение сдвинуло камни с крыши.' },
+      { en: 'They failed to dislodge the enemy troops.', ru: 'Им не удалось выбить вражеские войска.' },
+      { en: 'I used a toothpick to dislodge the seed.', ru: 'Я использовал зубочистку, чтобы вытащить семечко.' },
+      { en: 'Nothing could dislodge the idea from his head.', ru: 'Ничто не могло выбить эту идею из его головы.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_distraught', 'Distraught', '/dɪˈstrɔːt/', 'дистрот', 'Обезумевший от горя', ProficiencyLevel.C2, 'adj', 'Low', 'Literary',
+    'Чрезвычайно расстроенный и взволнованный.',
+    '- Эмоция: "Visibly distraught" (Заметно расстроенный)\n- Причина: "Distraught parents" (Обезумевшие от горя родители)\n- Состояние: "Distraught with grief" (Вне себя от горя)',
+    [
+      { en: 'The distraught parents were searching for their child.', ru: 'Обезумевшие от горя родители искали своего ребенка.' },
+      { en: 'She was distraught over the death of her dog.', ru: 'Она была вне себя от горя из-за смерти собаки.' },
+      { en: 'He sounded distraught on the phone.', ru: 'Он звучал очень расстроенным по телефону.' },
+      { en: 'We tried to calm the distraught woman.', ru: 'Мы пытались успокоить обезумевшую женщину.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_divisive', 'Divisive', '/dɪˈvaɪ.sɪv/', 'дивайсив', 'Вызывающий разногласия', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Вызывающий споры и разделение мнений среди людей.',
+    '- Политика: "Divisive issue" (Спорный вопрос)\n- Личность: "Divisive figure" (Фигура, вызывающая споры)\n- Эффект: "Divisive policy" (Политика, ведущая к расколу)',
+    [
+      { en: 'Abortion is a highly divisive issue.', ru: 'Аборт — это вопрос, вызывающий глубокие разногласия.' },
+      { en: 'His speech was divisive and aggressive.', ru: 'Его речь была сеющей рознь и агрессивной.' },
+      { en: 'She is a divisive figure in politics.', ru: 'Она — фигура, вызывающая споры в политике.' },
+      { en: 'The war proved to be socially divisive.', ru: 'Война оказалась социально разъединяющей.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_dogma', 'Dogma', '/ˈdɒɡ.mə/', 'догма', 'Догма', ProficiencyLevel.C2, 'noun', 'Low', 'Formal',
+    'Набор убеждений, принимаемых за истину без доказательств (обычно религиозных или политических).',
+    '- Религия: "Religious dogma" (Религиозная догма)\n- Политика: "Party dogma" (Партийная догма)\n- Убеждение: "Challenge dogma" (Бросить вызов догмам)',
+    [
+      { en: 'He questioned the political dogma of his time.', ru: 'Он поставил под сомнение политические догмы своего времени.' },
+      { en: 'Religious dogma often conflicts with science.', ru: 'Религиозная догма часто конфликтует с наукой.' },
+      { en: 'We must not be slaves to dogma.', ru: 'Мы не должны быть рабами догм.' },
+      { en: 'The dogma implies that the leader is always right.', ru: 'Догма подразумевает, что лидер всегда прав.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_dogmatic', 'Dogmatic', '/dɒɡˈmæt.ɪk/', 'догмэтик', 'Догматичный / Категоричный', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Уверенный в своей правоте и не желающий принимать другие мнения.',
+    '- Человек: "Dogmatic person" (Категоричный человек)\n- Тон: "Dogmatic tone" (Безапелляционный тон)\n- Мнение: "Dogmatic view" (Догматический взгляд)',
+    [
+      { en: 'He is so dogmatic that he never listens to anyone.', ru: 'Он настолько догматичен, что никогда никого не слушает.' },
+      { en: 'She has very dogmatic views on education.', ru: 'У нее очень категоричные взгляды на образование.' },
+      { en: 'Don\'t be so dogmatic about it.', ru: 'Не будь так категоричен в этом.' },
+      { en: 'His dogmatic approach annoyed his colleagues.', ru: 'Его безапелляционный подход раздражал коллег.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_dormant', 'Dormant', '/ˈdɔː.mənt/', 'домэнт', 'Спящий / Бездействующий', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Неактивный в данный момент, но способный стать активным позже.',
+    '- Вулкан: "Dormant volcano" (Спящий вулкан)\n- Счет: "Dormant account" (Неактивный счет)\n- Растение: "Dormant plants" (Спящие растения - зимой)',
+    [
+      { en: 'The volcano has been dormant for centuries.', ru: 'Вулкан спал столетиями.' },
+      { en: 'The seeds remain dormant until spring.', ru: 'Семена остаются в состоянии покоя до весны.' },
+      { en: 'He reactivated a dormant bank account.', ru: 'Он активировал неактивный банковский счет.' },
+      { en: 'The virus can lie dormant in the body.', ru: 'Вирус может дремать в организме.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_drab', 'Drab', '/dræb/', 'дрэб', 'Тусклый / Однообразный', ProficiencyLevel.C2, 'adj', 'Low', 'Neutral',
+    'Скучный, неинтересный, лишенный цвета.',
+    '- Цвет: "Drab colours" (Тусклые цвета)\n- Жизнь: "Drab existence" (Серое существование)\n- Одежда: "Drab uniform" (Унылая униформа)',
+    [
+      { en: 'She wore a drab grey coat.', ru: 'Она была одета в тусклое серое пальто.' },
+      { en: 'The office building looks drab and depressing.', ru: 'Офисное здание выглядит унылым и депрессивным.' },
+      { en: 'Life in the village seemed drab to him.', ru: 'Жизнь в деревне казалась ему скучной.' },
+      { en: 'The bird has drab brown feathers.', ru: 'У птицы невзрачные коричневые перья.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_dreary', 'Dreary', '/ˈdrɪə.ri/', 'дриэри', 'Тоскливый / Мрачный', ProficiencyLevel.C2, 'adj', 'Low', 'Neutral',
+    'Вызывающий скуку и уныние; мрачный (о погоде/месте).',
+    '- Погода: "Dreary day" (Мрачный день)\n- Работа: "Dreary routine" (Тоскливая рутина)\n- Вид: "Dreary landscape" (Унылый пейзаж)',
+    [
+      { en: 'It was a long, dreary winter.', ru: 'Это была долгая, тоскливая зима.' },
+      { en: 'She has a dreary job in a factory.', ru: 'У нее унылая работа на фабрике.' },
+      { en: 'The landscape was flat and dreary.', ru: 'Пейзаж был плоским и мрачным.' },
+      { en: 'I listened to his dreary speech.', ru: 'Я слушал его нудную речь.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_easel', 'Easel', '/ˈiː.zəl/', 'изэл', 'Мольберт', ProficiencyLevel.C2, 'noun', 'Low', 'Neutral',
+    'Деревянная подставка для картины художника.',
+    '- Искусство: "Set up an easel" (Установить мольберт)\n- Рисование: "Stand at the easel" (Стоять у мольберта)\n- Презентация: "Display easel" (Демонстрационный стенд)',
+    [
+      { en: 'The artist placed the canvas on the easel.', ru: 'Художник поставил холст на мольберт.' },
+      { en: 'She stood at her easel painting all day.', ru: 'Она стояла у мольберта и рисовала весь день.' },
+      { en: 'The chart was displayed on an easel.', ru: 'График был выставлен на мольберте.' },
+      { en: 'He bought a new wooden easel.', ru: 'Он купил новый деревянный мольберт.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_eclectic', 'Eclectic', '/ɪˈklek.tɪk/', 'иклектик', 'Эклектичный / Разносторонний', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Смешивающий разные стили или идеи; выбирающий лучшее из разного.',
+    '- Вкус: "Eclectic taste" (Разносторонний вкус)\n- Стиль: "Eclectic mix" (Эклектичная смесь)\n- Коллекция: "Eclectic collection" (Разношерстная коллекция)',
+    [
+      { en: 'He has an eclectic taste in music.', ru: 'У него разносторонний вкус в музыке.' },
+      { en: 'The room was decorated in an eclectic style.', ru: 'Комната была оформлена в эклектичном стиле.' },
+      { en: 'An eclectic mix of people attended the party.', ru: 'На вечеринке собралась разношерстная компания.' },
+      { en: 'Her approach to teaching is eclectic.', ru: 'Ее подход к преподаванию эклектичен (сочетает разные методы).' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_effluent', 'Effluent', '/ˈef.lu.ənt/', 'эфлуэнт', 'Сточные воды / Выбросы', ProficiencyLevel.C2, 'noun', 'Low', 'Technical',
+    'Жидкие отходы, сбрасываемые в реку или море (промышленные).',
+    '- Экология: "Industrial effluent" (Промышленные стоки)\n- Загрязнение: "Treat effluent" (Очищать сточные воды)\n- Сброс: "Discharge effluent" (Сбрасывать отходы)',
+    [
+      { en: 'Factory effluent is polluting the river.', ru: 'Заводские стоки загрязняют реку.' },
+      { en: 'The company was fined for discharging toxic effluent.', ru: 'Компанию оштрафовали за сброс токсичных отходов.' },
+      { en: 'Effluent treatment plants are essential.', ru: 'Очистные сооружения необходимы.' },
+      { en: 'We tested the effluent for chemicals.', ru: 'Мы проверили сточные воды на наличие химикатов.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_elapse', 'Elapse', '/iˈlæps/', 'илэпс', 'Проходить / Истекать (о времени)', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Проходить (о времени). Синоним: pass.',
+    '- Время: "Time elapsed" (Время прошло)\n- Период: "Years elapsed" (Прошли годы)\n- Ожидание: "Allow time to elapse" (Дать времени пройти)',
+    [
+      { en: 'Four years have elapsed since we last met.', ru: 'Прошло четыре года с нашей последней встречи.' },
+      { en: 'A considerable amount of time has elapsed.', ru: 'Прошло значительное количество времени.' },
+      { en: 'Wait for the time limit to elapse.', ru: 'Подожди, пока истечет лимит времени.' },
+      { en: 'Many hours elapsed before he woke up.', ru: 'Прошло много часов, прежде чем он проснулся.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_elate', 'Elate', '/iˈleɪt/', 'илейт', 'Поднимать настроение / Окрылять', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Делать кого-то очень счастливым и гордым (обычно в пассиве: elated).',
+    '- Чувство: "Elated by success" (Окрыленный успехом)\n- Настроение: "Feel elated" (Чувствовать восторг)\n- Победа: "Elated crowd" (Ликующая толпа)',
+    [
+      { en: 'She was elated by the news.', ru: 'Она была в восторге от новостей.' },
+      { en: 'We were elated to hear you are coming.', ru: 'Мы были счастливы услышать, что ты приезжаешь.' },
+      { en: 'The victory elated the fans.', ru: 'Победа окрылила болельщиков.' },
+      { en: 'He felt elated after passing the exam.', ru: 'Он чувствовал себя на седьмом небе после сдачи экзамена.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_elective', 'Elective', '/iˈlek.tɪv/', 'илектив', 'Факультативный / Избирательный', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Выбираемый голосованием; или необязательный (о предмете/операции).',
+    '- Медицина: "Elective surgery" (Плановая операция)\n- Учеба: "Elective course" (Факультативный курс)\n- Должность: "Elective office" (Выборная должность)',
+    [
+      { en: 'I am taking an elective course in art history.', ru: 'Я посещаю факультативный курс по истории искусств.' },
+      { en: 'Elective surgery can be scheduled in advance.', ru: 'Плановую операцию можно назначить заранее.' },
+      { en: 'The President holds an elective office.', ru: 'Президент занимает выборную должность.' },
+      { en: 'Students can choose three electives.', ru: 'Студенты могут выбрать три факультатива.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_elliptical', 'Elliptical', '/iˈlɪp.tɪ.kəl/', 'илиптикэл', 'Эллиптический / Недосказанный', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'В форме эллипса (овал); или (о речи) опускающий слова, трудный для понимания.',
+    '- Форма: "Elliptical orbit" (Эллиптическая орбита)\n- Речь: "Elliptical remark" (Туманное замечание)\n- Стиль: "Elliptical style" (Лаконичный/недосказанный стиль)',
+    [
+      { en: 'The planets move in elliptical orbits.', ru: 'Планеты движутся по эллиптическим орбитам.' },
+      { en: 'His answer was rather elliptical.', ru: 'Его ответ был довольно туманным (недосказанным).' },
+      { en: 'The rug is elliptical in shape.', ru: 'Ковер имеет форму эллипса.' },
+      { en: 'She writes in an elliptical style.', ru: 'Она пишет в стиле недосказанности.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_elucidate', 'Elucidate', '/iˈluː.sɪ.deɪt/', 'илюсидейт', 'Разъяснять / Проливать свет', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Делать что-то понятным, объяснять.',
+    '- Объяснение: "Elucidate a point" (Разъяснить пункт)\n- Смысл: "Elucidate meaning" (Прояснить значение)\n- Проблема: "Elucidate the mystery" (Пролить свет на тайну)',
+    [
+      { en: 'Please elucidate the reasons for your decision.', ru: 'Пожалуйста, разъясните причины вашего решения.' },
+      { en: 'The footnote elucidates the text.', ru: 'Сноска разъясняет текст.' },
+      { en: 'He tried to elucidate his theory.', ru: 'Он пытался разъяснить свою теорию.' },
+      { en: 'Can you elucidate what happened?', ru: 'Можешь прояснить, что случилось?' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_embankment', 'Embankment', '/ɪmˈbæŋk.mənt/', 'имбэнкмэнт', 'Набережная / Насыпь', ProficiencyLevel.C2, 'noun', 'Low', 'Neutral',
+    'Стена из камня или земли, удерживающая воду (набережная) или поддерживающая дорогу (насыпь).',
+    '- Река: "River embankment" (Набережная реки)\n- Железная дорога: "Railway embankment" (Железнодорожная насыпь)\n- Прогулка: "Walk along the embankment" (Гулять по набережной)',
+    [
+      { en: 'We walked along the Thames Embankment.', ru: 'Мы гуляли по набережной Темзы.' },
+      { en: 'The train runs on a high embankment.', ru: 'Поезд идет по высокой насыпи.' },
+      { en: 'Flood waters broke through the embankment.', ru: 'Паводковые воды прорвали дамбу.' },
+      { en: 'They built an embankment to stop the river flooding.', ru: 'Они построили насыпь, чтобы остановить разлив реки.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_embryonic', 'Embryonic', '/ˌem.briˈɒn.ɪk/', 'эмбрик', 'Зародышевый / Эмбриональный', ProficiencyLevel.C2, 'adj', 'Low', 'Scientific',
+    'Находящийся на очень ранней стадии развития.',
+    '- Стадия: "Embryonic stage" (Эмбриональная стадия)\n- Идея: "Embryonic idea" (Идея в зародыше)\n- Биология: "Embryonic cells" (Эмбриональные клетки)',
+    [
+      { en: 'The plan is still in an embryonic stage.', ru: 'План все еще находится в зачаточном состоянии.' },
+      { en: 'Stem cell research uses embryonic tissue.', ru: 'Исследования стволовых клеток используют эмбриональные ткани.' },
+      { en: 'His career was in an embryonic state.', ru: 'Его карьера была в самом начале.' },
+      { en: 'The embryonic development of the chick.', ru: 'Эмбриональное развитие цыпленка.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_encapsulate', 'Encapsulate', '/ɪnˈkæp.sjə.leɪt/', 'inkapsyuleyt', 'Кратко излагать / Заключать в капсулу', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Выражать суть чего-либо в краткой форме; или помещать в капсулу.',
+    '- Суть: "Encapsulate the idea" (Выразить суть идеи)\n- Резюме: "Encapsulate in a few words" (Выразить в нескольких словах)\n- Оболочка: "Encapsulated in plastic" (Заключенный в пластик)',
+    [
+      { en: 'The poem encapsulates the mood of the time.', ru: 'Стихотворение отражает (выражает суть) настроение того времени.' },
+      { en: 'Can you encapsulate your argument in one sentence?', ru: 'Можешь выразить свой аргумент одним предложением?' },
+      { en: 'The pill encapsulates the medicine.', ru: 'Таблетка заключает лекарство в капсулу.' },
+      { en: 'It perfectly encapsulates the problem.', ru: 'Это идеально отражает суть проблемы.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_encase', 'Encase', '/ɪnˈkeɪs/', 'инкейс', 'Облекать / Заключать в оболочку', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Полностью покрывать или окружать чем-то защитным.',
+    '- Защита: "Encased in concrete" (Замурованный в бетон)\n- Броня: "Encased in armour" (Закованный в броню)\n- Стекло: "Encased in glass" (Заключенный в стекло)',
+    [
+      { en: 'The reactor is encased in concrete.', ru: 'Реактор заключен в бетонную оболочку.' },
+      { en: 'His leg was encased in plaster.', ru: 'Его нога была в гипсе.' },
+      { en: 'The jewels were encased in a glass box.', ru: 'Драгоценности были заключены в стеклянную шкатулку.' },
+      { en: 'Knights were encased in steel armour.', ru: 'Рыцари были закованы в стальные доспехи.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_endemic', 'Endemic', '/enˈdem.ɪk/', 'эндемик', 'Эндемичный / Свойственный местности', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Распространенный в определенном месте или среди определенной группы людей (о болезнях или проблемах).',
+    '- Болезнь: "Endemic disease" (Эндемическое заболевание)\n- Проблема: "Endemic corruption" (Повсеместная коррупция)\n- Вид: "Endemic species" (Эндемичный вид)',
+    [
+      { en: 'Malaria is endemic in this region.', ru: 'Малярия является эндемичным заболеванием в этом регионе.' },
+      { en: 'Corruption is endemic in the system.', ru: 'Коррупция свойственна этой системе.' },
+      { en: 'The plant is endemic to Australia.', ru: 'Это растение эндемично для Австралии.' },
+      { en: 'Racism was endemic in the 1950s.', ru: 'Расизм был повсеместным в 1950-х.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_enigmatic', 'Enigmatic', '/ˌen.ɪɡˈmæt.ɪk/', 'инигметик', 'Загадочный', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Таинственный и трудный для понимания.',
+    '- Улыбка: "Enigmatic smile" (Загадочная улыбка - как у Моны Лизы)\n- Личность: "Enigmatic figure" (Загадочная фигура)\n- Ответ: "Enigmatic reply" (Загадочный ответ)',
+    [
+      { en: 'She gave him an enigmatic smile.', ru: 'Она одарила его загадочной улыбкой.' },
+      { en: 'He is an enigmatic character.', ru: 'Он загадочный персонаж.' },
+      { en: 'The message was short and enigmatic.', ru: 'Сообщение было коротким и загадочным.' },
+      { en: 'The Mona Lisa is famous for her enigmatic expression.', ru: 'Мона Лиза известна своим загадочным выражением лица.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_entourage', 'Entourage', '/ˈɒn.tu.rɑːʒ/', 'онтураж', 'Свита / Окружение', ProficiencyLevel.C2, 'noun', 'Low', 'Neutral',
+    'Группа людей, сопровождающих важную персону.',
+    '- Знаменитость: "Celebrity entourage" (Свита знаменитости)\n- Путешествие: "Travel with an entourage" (Путешествовать со свитой)\n- Король: "Royal entourage" (Королевская свита)',
+    [
+      { en: 'The star arrived with a huge entourage.', ru: 'Звезда прибыла с огромной свитой.' },
+      { en: 'His entourage includes bodyguards and assistants.', ru: 'Его свита включает телохранителей и ассистентов.' },
+      { en: 'She never travels without her entourage.', ru: 'Она никогда не путешествует без своего окружения.' },
+      { en: 'The president and his entourage left the building.', ru: 'Президент и его свита покинули здание.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_enumerate', 'Enumerate', '/ɪˈnjuː.mə.reɪt/', 'иньюмэрейт', 'Перечислять', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Называть вещи одну за другой в списке.',
+    '- Список: "Enumerate the reasons" (Перечислить причины)\n- Права: "Enumerate rights" (Перечислить права)\n- Детали: "Enumerate details" (Перечислить детали)',
+    [
+      { en: 'He enumerated the benefits of the plan.', ru: 'Он перечислил преимущества плана.' },
+      { en: 'I cannot enumerate all his faults.', ru: 'Я не могу перечислить все его недостатки.' },
+      { en: 'The report enumerates the errors made.', ru: 'Отчет перечисляет допущенные ошибки.' },
+      { en: 'Let me enumerate the steps we need to take.', ru: 'Позвольте мне перечислить шаги, которые нам нужно предпринять.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_epithelial', 'Epithelial', '/ˌep.ɪˈθiː.li.əl/', 'эписилиэл', 'Эпителиальный', ProficiencyLevel.C2, 'adj', 'Low', 'Medical',
+    'Относящийся к тонкой ткани, покрывающей тело и органы (эпителий).',
+    '- Ткань: "Epithelial tissue" (Эпителиальная ткань)\n- Клетки: "Epithelial cells" (Эпителиальные клетки)\n- Слой: "Epithelial layer" (Эпителиальный слой)',
+    [
+      { en: 'The skin is made of epithelial cells.', ru: 'Кожа состоит из эпителиальных клеток.' },
+      { en: 'Damage to the epithelial lining.', ru: 'Повреждение эпителиальной оболочки.' },
+      { en: 'Epithelial tissue protects the organs.', ru: 'Эпителиальная ткань защищает органы.' },
+      { en: 'Cancer can start in epithelial cells.', ru: 'Рак может начаться в эпителиальных клетках.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_epitomise', 'Epitomise', '/ɪˈpɪt.ə.maɪz/', 'ипитэмайз', 'Олицетворять', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Быть идеальным примером качества или типа (US: Epitomize).',
+    '- Пример: "Epitomise the spirit" (Олицетворять дух)\n- Качество: "Epitomise elegance" (Олицетворять элегантность)\n- Эпоха: "Epitomise the era" (Быть олицетворением эпохи)',
+    [
+      { en: 'She epitomises kindness and generosity.', ru: 'Она олицетворяет доброту и щедрость.' },
+      { en: 'The building epitomises the Art Deco style.', ru: 'Здание олицетворяет стиль ар-деко.' },
+      { en: 'He epitomises everything I dislike.', ru: 'Он олицетворяет все, что мне не нравится.' },
+      { en: 'This car epitomises luxury.', ru: 'Этот автомобиль — воплощение роскоши.' }
+    ],
+    []
+  ),
+];
+
+Вот TypeScript код для списка слов от EPOCH до GIMMICK, распределенный по уровням владения языком.
+
+code
+TypeScript
+download
+content_copy
+expand_less
+import { createRichWord } from './utils/createRichWord';
+import { ProficiencyLevel } from './enums';
+
+export const wordsBatchEtoG_Part2 = [
+  // ==============================================================================
+  // --- LEVEL B1 (Threshold) -----------------------------------------------------
+  // ==============================================================================
+
+  createRichWord('b1_fairs', 'Fair', '/feər/', 'феэ', 'Ярмарка', ProficiencyLevel.B1, 'noun', 'Medium', 'Neutral',
+    'Собрание людей для торговли, развлечений или выставки товаров (входное слово Fairs приведено к Lemma).',
+    '- Развлечения: "Fun fair" (Парк аттракционов/Ярмарка)\n- Торговля: "Trade fair" (Торговая ярмарка)\n- Книга: "Book fair" (Книжная ярмарка)',
+    [
+      { en: 'We won a teddy bear at the fair.', ru: 'Мы выиграли плюшевого мишку на ярмарке.' },
+      { en: 'The annual book fair attracts many visitors.', ru: 'Ежегодная книжная ярмарка привлекает много посетителей.' },
+      { en: 'There were many rides at the fun fair.', ru: 'На ярмарке было много аттракционов.' },
+      { en: 'Farmers brought their cattle to the county fair.', ru: 'Фермеры привезли свой скот на окружную ярмарку.' }
+    ],
+    [
+      { meaning: "Just/Impartial (Adjective)", translation: "Справедливый / Честный", example: { en: "That's not fair!", ru: "Это нечестно!" } },
+      { meaning: "Light/Pale (Adjective)", translation: "Светлый (о волосах/коже)", example: { en: "She has fair hair.", ru: "У нее светлые волосы." } }
+    ]
+  ),
+
+  createRichWord('b1_gasoline', 'Gasoline', '/ˈɡæs.əl.iːn/', 'гэсэлин', 'Бензин', ProficiencyLevel.B1, 'noun', 'High', 'Neutral',
+    'Топливо для автомобилей (американский английский; британский вариант - petrol).',
+    '- Авто: "Fill up with gasoline" (Заправиться бензином)\n- Цена: "Gasoline prices" (Цены на бензин)\n- Бак: "Gasoline tank" (Бензобак)',
+    [
+      { en: 'The car is running low on gasoline.', ru: 'В машине заканчивается бензин.' },
+      { en: 'Gasoline prices have gone up again.', ru: 'Цены на бензин снова выросли.' },
+      { en: 'He poured gasoline into the generator.', ru: 'Он залил бензин в генератор.' },
+      { en: 'Is this engine diesel or gasoline?', ru: 'Этот двигатель дизельный или бензиновый?' }
+    ],
+    []
+  ),
+
+  // ==============================================================================
+  // --- LEVEL B2 (Vantage) -------------------------------------------------------
+  // ==============================================================================
+
+  createRichWord('b2_fiancee', 'Fiancee', '/fiˈɒn.seɪ/', 'фионсей', 'Невеста', ProficiencyLevel.B2, 'noun', 'Low', 'Neutral',
+    'Женщина, которая помолвлена и собирается выйти замуж (мужчина - fiancé).',
+    '- Отношения: "Introduce fiancee" (Представить невесту)\n- Свадьба: "Future fiancee" (Будущая невеста)\n- Статус: "Engaged to fiancee" (Помолвлен с невестой)',
+    [
+      { en: 'He introduced his fiancee to his parents.', ru: 'Он представил свою невесту родителям.' },
+      { en: 'His fiancee works as a doctor.', ru: 'Его невеста работает врачом.' },
+      { en: 'They bought a ring for his fiancee.', ru: 'Они купили кольцо для его невесты.' },
+      { en: 'He is traveling with his fiancee.', ru: 'Он путешествует со своей невестой.' }
+    ],
+    []
+  ),
+
+  createRichWord('b2_freckle', 'Freckle', '/ˈfrek.əl/', 'фрекл', 'Веснушка', ProficiencyLevel.B2, 'noun', 'Low', 'Neutral',
+    'Маленькое коричневое пятнышко на коже, появляющееся от солнца.',
+    '- Лицо: "Covered in freckles" (Покрытый веснушками)\n- Солнце: "Get freckles" (Покрыться веснушками)\n- Внешность: "Cute freckles" (Милые веснушки)',
+    [
+      { en: 'She has freckles on her nose.', ru: 'У нее веснушки на носу.' },
+      { en: 'The sun makes my freckles darker.', ru: 'От солнца мои веснушки темнеют.' },
+      { en: 'He is a redhead with lots of freckles.', ru: 'Он рыжий с множеством веснушек.' },
+      { en: 'Freckles often run in families.', ru: 'Веснушки часто передаются по наследству.' }
+    ],
+    []
+  ),
+
+  createRichWord('b2_freshman', 'Freshman', '/ˈfreʃ.mən/', 'фрешмэн', 'Первокурсник', ProficiencyLevel.B2, 'noun', 'Low', 'Neutral',
+    'Студент первого курса университета или колледжа (особенно в США).',
+    '- Университет: "College freshman" (Первокурсник колледжа)\n- Год: "Freshman year" (Первый курс)\n- Новичок: "Incoming freshman" (Вновь поступивший)',
+    [
+      { en: 'It is his freshman year at Harvard.', ru: 'Это его первый курс в Гарварде.' },
+      { en: 'The freshman students looked lost.', ru: 'Студенты-первокурсники выглядели потерянными.' },
+      { en: 'She lives in the freshman dormitory.', ru: 'Она живет в общежитии для первокурсников.' },
+      { en: 'As a freshman, he has a lot to learn.', ru: 'Как первокурснику, ему предстоит многому научиться.' }
+    ],
+    []
+  ),
+
+  // ==============================================================================
+  // --- LEVEL C1 (Advanced) ------------------------------------------------------
+  // ==============================================================================
+
+  createRichWord('c1_epoch', 'Epoch', '/ˈiː.pɒk/', 'ипок', 'Эпоха', ProficiencyLevel.C1, 'noun', 'Low', 'Formal',
+    'Длительный период времени в истории, отмеченный важными событиями.',
+    '- История: "Victorian epoch" (Викторианская эпоха)\n- Перемены: "End of an epoch" (Конец эпохи)\n- Геология: "Geological epoch" (Геологическая эпоха)',
+    [
+      { en: 'The invention of the internet marked a new epoch.', ru: 'Изобретение интернета ознаменовало новую эпоху.' },
+      { en: 'We are living in an epoch of rapid change.', ru: 'Мы живем в эпоху стремительных перемен.' },
+      { en: 'The death of the king ended an epoch.', ru: 'Смерть короля положила конец целой эпохе.' },
+      { en: 'This epoch is characterized by technological growth.', ru: 'Эта эпоха характеризуется технологическим ростом.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_espionage', 'Espionage', '/ˈes.pi.ə.nɑːʒ/', 'эспиэнаж', 'Шпионаж', ProficiencyLevel.C1, 'noun', 'Low', 'Formal',
+    'Деятельность по шпионажу, особенно между странами или компаниями.',
+    '- Деятельность: "Industrial espionage" (Промышленный шпионаж)\n- Обвинение: "Accused of espionage" (Обвинен в шпионаже)\n- Сфера: "Act of espionage" (Акт шпионажа)',
+    [
+      { en: 'He was arrested for espionage.', ru: 'Его арестовали за шпионаж.' },
+      { en: 'Industrial espionage costs companies millions.', ru: 'Промышленный шпионаж обходится компаниям в миллионы.' },
+      { en: 'The novel is a classic tale of Cold War espionage.', ru: 'Этот роман — классическая история шпионажа времен Холодной войны.' },
+      { en: 'They denied involvement in espionage activities.', ru: 'Они отрицали причастность к шпионской деятельности.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_etiquette', 'Etiquette', '/ˈet.ɪ.ket/', 'этикет', 'Этикет', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Набор правил вежливого поведения в обществе.',
+    '- Поведение: "Table etiquette" (Столовый этикет)\n- Правила: "Rules of etiquette" (Правила этикета)\n- Бизнес: "Business etiquette" (Деловой этикет)',
+    [
+      { en: 'It is bad etiquette to speak with your mouth full.', ru: 'Говорить с набитым ртом — это дурной тон (нарушение этикета).' },
+      { en: 'She studied the etiquette of the royal court.', ru: 'Она изучала этикет королевского двора.' },
+      { en: 'Social etiquette varies from country to country.', ru: 'Социальный этикет различается в разных странах.' },
+      { en: 'Follow the proper etiquette when dining out.', ru: 'Соблюдайте надлежащий этикет, обедая вне дома.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_evangelist', 'Evangelist', '/ɪˈvæn.dʒə.lɪst/', 'ивэнджэлист', 'Проповедник / Евангелист', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Человек, который с энтузиазмом проповедует христианство; или сторонник какой-либо идеи (техно-евангелист).',
+    '- Религия: "TV evangelist" (Телепроповедник)\n- Технологии: "Tech evangelist" (Популяризатор технологий)\n- Действие: "Preach like an evangelist" (Проповедовать как евангелист)',
+    [
+      { en: 'The evangelist preached to a large crowd.', ru: 'Проповедник читал проповедь большой толпе.' },
+      { en: 'He is a well-known television evangelist.', ru: 'Он известный телевизионный проповедник.' },
+      { en: 'She works as a technology evangelist for a software firm.', ru: 'Она работает популяризатором технологий в софтверной фирме.' },
+      { en: 'Evangelists travel to spread their message.', ru: 'Евангелисты путешествуют, чтобы распространять свое послание.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_evasion', 'Evasion', '/ɪˈveɪ.ʒən/', 'ивейжн', 'Уклонение', ProficiencyLevel.C1, 'noun', 'Low', 'Formal',
+    'Акт избегания чего-либо (налогов, вопросов, ответственности).',
+    '- Налоги: "Tax evasion" (Уклонение от налогов)\n- Ответственность: "Evasion of duty" (Уклонение от обязанностей)\n- Разговор: "Answer without evasion" (Отвечать без уверток)',
+    [
+      { en: 'He was charged with tax evasion.', ru: 'Ему предъявили обвинение в уклонении от уплаты налогов.' },
+      { en: 'Her answer was full of evasion.', ru: 'Ее ответ был полон уверток.' },
+      { en: 'Evasion of the rules will not be tolerated.', ru: 'Уклонение от соблюдения правил не будет допускаться.' },
+      { en: 'It was a clear evasion of responsibility.', ru: 'Это было явное уклонение от ответственности.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_exhale', 'Exhale', '/eksˈheɪl/', 'эксхейл', 'Выдыхать', ProficiencyLevel.C1, 'verb', 'Medium', 'Neutral',
+    'Выпускать воздух из легких (антоним: inhale).',
+    '- Дыхание: "Inhale and exhale" (Вдохнуть и выдохнуть)\n- Дым: "Exhale smoke" (Выдыхать дым)\n- Расслабление: "Exhale slowly" (Медленно выдыхать)',
+    [
+      { en: 'Take a deep breath and exhale slowly.', ru: 'Сделайте глубокий вдох и медленно выдохните.' },
+      { en: 'He exhaled a cloud of smoke.', ru: 'Он выдохнул облако дыма.' },
+      { en: 'She exhaled with relief when she heard the news.', ru: 'Она с облегчением выдохнула, услышав новости.' },
+      { en: 'Hold your breath, then exhale.', ru: 'Задержите дыхание, затем выдохните.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_expatriate', 'Expatriate', '/eksˈpæt.ri.ət/', 'экспэтриэт', 'Экспатриант / Экспат', ProficiencyLevel.C1, 'noun', 'Low', 'Formal',
+    'Человек, живущий не в своей родной стране.',
+    '- Жизнь: "Expatriate community" (Сообщество экспатов)\n- Работа: "American expatriate" (Американский экспат)\n- Сокращение: "Expat" (Экспат - разг.)',
+    [
+      { en: 'He is a British expatriate living in Spain.', ru: 'Он британский экспатриант, живущий в Испании.' },
+      { en: 'The expatriate community helps new arrivals.', ru: 'Сообщество экспатов помогает новоприбывшим.' },
+      { en: 'Many expatriates work in the oil industry.', ru: 'Многие экспаты работают в нефтяной промышленности.' },
+      { en: 'She enjoys the expatriate lifestyle.', ru: 'Ей нравится образ жизни экспата.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_fad', 'Fad', '/fæd/', 'фэд', 'Прихоть / Модное увлечение', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Что-то очень популярное в течение короткого времени, а затем забываемое.',
+    '- Мода: "Passing fad" (Минутное увлечение)\n- Еда: "Diet fad" (Модная диета)\n- Популярность: "Latest fad" (Последний писк моды)',
+    [
+      { en: 'This hairstyle is just a passing fad.', ru: 'Эта прическа — всего лишь минутное увлечение.' },
+      { en: 'Diet fads come and go.', ru: 'Модные диеты приходят и уходят.' },
+      { en: 'He refuses to follow the latest fads.', ru: 'Он отказывается следовать последним модным веяниям.' },
+      { en: 'Is this a trend or just a fad?', ru: 'Это тренд или просто временное увлечение?' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_fang', 'Fang', '/fæŋ/', 'фэнг', 'Клык', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Длинный острый зуб животного (змеи, волка, вампира).',
+    '- Животное: "Wolf\'s fangs" (Волчьи клыки)\n- Змея: "Poisonous fangs" (Ядовитые клыки)\n- Вампир: "Vampire fangs" (Клыки вампира)',
+    [
+      { en: 'The dog bared its fangs.', ru: 'Собака оскалила клыки.' },
+      { en: 'Snakes inject poison through their fangs.', ru: 'Змеи впрыскивают яд через клыки.' },
+      { en: 'The vampire costume included fake fangs.', ru: 'Костюм вампира включал накладные клыки.' },
+      { en: 'The tiger sank its fangs into the meat.', ru: 'Тигр вонзил клыки в мясо.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_fasts', 'Fasts', '/fɑːsts/', 'фастс', 'Посты (голодание)', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Периоды воздержания от еды (входное слово Fast приведено к Lemma, но примеры даны для множественного числа или глагола).',
+    '- Религия: "Religious fasts" (Религиозные посты)\n- Здоровье: "Intermittent fasting" (Интервальное голодание)\n- Глагол: "To fast" (Поститься)',
+    [
+      { en: 'Muslims observe fasts during Ramadan.', ru: 'Мусульмане соблюдают посты во время Рамадана.' },
+      { en: 'He fasts twice a week for health reasons.', ru: 'Он постится дважды в неделю по соображениям здоровья.' },
+      { en: 'Long fasts can be dangerous.', ru: 'Длительные голодания могут быть опасны.' },
+      { en: 'Break the fast with a light meal.', ru: 'Прервите пост легкой едой.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_fetus', 'Fetus', '/ˈfiː.təs/', 'фитэс', 'Плод (эмбрион)', ProficiencyLevel.C1, 'noun', 'Low', 'Medical',
+    'Развивающийся ребенок в утробе матери (обычно после 8-й недели).',
+    '- Медицина: "Human fetus" (Человеческий плод)\n- Развитие: "Development of the fetus" (Развитие плода)\n- Здоровье: "Fetal heart rate" (Сердцебиение плода)',
+    [
+      { en: 'The fetus is developing normally.', ru: 'Плод развивается нормально.' },
+      { en: 'Ultrasound allows us to see the fetus.', ru: 'Ультразвук позволяет нам увидеть плод.' },
+      { en: 'Smoking can harm the developing fetus.', ru: 'Курение может навредить развивающемуся плоду.' },
+      { en: 'At this stage, the embryo becomes a fetus.', ru: 'На этой стадии эмбрион становится плодом.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_fiasco', 'Fiasco', '/fiˈæs.kəʊ/', 'фиаско', 'Фиаско / Полный провал', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Событие, которое заканчивается полным и постыдным провалом.',
+    '- Провал: "Total fiasco" (Полное фиаско)\n- Событие: "Ended in a fiasco" (Закончилось фиаско)\n- Описание: "Political fiasco" (Политическое фиаско)',
+    [
+      { en: 'The party was a complete fiasco.', ru: 'Вечеринка была полным фиаско.' },
+      { en: 'The project ended in a fiasco due to poor planning.', ru: 'Проект закончился провалом из-за плохого планирования.' },
+      { en: 'We want to avoid another fiasco.', ru: 'Мы хотим избежать очередного фиаско.' },
+      { en: 'The meeting was a fiasco from start to finish.', ru: 'Встреча была провалом от начала до конца.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_fidget', 'Fidget', '/ˈfɪdʒ.ɪt/', 'фиджит', 'Ерзать / Нервничать', ProficiencyLevel.C1, 'verb', 'Low', 'Neutral',
+    'Делать мелкие движения руками или ногами из-за нервозности или скуки.',
+    '- Движение: "Fidget in chair" (Ерзать на стуле)\n- Руки: "Fidget with a pen" (Вертеть ручку в руках)\n- Состояние: "Stop fidgeting" (Перестань ерзать)',
+    [
+      { en: 'Stop fidgeting and sit still!', ru: 'Перестань ерзать и сиди смирно!' },
+      { en: 'He fidgeted nervously in his chair.', ru: 'Он нервно ерзал на стуле.' },
+      { en: 'Children often fidget when they are bored.', ru: 'Дети часто ерзают, когда им скучно.' },
+      { en: 'She fidgeted with her necklace while speaking.', ru: 'Она теребила ожерелье, пока говорила.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_figurative', 'Figurative', '/ˈfɪɡ.ər.ə.tɪv/', 'фигэрэтив', 'Фигуральный / Переносный', ProficiencyLevel.C1, 'adj', 'Low', 'Formal',
+    'Используемый в переносном, а не прямом смысле (о значении слов).',
+    '- Смысл: "Figurative meaning" (Переносное значение)\n- Искусство: "Figurative art" (Изобразительное искусство - с фигурами)\n- Речь: "Figuratively speaking" (Фигурально выражаясь)',
+    [
+      { en: 'The word is used in a figurative sense here.', ru: 'Слово здесь используется в переносном смысле.' },
+      { en: 'Figuratively speaking, he exploded with anger.', ru: 'Фигурально выражаясь, он взорвался от гнева.' },
+      { en: 'Her paintings are figurative, not abstract.', ru: 'Ее картины фигуративны, а не абстрактны.' },
+      { en: 'Understand the figurative language of poetry.', ru: 'Понимайте образный язык поэзии.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_fillet', 'Fillet', '/ˈfɪl.ɪt/', 'филит', 'Филе', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Кусок мяса или рыбы без костей.',
+    '- Еда: "Fish fillet" (Рыбное филе)\n- Мясо: "Fillet steak" (Стейк из филе)\n- Глагол: "To fillet a fish" (Разделать рыбу на филе)',
+    [
+      { en: 'I ordered a cod fillet with chips.', ru: 'Я заказал филе трески с картошкой фри.' },
+      { en: 'Fillet steak is very tender.', ru: 'Стейк из филе очень нежный.' },
+      { en: 'He showed me how to fillet a fish.', ru: 'Он показал мне, как разделать рыбу на филе.' },
+      { en: 'Bake the chicken fillets in the oven.', ru: 'Запеките куриное филе в духовке.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_fir', 'Fir', '/fɜːr/', 'фё', 'Ель / Пихта', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Вечнозеленое дерево с иголками (часто используется как рождественская елка).',
+    '- Дерево: "Fir tree" (Ель/Пихта)\n- Шишки: "Fir cones" (Еловые шишки)\n- Лес: "Douglas fir" (Пихта Дугласа)',
+    [
+      { en: 'We planted a fir tree in the garden.', ru: 'Мы посадили ель в саду.' },
+      { en: 'The forest is full of pine and fir trees.', ru: 'Лес полон сосен и елей.' },
+      { en: 'Fir trees stay green all year round.', ru: 'Ели остаются зелеными круглый год.' },
+      { en: 'The smell of fir reminds me of Christmas.', ru: 'Запах ели напоминает мне о Рождестве.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_fiver', 'Fiver', '/ˈfaɪ.vər/', 'файвэ', 'Пятерка (банкнота)', ProficiencyLevel.C1, 'noun', 'Low', 'Informal',
+    'Банкнота достоинством в пять фунтов или пять долларов (разг.).',
+    '- Деньги: "Lend me a fiver" (Одолжи мне пятерку)\n- Стоимость: "Costs a fiver" (Стоит пятерку)\n- Сдача: "Here is a fiver" (Вот пятерка)',
+    [
+      { en: 'Can you lend me a fiver until tomorrow?', ru: 'Можешь одолжить мне пятерку до завтра?' },
+      { en: 'I found a fiver on the street.', ru: 'Я нашел пятерку на улице.' },
+      { en: 'It only costs a fiver.', ru: 'Это стоит всего пятерку.' },
+      { en: 'He slipped the doorman a fiver.', ru: 'Он сунул швейцару пятерку.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_flannel', 'Flannel', '/ˈflæn.əl/', 'флэнэл', 'Фланель / Мочалка', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Мягкая ткань (для рубашек/пижам); или маленькое полотенце для лица (брит.).',
+    '- Ткань: "Flannel shirt" (Фланелевая рубашка)\n- Одежда: "Grey flannels" (Серые фланелевые брюки)\n- Гигиена: "Face flannel" (Мочалка для лица)',
+    [
+      { en: 'He wore a checked flannel shirt.', ru: 'На нем была клетчатая фланелевая рубашка.' },
+      { en: 'Use a wet flannel to wash your face.', ru: 'Используй мокрую мочалку, чтобы умыть лицо.' },
+      { en: 'Flannel sheets are warm in winter.', ru: 'Фланелевые простыни теплые зимой.' },
+      { en: 'She wiped the baby\'s face with a flannel.', ru: 'Она вытерла лицо ребенка мочалкой.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_flask', 'Flask', '/flɑːsk/', 'фласк', 'Фляга / Колба / Термос', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Плоская бутылка для алкоголя; лабораторная посуда; или термос (Vacuum flask).',
+    '- Алкоголь: "Hip flask" (Карманная фляга)\n- Наука: "Laboratory flask" (Лабораторная колба)\n- Тепло: "Thermos flask" (Термос)',
+    [
+      { en: 'He took a swig from his hip flask.', ru: 'Он сделал глоток из своей карманной фляги.' },
+      { en: 'We brought a flask of hot coffee.', ru: 'Мы принесли термос с горячим кофе.' },
+      { en: 'The scientist heated the liquid in a flask.', ru: 'Ученый нагрел жидкость в колбе.' },
+      { en: 'Pour the tea from the flask.', ru: 'Налей чай из термоса.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_fleece', 'Fleece', '/fliːs/', 'флис', 'Флис / Шерсть / Обирать', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Шерстяной покров овцы; синтетическая теплая ткань (флис); или обмануть на деньги (гл., разг.).',
+    '- Ткань: "Fleece jacket" (Флисовая куртка)\n- Животные: "Sheep\'s fleece" (Овечья шерсть)\n- Миф: "Golden Fleece" (Золотое руно)',
+    [
+      { en: 'He wore a warm fleece jacket.', ru: 'На нем была теплая флисовая куртка.' },
+      { en: 'The farmer sheared the fleece from the sheep.', ru: 'Фермер состриг шерсть с овцы.' },
+      { en: 'I felt like I had been fleeced by that taxi driver.', ru: 'Я чувствовал, что таксист меня обобрал.' },
+      { en: 'Fleece is a soft and warm material.', ru: 'Флис — мягкий и теплый материал.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_folklore', 'Folklore', '/ˈfəʊk.lɔːr/', 'фоукло', 'Фольклор', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Традиционные истории, верования и обычаи народа.',
+    '- Культура: "Local folklore" (Местный фольклор)\n- Истории: "Irish folklore" (Ирландский фольклор)\n- Миф: "Part of folklore" (Часть фольклора)',
+    [
+      { en: 'In Irish folklore, there are many stories about fairies.', ru: 'В ирландском фольклоре много историй о феях.' },
+      { en: 'Folklore is passed down through generations.', ru: 'Фольклор передается из поколения в поколение.' },
+      { en: 'The vampire is a creature of folklore.', ru: 'Вампир — это существо из фольклора.' },
+      { en: 'He studies the folklore of ancient tribes.', ru: 'Он изучает фольклор древних племен.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_froth', 'Froth', '/frɒθ/', 'фрос', 'Пена', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Масса мелких пузырьков на поверхности жидкости (на пиве, кофе, у рта).',
+    '- Напитки: "Beer froth" (Пена на пиве)\n- Кофе: "Froth on cappuccino" (Пена на капучино)\n- Глагол: "Froth at the mouth" (Идти пеной изо рта / Беситься)',
+    [
+      { en: 'He blew the froth off his beer.', ru: 'Он сдул пену со своего пива.' },
+      { en: 'The waves churned into white froth.', ru: 'Волны взбивались в белую пену.' },
+      { en: 'I like a lot of froth on my coffee.', ru: 'Я люблю много пены в моем кофе.' },
+      { en: 'The dog was frothing at the mouth.', ru: 'У собаки шла пена изо рта.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_gale', 'Gale', '/ɡeɪl/', 'гейл', 'Шторм / Буря', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Очень сильный ветер.',
+    '- Погода: "Gale-force winds" (Штормовые ветра)\n- Звук: "Gales of laughter" (Взрывы хохота)\n- Шторм: "Blow a gale" (Дуть штормовым ветром)',
+    [
+      { en: 'The tree was blown down in a gale.', ru: 'Дерево было повалено штормом.' },
+      { en: 'Gales of laughter came from the room.', ru: 'Из комнаты доносились взрывы хохота.' },
+      { en: 'It is blowing a gale outside.', ru: 'На улице бушует штормовой ветер.' },
+      { en: 'The ship struggled against the gale.', ru: 'Корабль боролся со штормом.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_genealogy', 'Genealogy', '/ˌdʒiː.niˈæl.ə.dʒi/', 'джиниэлэджи', 'Генеалогия / Родословная', ProficiencyLevel.C1, 'noun', 'Low', 'Formal',
+    'История семьи и предков; изучение родословных.',
+    '- Семья: "Trace genealogy" (Прослеживать родословную)\n- Дерево: "Genealogy tree" (Генеалогическое древо)\n- Исследование: "Interested in genealogy" (Интересоваться генеалогией)',
+    [
+      { en: 'She is researching her family genealogy.', ru: 'Она исследует свою семейную генеалогию.' },
+      { en: 'Genealogy has become a popular hobby.', ru: 'Генеалогия стала популярным хобби.' },
+      { en: 'He traced his genealogy back to 1700.', ru: 'Он проследил свою родословную до 1700 года.' },
+      { en: 'The library has a genealogy section.', ru: 'В библиотеке есть отдел генеалогии.' }
+    ],
+    []
+  ),
+
+  createRichWord('c1_gimmick', 'Gimmick', '/ˈɡɪm.ɪk/', 'гимик', 'Уловка / Трюк', ProficiencyLevel.C1, 'noun', 'Low', 'Neutral',
+    'Что-то, используемое для привлечения внимания или рекламы, часто бесполезное.',
+    '- Маркетинг: "Marketing gimmick" (Маркетинговая уловка)\n- Продажи: "Sales gimmick" (Трюк для продаж)\n- Оценка: "Just a gimmick" (Просто уловка)',
+    [
+      { en: 'The contest is just a marketing gimmick.', ru: 'Конкурс — это просто маркетинговая уловка.' },
+      { en: 'They use gimmicks to sell cheap products.', ru: 'Они используют трюки, чтобы продавать дешевые товары.' },
+      { en: 'Unlike other phones, this feature is not a gimmick.', ru: 'В отличие от других телефонов, эта функция — не просто трюк.' },
+      { en: 'He dismissed the plan as a political gimmick.', ru: 'Он отверг план как политическую уловку.' }
+    ],
+    []
+  ),
+
+  // ==============================================================================
+  // --- LEVEL C2 (Proficiency) ---------------------------------------------------
+  // ==============================================================================
+
+  createRichWord('c2_eschew', 'Eschew', '/ɪsˈtʃuː/', 'исчу', 'Избегать / Сторониться', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Намеренно избегать чего-либо (еды, привычек, идей) по моральным или практическим причинам.',
+    '- Привычки: "Eschew violence" (Отвергать насилие)\n- Еда: "Eschew meat" (Отказаться от мяса)\n- Стиль: "Eschew complexity" (Избегать сложности)',
+    [
+      { en: 'He eschewed political involvement.', ru: 'Он сторонился участия в политике.' },
+      { en: 'We should eschew violence as a solution.', ru: 'Нам следует отвергать насилие как решение.' },
+      { en: 'She eschews rich foods for health reasons.', ru: 'Она избегает жирной пищи по соображениям здоровья.' },
+      { en: 'The artist eschewed traditional methods.', ru: 'Художник отказался от традиционных методов.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_esquire', 'Esquire', '/ɪˈskwaɪər/', 'исквайэ', 'Эсквайр / Господин', ProficiencyLevel.C2, 'noun', 'Low', 'Formal',
+    'Почетный титул, добавляемый к имени мужчины (устар.); название журнала; оруженосец (ист.).',
+    '- Титул: "John Smith, Esq." (Джон Смит, эсквайр)\n- История: "Knight and esquire" (Рыцарь и оруженосец)\n- Обращение: "Addressed as Esquire" (Обращаться как к эсквайру)',
+    [
+      { en: 'The letter was addressed to "William Brown, Esq."', ru: 'Письмо было адресовано "Уильяму Брауну, эсквайру".' },
+      { en: 'In the past, an esquire served a knight.', ru: 'В прошлом оруженосец служил рыцарю.' },
+      { en: 'The term Esquire is now mostly used by lawyers in the US.', ru: 'Термин Эсквайр сейчас в основном используется юристами в США.' },
+      { en: 'He holds the title of Esquire.', ru: 'Он носит титул эсквайра.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_eucharist', 'Eucharist', '/ˈjuː.kər.ɪst/', 'юкэрист', 'Евхаристия / Причастие', ProficiencyLevel.C2, 'noun', 'Low', 'Formal',
+    'Христианская церемония с хлебом и вином (Святое Причастие).',
+    '- Религия: "Celebrate the Eucharist" (Совершать Евхаристию)\n- Церковь: "Receive the Eucharist" (Принимать причастие)\n- Обряд: "Holy Eucharist" (Святая Евхаристия)',
+    [
+      { en: 'They attended the Eucharist on Sunday.', ru: 'Они посетили Евхаристию в воскресенье.' },
+      { en: 'The priest celebrated the Eucharist.', ru: 'Священник совершил Евхаристию.' },
+      { en: 'Bread and wine are symbols in the Eucharist.', ru: 'Хлеб и вино являются символами в Евхаристии.' },
+      { en: 'First Eucharist is an important event for Catholics.', ru: 'Первое причастие — важное событие для католиков.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_euphoria', 'Euphoria', '/juːˈfɔː.ri.ə/', 'юфориэ', 'Эйфория', ProficiencyLevel.C2, 'noun', 'Low', 'Formal',
+    'Крайне сильное чувство счастья и возбуждения (обычно кратковременное).',
+    '- Чувство: "State of euphoria" (Состояние эйфории)\n- Причина: "Drug-induced euphoria" (Эйфория от наркотиков)\n- Событие: "Euphoria of victory" (Эйфория от победы)',
+    [
+      { en: 'There was a mood of euphoria after the victory.', ru: 'После победы царило настроение эйфории.' },
+      { en: 'The drug produces a feeling of euphoria.', ru: 'Наркотик вызывает чувство эйфории.' },
+      { en: 'The initial euphoria soon wore off.', ru: 'Первоначальная эйфория вскоре прошла.' },
+      { en: 'They were in a state of sheer euphoria.', ru: 'Они были в состоянии чистой эйфории.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_exalt', 'Exalt', '/ɪɡˈzɔːlt/', 'игзолт', 'Превозносить / Возвеличивать', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Восхвалять кого-то; повышать в ранге или статусе.',
+    '- Похвала: "Exalt his name" (Превозносить его имя)\n- Религия: "Exalt God" (Возвеличивать Бога)\n- Статус: "Exalted position" (Высокое положение)',
+    [
+      { en: 'The poem exalts the beauty of nature.', ru: 'Стихотворение превозносит красоту природы.' },
+      { en: 'He was exalted to a high position.', ru: 'Он был возвышен до высокой должности.' },
+      { en: 'They exalted him as a hero.', ru: 'Они превозносили его как героя.' },
+      { en: 'His exalted status made him arrogant.', ru: 'Его высокое положение сделало его высокомерным.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_excrete', 'Excrete', '/ɪkˈskriːt/', 'икскрит', 'Выделять (из организма)', ProficiencyLevel.C2, 'verb', 'Low', 'Scientific',
+    'Выводить отходы из тела (пот, мочу и т.д.).',
+    '- Биология: "Excrete waste" (Выделять отходы)\n- Жидкость: "Excrete sweat" (Выделять пот)\n- Процесс: "Excretory system" (Выделительная система)',
+    [
+      { en: 'The kidneys excrete toxins from the blood.', ru: 'Почки выводят токсины из крови.' },
+      { en: 'Plants excrete oxygen during the day.', ru: 'Растения выделяют кислород днем.' },
+      { en: 'Sweat is excreted through the skin.', ru: 'Пот выделяется через кожу.' },
+      { en: 'The body excretes excess water.', ru: 'Организм выводит лишнюю воду.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_extort', 'Extort', '/ɪkˈstɔːt/', 'икстот', 'Вымогать', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Получать деньги или информацию силой или угрозами.',
+    '- Деньги: "Extort money" (Вымогать деньги)\n- Информация: "Extort a confession" (Выбить признание)\n- Преступление: "Extortion" (Вымогательство)',
+    [
+      { en: 'The gang tried to extort money from shopkeepers.', ru: 'Банда пыталась вымогать деньги у лавочников.' },
+      { en: 'He was convicted of attempting to extort.', ru: 'Его осудили за попытку вымогательства.' },
+      { en: 'Police cannot extort confessions from suspects.', ru: 'Полиция не может выбивать признания у подозреваемых.' },
+      { en: 'They threatened him to extort information.', ru: 'Они угрожали ему, чтобы выведать информацию.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_extrapolate', 'Extrapolate', '/ɪkˈstræp.ə.leɪt/', 'экстрэпэлейт', 'Экстраполировать / Делать выводы', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Предполагать будущее или неизвестное на основе известных фактов.',
+    '- Данные: "Extrapolate from data" (Делать выводы из данных)\n- Будущее: "Extrapolate trends" (Экстраполировать тенденции)\n- Логика: "Difficult to extrapolate" (Трудно экстраполировать)',
+    [
+      { en: 'You cannot extrapolate these results to the whole population.', ru: 'Нельзя переносить (экстраполировать) эти результаты на все население.' },
+      { en: 'We can extrapolate future trends from past data.', ru: 'Мы можем прогнозировать будущие тенденции на основе прошлых данных.' },
+      { en: 'It is dangerous to extrapolate too much.', ru: 'Опасно делать слишком далекие выводы.' },
+      { en: 'He extrapolated a pattern from a few examples.', ru: 'Он вывел закономерность из нескольких примеров.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_exude', 'Exude', '/ɪɡˈzuːd/', 'игзюд', 'Исучать / Выделять', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Выделять жидкость или запах; излучать качество (уверенность, шарм).',
+    '- Качество: "Exude confidence" (Излучать уверенность)\n- Запах: "Exude a smell" (Исучать запах)\n- Жидкость: "Exude liquid" (Выделять жидкость)',
+    [
+      { en: 'She exudes confidence and charm.', ru: 'Она излучает уверенность и обаяние.' },
+      { en: 'The plant exudes a sticky liquid.', ru: 'Растение выделяет липкую жидкость.' },
+      { en: 'He exudes an air of authority.', ru: 'От него веет (он излучает) авторитетом.' },
+      { en: 'The wound exuded pus.', ru: 'Из раны сочился гной.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_fallacy', 'Fallacy', '/ˈfæl.ə.si/', 'фэлэси', 'Заблуждение / Ложный вывод', ProficiencyLevel.C2, 'noun', 'Low', 'Formal',
+    'Ложная идея или ошибка в рассуждениях.',
+    '- Логика: "Logical fallacy" (Логическая ошибка)\n- Миф: "Common fallacy" (Распространенное заблуждение)\n- Вера: "It is a fallacy that..." (Это заблуждение, что...)',
+    [
+      { en: 'It is a common fallacy that money buys happiness.', ru: 'Это распространенное заблуждение, что деньги покупают счастье.' },
+      { en: 'His argument is based on a fallacy.', ru: 'Его аргумент основан на ложном доводе.' },
+      { en: 'We exposed the fallacy of their claims.', ru: 'Мы разоблачили ошибочность их утверждений.' },
+      { en: 'The pathetic fallacy attributes feelings to nature.', ru: 'Патетическая ошибка (литер.) приписывает чувства природе.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_fallible', 'Fallible', '/ˈfæl.ə.bəl/', 'фэлэбл', 'Ошибающийся / Небезгрешный', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Способный совершать ошибки (о человеке).',
+    '- Человек: "Humans are fallible" (Люди могут ошибаться)\n- Память: "Fallible memory" (Память может подводить)\n- Суждение: "Fallible judgment" (Ошибочное суждение)',
+    [
+      { en: 'We are all human and therefore fallible.', ru: 'Мы все люди и поэтому можем ошибаться.' },
+      { en: 'Even experts are fallible.', ru: 'Даже эксперты могут ошибаться.' },
+      { en: 'Human memory is notoriously fallible.', ru: 'Человеческая память, как известно, ненадежна.' },
+      { en: 'He admitted that he is fallible.', ru: 'Он признал, что он небезгрешен.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_feign', 'Feign', '/feɪn/', 'фейн', 'Притворяться / Симулировать', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Делать вид, что чувствуешь или страдаешь чем-то (feign illness/surprise).',
+    '- Чувство: "Feign surprise" (Притвориться удивленным)\n- Болезнь: "Feign illness" (Симулировать болезнь)\n- Смерть: "Feign death" (Притвориться мертвым)',
+    [
+      { en: 'He feigned a headache to leave early.', ru: 'Он притворился, что у него болит голова, чтобы уйти пораньше.' },
+      { en: 'She feigned interest in his story.', ru: 'Она изобразила интерес к его истории.' },
+      { en: 'The possum feigned death.', ru: 'Опоссум притворился мертвым.' },
+      { en: 'I cannot feign ignorance any longer.', ru: 'Я больше не могу притворяться, что не знаю.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_felon', 'Felon', '/ˈfel.ən/', 'фелэн', 'Уголовный преступник', ProficiencyLevel.C2, 'noun', 'Low', 'Legal',
+    'Человек, совершивший тяжкое преступление (felony).',
+    '- Закон: "Convicted felon" (Осужденный преступник)\n- Тюрьма: "Prison for felons" (Тюрьма для уголовников)\n- Статус: "Felon on parole" (Преступник, освобожденный условно-досрочно)',
+    [
+      { en: 'As a convicted felon, he cannot vote.', ru: 'Как осужденный преступник, он не может голосовать.' },
+      { en: 'The police are searching for the felon.', ru: 'Полиция ищет преступника.' },
+      { en: 'He was treated like a common felon.', ru: 'С ним обращались как с обычным уголовником.' },
+      { en: 'Felons face difficulty finding jobs.', ru: 'Уголовные преступники сталкиваются с трудностями при поиске работы.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_fervour', 'Fervour', '/ˈfɜː.vər/', 'фёвэ', 'Пыл / Жар', ProficiencyLevel.C2, 'noun', 'Low', 'Formal',
+    'Очень сильное и искреннее чувство (религиозное, патриотическое).',
+    '- Религия: "Religious fervour" (Религиозный пыл)\n- Патриотизм: "Patriotic fervour" (Патриотический подъем)\n- Речь: "Speak with fervour" (Говорить с жаром)',
+    [
+      { en: 'He spoke with great fervour about his beliefs.', ru: 'Он говорил с большим пылом о своих убеждениях.' },
+      { en: 'The crowd cheered with fervour.', ru: 'Толпа приветствовала с энтузиазмом (жаром).' },
+      { en: 'Her revolutionary fervour inspired others.', ru: 'Ее революционный пыл вдохновил других.' },
+      { en: 'Religious fervour swept the country.', ru: 'Религиозный подъем охватил страну.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_fetter', 'Fetter', '/ˈfet.ər/', 'фетэ', 'Оковывать / Сдерживать', ProficiencyLevel.C2, 'verb', 'Low', 'Formal',
+    'Сковывать цепями (буквально); ограничивать свободу (переносно).',
+    '- Свобода: "Unfettered" (Ничем не сдерживаемый)\n- Ограничение: "Fettered by rules" (Скованный правилами)\n- Цепи: "In fetters" (В оковах - сущ.)',
+    [
+      { en: 'He felt fettered by strict regulations.', ru: 'Он чувствовал себя скованным строгими правилами.' },
+      { en: 'The prisoner was fettered in chains.', ru: 'Заключенный был закован в цепи.' },
+      { en: 'Creativity should not be fettered.', ru: 'Творчество не должно быть ограничено.' },
+      { en: 'Free market unfettered by government control.', ru: 'Свободный рынок, не сдерживаемый государственным контролем.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_flagging', 'Flagging', '/ˈflæɡ.ɪŋ/', 'флэгин', 'Слабеющий / Угасающий', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Становящийся слабее или более уставшим.',
+    '- Энергия: "Flagging energy" (Угасающая энергия)\n- Интерес: "Flagging interest" (Ослабевающий интерес)\n- Экономика: "Flagging economy" (Слабеющая экономика)',
+    [
+      { en: 'We tried to revive our flagging spirits.', ru: 'Мы пытались оживить наш угасающий дух.' },
+      { en: 'The company has lagging sales and flagging profits.', ru: 'У компании отстающие продажи и падающая прибыль.' },
+      { en: 'He made an effort to boost his flagging energy.', ru: 'Он сделал усилие, чтобы поднять свою угасающую энергию.' },
+      { en: 'Support for the campaign is flagging.', ru: 'Поддержка кампании ослабевает.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_flail', 'Flail', '/fleɪl/', 'флейл', 'Махать / Молотить', ProficiencyLevel.C2, 'verb', 'Low', 'Literary',
+    'Беспорядочно махать руками (обычно при падении или панике); бить цепом.',
+    '- Руки: "Arms flailing" (Размахивая руками)\n- Паника: "Flail around" (Метаться)\n- Инструмент: "Thresh with a flail" (Молотить цепом)',
+    [
+      { en: 'He fell, his arms flailing wildly.', ru: 'Он упал, дико размахивая руками.' },
+      { en: 'The swimmer flailed in the water.', ru: 'Пловец беспорядочно барахтался в воде.' },
+      { en: 'She flailed around trying to find the light switch.', ru: 'Она шарила руками, пытаясь найти выключатель.' },
+      { en: 'Don\'t flail your arms like that.', ru: 'Не махай так руками.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_flamboyant', 'Flamboyant', '/flæmˈbɔɪ.ənt/', 'флэмбойэнт', 'Яркий / Вычурный', ProficiencyLevel.C2, 'adj', 'Low', 'Neutral',
+    'Очень яркий, уверенный в себе и привлекающий внимание (о человеке или стиле).',
+    '- Стиль: "Flamboyant clothes" (Вычурная одежда)\n- Личность: "Flamboyant gesture" (Театральный жест)\n- Цвет: "Flamboyant colours" (Кричащие цвета)',
+    [
+      { en: 'He is known for his flamboyant lifestyle.', ru: 'Он известен своим ярким образом жизни.' },
+      { en: 'She wore a flamboyant hat with feathers.', ru: 'Она была в вычурной шляпе с перьями.' },
+      { en: 'His flamboyant personality filled the room.', ru: 'Его яркая личность заполнила комнату.' },
+      { en: 'Freddie Mercury was a flamboyant performer.', ru: 'Фредди Меркьюри был эпатажным (ярким) исполнителем.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_fleck', 'Fleck', '/flek/', 'флек', 'Пятнышко / Крапинка', ProficiencyLevel.C2, 'noun', 'Low', 'Literary',
+    'Очень маленькое пятно или частица.',
+    '- Цвет: "Flecks of gold" (Золотые крапинки)\n- Грязь: "Fleck of dust" (Пылинка)\n- Глаза: "Green with gold flecks" (Зеленые с золотыми искорками)',
+    [
+      { en: 'His eyes have flecks of green.', ru: 'В его глазах есть зеленые крапинки.' },
+      { en: 'There was a fleck of paint on his coat.', ru: 'На его пальто было пятнышко краски.' },
+      { en: 'Flecks of foam blew off the waves.', ru: 'Клочья пены срывались с волн.' },
+      { en: 'The fabric is grey with white flecks.', ru: 'Ткань серая с белыми вкраплениями.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_flimsy', 'Flimsy', '/ˈflɪm.zi/', 'флимзи', 'Хрупкий / Неубедительный', ProficiencyLevel.C2, 'adj', 'Low', 'Neutral',
+    'Легко ломающийся (тонкий); или слабый (об аргументе/оправдании).',
+    '- Материал: "Flimsy material" (Тонкий/хлипкий материал)\n- Аргумент: "Flimsy excuse" (Слабое оправдание)\n- Конструкция: "Flimsy structure" (Хлипкая конструкция)',
+    [
+      { en: 'The tent was too flimsy to withstand the storm.', ru: 'Палатка была слишком хлипкой, чтобы выдержать шторм.' },
+      { en: 'He gave a flimsy excuse for being late.', ru: 'Он придумал неубедительное оправдание своему опозданию.' },
+      { en: 'She wore a flimsy summer dress.', ru: 'На ней было тонкое летнее платье.' },
+      { en: 'The evidence against him is very flimsy.', ru: 'Улики против него очень шаткие.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_flounder', 'Flounder', '/ˈflaʊn.dər/', 'флаундэ', 'Барахтаться / Испытывать трудности', ProficiencyLevel.C2, 'verb', 'Low', 'Neutral',
+    'Испытывать большие трудности, не зная, что делать; двигаться неуклюже (в воде/грязи).',
+    '- Проблема: "Economy is floundering" (Экономика буксует/испытывает трудности)\n- Речь: "Flounder for words" (Запинаться/искать слова)\n- Движение: "Flounder in the mud" (Барахтаться в грязи)',
+    [
+      { en: 'He floundered when asked a difficult question.', ru: 'Он поплыл (растерялся), когда ему задали сложный вопрос.' },
+      { en: 'The company is floundering in debt.', ru: 'Компания тонет в долгах.' },
+      { en: 'She floundered around in the deep snow.', ru: 'Она барахталась в глубоком снегу.' },
+      { en: 'Without a leader, the project floundered.', ru: 'Без лидера проект зашел в тупик (начал буксовать).' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_foray', 'Foray', '/ˈfɒr.eɪ/', 'форей', 'Набег / Попытка', ProficiencyLevel.C2, 'noun', 'Low', 'Formal',
+    'Внезапная атака (воен.); или первая попытка заняться чем-то новым.',
+    '- Война: "Make a foray" (Совершить набег)\n- Опыт: "Foray into politics" (Попытка заняться политикой)\n- Покупка: "Shopping foray" (Вылазка по магазинам)',
+    [
+      { en: 'This is his first foray into acting.', ru: 'Это его первая проба сил в актерстве.' },
+      { en: 'Soldiers made a foray into enemy territory.', ru: 'Солдаты совершили вылазку на вражескую территорию.' },
+      { en: 'Her foray into the business world was successful.', ru: 'Ее вхождение в деловой мир было успешным.' },
+      { en: 'We made a quick foray to the shops.', ru: 'Мы совершили быструю вылазку в магазины.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_forlorn', 'Forlorn', '/fəˈlɔːn/', 'фэлон', 'Одинокий / Покинутый', ProficiencyLevel.C2, 'adj', 'Low', 'Literary',
+    'Выглядящий одиноким и несчастным; или маловероятный (forlorn hope).',
+    '- Вид: "Forlorn figure" (Одинокая фигура)\n- Надежда: "Forlorn hope" (Слабая надежда)\n- Место: "Forlorn house" (Заброшенный дом)',
+    [
+      { en: 'She looked forlorn standing in the rain.', ru: 'Она выглядела несчастной, стоя под дождем.' },
+      { en: 'The old house stood empty and forlorn.', ru: 'Старый дом стоял пустым и заброшенным.' },
+      { en: 'It was a forlorn attempt to win.', ru: 'Это была безнадежная попытка победить.' },
+      { en: 'He sat with a forlorn expression.', ru: 'Он сидел с унылым выражением лица.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_forte', 'Forte', '/ˈfɔː.teɪ/', 'фотей', 'Сильная сторона', ProficiencyLevel.C2, 'noun', 'Low', 'Formal',
+    'То, что у человека получается очень хорошо.',
+    '- Навык: "Math is my forte" (Математика — моя сильная сторона)\n- Талант: "Cooking is not my forte" (Готовка — не мой конек)\n- Музыка: "Forte" (Громко - муз. термин)',
+    [
+      { en: 'Singing is definitely her forte.', ru: 'Пение — определенно ее сильная сторона.' },
+      { en: 'Patience is not my forte.', ru: 'Терпение — не мой конек.' },
+      { en: 'He discovered his forte in sales.', ru: 'Он открыл свой талант в продажах.' },
+      { en: 'Diplomacy was his forte.', ru: 'Дипломатия была его сильной стороной.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_fraught', 'Fraught', '/frɔːt/', 'фрот', 'Чреватый / Напряженный', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Полный проблем или рисков (fraught with); или вызывающий беспокойство.',
+    '- Риск: "Fraught with danger" (Чреватый опасностью)\n- Проблема: "Fraught with difficulty" (Полный трудностей)\n- Атмосфера: "Fraught atmosphere" (Напряженная атмосфера)',
+    [
+      { en: 'The journey was fraught with danger.', ru: 'Путешествие было чревато опасностью.' },
+      { en: 'There was a fraught silence in the room.', ru: 'В комнате повисла напряженная тишина.' },
+      { en: 'The negotiations were fraught.', ru: 'Переговоры были напряженными.' },
+      { en: 'Every step was fraught with risk.', ru: 'Каждый шаг был сопряжен с риском.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_friar', 'Friar', '/fraɪər/', 'фрайэ', 'Монах', ProficiencyLevel.C2, 'noun', 'Low', 'Religion',
+    'Член мужского религиозного ордена (особенно нищенствующего).',
+    '- Религия: "Franciscan friar" (Францисканский монах)\n- История: "Friar Tuck" (Монах Тук - Робин Гуд)\n- Одежда: "Robes of a friar" (Одеяние монаха)',
+    [
+      { en: 'The friar lived a simple life of poverty.', ru: 'Монах жил простой жизнью в бедности.' },
+      { en: 'Friars travelled preaching to the people.', ru: 'Монахи путешествовали, проповедуя людям.' },
+      { en: 'He joined an order of friars.', ru: 'Он вступил в орден монахов.' },
+      { en: 'The old friar blessed them.', ru: 'Старый монах благословил их.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_frill', 'Frill', '/frɪl/', 'фрил', 'Оборка / Излишество', ProficiencyLevel.C2, 'noun', 'Low', 'Neutral',
+    'Декоративная полоска ткани (рюша); или ненужная дополнительная функция ("no frills").',
+    '- Одежда: "Dress with frills" (Платье с оборками)\n- Сервис: "No-frills airline" (Бюджетная авиакомпания без излишеств)\n- Декор: "Paper frill" (Бумажная манжетка)',
+    [
+      { en: 'She wore a blouse with frills on the sleeves.', ru: 'На ней была блузка с оборками на рукавах.' },
+      { en: 'It is a basic service with no frills.', ru: 'Это базовая услуга без всяких излишеств.' },
+      { en: 'I prefer plain clothes without frills.', ru: 'Я предпочитаю простую одежду без рюшечек.' },
+      { en: 'The "no-frills" account has low fees.', ru: 'Счет "без излишеств" имеет низкие комиссии.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_frivolous', 'Frivolous', '/ˈfrɪv.əl.əs/', 'фривэлэс', 'Легкомысленный / Пустяковый', ProficiencyLevel.C2, 'adj', 'Low', 'Formal',
+    'Несерьезный; глупый или неважный.',
+    '- Поведение: "Frivolous behaviour" (Легкомысленное поведение)\n- Трата: "Frivolous spending" (Пустая трата денег)\n- Закон: "Frivolous lawsuit" (Необоснованный иск)',
+    [
+      { en: 'Stop being so frivolous and act your age.', ru: 'Перестань быть таким легкомысленным и веди себя соответственно возрасту.' },
+      { en: 'The judge dismissed the frivolous lawsuit.', ru: 'Судья отклонил необоснованный иск.' },
+      { en: 'She spends money on frivolous things.', ru: 'Она тратит деньги на всякие пустяки.' },
+      { en: 'It was a frivolous comment.', ru: 'Это был легкомысленный комментарий.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_gait', 'Gait', '/ɡeɪt/', 'гейт', 'Походка', ProficiencyLevel.C2, 'noun', 'Low', 'Literary',
+    'Манера ходить.',
+    '- Движение: "Unsteady gait" (Неуверенная походка)\n- Животные: "Horse\'s gait" (Аллюр лошади)\n- Описание: "Slow gait" (Медленная походка)',
+    [
+      { en: 'He walked with a slow, shuffling gait.', ru: 'Он шел медленной, шаркающей походкой.' },
+      { en: 'I recognized him by his distinctive gait.', ru: 'Я узнал его по характерной походке.' },
+      { en: 'The horse has a smooth gait.', ru: 'У лошади плавный ход (аллюр).' },
+      { en: 'Her gait was confident and brisk.', ru: 'Ее походка была уверенной и быстрой.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_gallant', 'Gallant', '/ˈɡæl.ənt/', 'гэлэнт', 'Галантный / Храбрый', ProficiencyLevel.C2, 'adj', 'Low', 'Literary',
+    'Вежливый по отношению к женщинам; или храбрый (о солдатах).',
+    '- Вежливость: "Gallant gentleman" (Галантный джентльмен)\n- Храбрость: "Gallant attempt" (Отважная попытка)\n- Война: "Gallant soldiers" (Доблестные солдаты)',
+    [
+      { en: 'He made a gallant attempt to save her.', ru: 'Он сделал отважную попытку спасти ее.' },
+      { en: 'A gallant knight rode a white horse.', ru: 'Доблестный рыцарь ехал на белой лошади.' },
+      { en: 'He was very gallant towards the ladies.', ru: 'Он был очень галантен с дамами.' },
+      { en: 'They fought a gallant battle.', ru: 'Они вели героическую битву.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_gazette', 'Gazette', '/ɡəˈzet/', 'гэзет', 'Вестник / Газета', ProficiencyLevel.C2, 'noun', 'Low', 'Formal',
+    'Официальная газета организации или правительства; часто часть названия газеты.',
+    '- СМИ: "London Gazette" (Лондонская газета - официальная)\n- Публикация: "Published in the gazette" (Опубликовано в вестнике)\n- Название: "Local gazette" (Местный вестник)',
+    [
+      { en: 'The new laws were published in the official gazette.', ru: 'Новые законы были опубликованы в официальном вестнике.' },
+      { en: 'He reads the Police Gazette.', ru: 'Он читает "Полицейский вестник".' },
+      { en: 'The appointment was announced in the Gazette.', ru: 'О назначении было объявлено в "Газетт".' },
+      { en: 'It is a weekly gazette for doctors.', ru: 'Это еженедельный вестник для врачей.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_genus', 'Genus', '/ˈdʒiː.nəs/', 'джинэс', 'Род (биология)', ProficiencyLevel.C2, 'noun', 'Low', 'Scientific',
+    'Группа животных или растений, включающая несколько видов.',
+    '- Биология: "Genus Homo" (Род Homo)\n- Классификация: "Species and genus" (Вид и род)\n- Наука: "Plant genus" (Род растений)',
+    [
+      { en: 'Lions and tigers belong to the same genus.', ru: 'Львы и тигры принадлежат к одному роду.' },
+      { en: 'Canis is the genus for dogs and wolves.', ru: 'Canis — это род для собак и волков.' },
+      { en: 'Identifying the correct genus is difficult.', ru: 'Определить правильный род трудно.' },
+      { en: 'This genus contains over fifty species.', ru: 'Этот род содержит более пятидесяти видов.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_ghastly', 'Ghastly', '/ˈɡɑːst.li/', 'гастли', 'Ужасный / Мертвенно-бледный', ProficiencyLevel.C2, 'adj', 'Low', 'Literary',
+    'Вызывающий ужас; или очень бледный и больной на вид.',
+    '- Вид: "Ghastly sight" (Ужасное зрелище)\n- Лицо: "Look ghastly" (Выглядеть ужасно/мертвенно)\n- Ошибка: "Ghastly mistake" (Чудовищная ошибка)',
+    [
+      { en: 'The accident was a ghastly sight.', ru: 'Авария была ужасным зрелищем.' },
+      { en: 'You look ghastly, are you ill?', ru: 'Ты выглядишь ужасно (бледно), ты болен?' },
+      { en: 'It was a ghastly mistake to come here.', ru: 'Было чудовищной ошибкой прийти сюда.' },
+      { en: 'The weather is ghastly today.', ru: 'Погода сегодня отвратительная.' }
+    ],
+    []
+  ),
+
+  createRichWord('c2_gilt', 'Gilt', '/ɡɪlt/', 'гилт', 'Позолота / Позолоченный', ProficiencyLevel.C2, 'noun', 'Low', 'Neutral',
+    'Тонкий слой золота; или государственные облигации (Gilts - UK).',
+    '- Декор: "Gilt frame" (Позолоченная рама)\n- Материал: "Silver gilt" (Позолоченное серебро)\n- Финансы: "Gilt-edged securities" (Первоклассные ценные бумаги)',
+    [
+      { en: 'The mirror has a heavy gilt frame.', ru: 'У зеркала тяжелая позолоченная рама.' },
+      { en: 'The letters on the book cover are gilt.', ru: 'Буквы на обложке книги позолочены.' },
+      { en: 'He invests in government gilts.', ru: 'Он инвестирует в государственные облигации.' },
+      { en: 'The gilt edges of the pages shone.', ru: 'Позолоченные края страниц сияли.' }
+    ],
+    []
+  )
+];

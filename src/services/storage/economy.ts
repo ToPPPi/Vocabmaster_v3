@@ -16,33 +16,21 @@ export const isUserPremium = (progress: UserProgress): boolean => {
 export const buyPremium = async (plan: 'month' | 'year' | 'lifetime'): Promise<boolean> => {
     const tg = window.Telegram?.WebApp;
     
-    // SECURITY FIX: 
-    // We strictly separate "Dev Environment" from "Production Web Browser".
-    // If usage is outside Telegram AND in Production (real website), we BLOCK payments.
-    
-    const isTelegramAvailable = !!tg?.initData;
-
-    // 1. Production Web Browser (Security Block)
-    if (!isTelegramAvailable && !IS_DEV_ENV) {
-        alert("Оплата доступна только в приложении Telegram. Пожалуйста, перейдите в бота @VocabMasterBot.");
-        // Optional: Redirect user
-        window.open('https://t.me/VocabMasterBot', '_blank');
+    // 1. Production Web Browser Check
+    if (!tg?.initData && !IS_DEV_ENV) {
+        alert("Оплата доступна только в Telegram.");
         return false;
     }
 
-    // 2. Dev Simulation (Localhost Only)
-    if (!isTelegramAvailable && IS_DEV_ENV) {
+    // 2. Dev Simulation
+    if (!tg?.initData && IS_DEV_ENV) {
         console.warn(`[DEV] Payment Sim: ${plan}`);
-        await new Promise(resolve => setTimeout(resolve, 800));
-        const confirm = window.confirm(`[DEV MODE] Симуляция: Купить ${plan}?`);
-        if (confirm) {
-            await activatePremium(plan);
-            return true;
-        }
-        return false;
+        await new Promise(resolve => setTimeout(resolve, 500));
+        await activatePremium(plan);
+        return true;
     }
 
-    // 3. Real Payment Flow (Telegram)
+    // 3. Real Payment Flow (Telegram Stars / Invoice)
     try {
         const response = await fetch('/api/create-invoice', {
             method: 'POST',
@@ -66,12 +54,13 @@ export const buyPremium = async (plan: 'month' | 'year' | 'lifetime'): Promise<b
                 });
             });
         } else {
-            alert("Ошибка создания счета. Проверьте консоль.");
+            alert("Ошибка создания счета. Попробуйте позже.");
             return false;
         }
     } catch (e) {
         console.error("Payment API Error", e);
-        alert("Ошибка соединения с сервером платежей.");
+        // Fallback for demo purposes if backend fails:
+        // alert("Ошибка сервера. (В демо-режиме оплата не пройдет без бэкенда)");
         return false;
     }
 };
@@ -82,35 +71,24 @@ const activatePremium = async (plan: 'month' | 'year' | 'lifetime') => {
 
     if (plan === 'lifetime') {
         progress.premiumStatus = true;
-        progress.premiumExpiration = null; // Clear expiration as it's lifetime
+        progress.premiumExpiration = null;
     } else {
         const duration = plan === 'year' 
             ? 365 * 24 * 60 * 60 * 1000 
             : 30 * 24 * 60 * 60 * 1000;
         
-        // STACKING LOGIC:
-        // If user has active premium, add time to the EXISTING expiration date.
-        // If expired or new, start from NOW.
         let currentExpiration = progress.premiumExpiration || 0;
-        
-        // If premium expired in the past, reset start time to now
-        if (currentExpiration < now) {
-            currentExpiration = now;
-        }
+        if (currentExpiration < now) currentExpiration = now;
 
         progress.premiumExpiration = currentExpiration + duration;
-        // Ensure status is false so we rely on expiration date for subscriptions
         progress.premiumStatus = false; 
     }
     
-    // Remove locks immediately
     progress.nextSessionUnlockTime = undefined;
-    
     await saveUserProgress(progress);
 };
 
 export const togglePremium = async (forceState?: boolean): Promise<UserProgress> => {
-    // Legacy dev helper for testing
     const progress = await getUserProgress();
     if (forceState !== undefined) {
         progress.premiumStatus = forceState;
@@ -121,7 +99,6 @@ export const togglePremium = async (forceState?: boolean): Promise<UserProgress>
             progress.premiumStatus = false;
             progress.premiumExpiration = null;
         } else {
-            // Default toggle gives 30 days
             progress.premiumExpiration = getSecureNow() + (30 * 24 * 60 * 60 * 1000);
             progress.premiumStatus = false;
         }
@@ -130,41 +107,32 @@ export const togglePremium = async (forceState?: boolean): Promise<UserProgress>
     return progress;
 };
 
-// --- PROMO CODES (MANUAL GRANTING) ---
-// YOU CAN EDIT THIS LIST TO ADD NEW CODES
+// --- PROMO CODES ---
 const VALID_PROMO_CODES: Record<string, 'month' | 'year' | 'lifetime'> = {
-    'VOCAB-START': 'month',      // Public promo
-    'ADMIN-GRANT-30': 'month',   // Support code
-    'ADMIN-GRANT-365': 'year',   // Support code
-    'VOCAB-MASTER-KEY': 'lifetime' // VIP
+    'VOCAB-START': 'month',      
+    'ADMIN-GRANT-30': 'month',   
+    'ADMIN-GRANT-365': 'year',   
+    'VOCAB-MASTER-KEY': 'lifetime'
 };
 
 export const redeemPromoCode = async (code: string): Promise<{success: boolean, message: string}> => {
     const cleanCode = code.trim().toUpperCase();
     const plan = VALID_PROMO_CODES[cleanCode];
 
-    if (!plan) {
-        return { success: false, message: "Неверный промокод" };
-    }
+    if (!plan) return { success: false, message: "Неверный промокод" };
 
     const progress = await getUserProgress();
-    
-    // Initialize array if missing (migration)
     if (!progress.usedPromoCodes) progress.usedPromoCodes = [];
 
-    // Check if used
     if (progress.usedPromoCodes.includes(cleanCode)) {
-        return { success: false, message: "Код уже был использован вами" };
+        return { success: false, message: "Код уже использован" };
     }
 
-    // Activate
     await activatePremium(plan);
-    
-    // Mark as used
     progress.usedPromoCodes.push(cleanCode);
     await saveUserProgress(progress);
 
-    return { success: true, message: `Код принят! Активирован план: ${plan.toUpperCase()}` };
+    return { success: true, message: `Код принят! План: ${plan.toUpperCase()}` };
 };
 
 export const addCoins = async (amount: number) => {

@@ -13,6 +13,12 @@ export const INITIAL_PROGRESS: UserProgress = {
   lastCloudSync: 0,
   wordsLearnedToday: 0,
   aiGenerationsToday: 0,
+  
+  // Smart Notification Defaults
+  dailyLaunchCount: 0,
+  motivationMessageSentToday: false,
+  lastMotivationDate: 0, // Default to 0 so first trigger is possible
+
   darkMode: false,
   premiumStatus: false,
   premiumExpiration: null,
@@ -42,7 +48,7 @@ let saveTimeout: any = null; // Timer for debounce
 const DEBOUNCE_DELAY_MS = 2000; // Wait 2 seconds before writing to disk
 
 // --- AUTO BACKUP LOGIC ---
-const BACKUP_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 hours
+const BACKUP_INTERVAL_MS = 3 * 24 * 60 * 60 * 1000; // 3 Days
 
 const checkAndRunAutoBackup = async (progress: UserProgress) => {
     const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
@@ -51,6 +57,7 @@ const checkAndRunAutoBackup = async (progress: UserProgress) => {
     const now = getSecureNow();
     const lastBackup = progress.lastAutoBackupDate || 0;
 
+    // Strict check: Must be at least 3 days since last success
     if (now - lastBackup > BACKUP_INTERVAL_MS) {
         console.log("🔄 Triggering Auto-Backup...");
         try {
@@ -67,9 +74,9 @@ const checkAndRunAutoBackup = async (progress: UserProgress) => {
             });
 
             if (response.ok) {
-                console.log("✅ Auto-Backup sent to Telegram Chat");
+                console.log("✅ Auto-Backup sent");
                 progress.lastAutoBackupDate = now;
-                // Force save immediately after backup to record timestamp
+                // Force save immediately to record the timestamp
                 await idbService.save(progress);
             }
         } catch (e) {
@@ -86,28 +93,29 @@ export const initUserProgress = async (): Promise<{ data: UserProgress, hasConfl
     let data: UserProgress | null = null;
 
     try {
-        // 1. Try IndexedDB (Primary Storage)
         data = await idbService.load();
     } catch (e) {
         console.error("🔥 CRITICAL: IndexedDB is dead/unreachable.", e);
         return { data: INITIAL_PROGRESS, hasConflict: false, criticalError: true };
     }
     
-    // 2. Migration Check
+    // Migration Check
     if (!data) {
         try {
             const rawLS = localStorage.getItem(STORAGE_KEY);
             if (rawLS) {
-                console.log("📦 Migrating from LocalStorage to IndexedDB...");
                 data = JSON.parse(rawLS);
                 if (data) await idbService.save(data);
             }
-        } catch (e) {
-            console.error("LS Read Error", e);
-        }
+        } catch (e) {}
     }
 
     if (data) {
+        // Ensure new fields exist for legacy data
+        if (data.dailyLaunchCount === undefined) data.dailyLaunchCount = 0;
+        if (data.motivationMessageSentToday === undefined) data.motivationMessageSentToday = false;
+        if (data.lastMotivationDate === undefined) data.lastMotivationDate = 0;
+
         memoryCache = data;
         const processed = checkDailyReset(data);
         
@@ -117,8 +125,6 @@ export const initUserProgress = async (): Promise<{ data: UserProgress, hasConfl
         return { data: processed, hasConflict: false };
     }
 
-    // 3. New User
-    console.log("🌟 New User State");
     memoryCache = { ...INITIAL_PROGRESS };
     return { data: memoryCache, hasConflict: false };
 };
@@ -131,21 +137,17 @@ export const getUserProgress = async (): Promise<UserProgress> => {
 
 export const downloadCloudData = async (): Promise<UserProgress | null> => { return null; };
 
-// OPTIMIZED SAVE: Uses Debouncing
 export const saveUserProgress = async (progress: UserProgress, forceImmediate = false) => {
     progress.lastLocalUpdate = Date.now();
     memoryCache = progress;
     
-    // If a save is already pending, clear it (reset timer)
     if (saveTimeout) {
         clearTimeout(saveTimeout);
         saveTimeout = null;
     }
 
-    // Function to perform the actual write
     const performWrite = async () => {
         try {
-            // console.log("💾 Writing to Disk (IndexedDB)..."); 
             await idbService.save(progress);
         } catch (e) {
             console.error("IDB Save Error:", e);
@@ -155,7 +157,6 @@ export const saveUserProgress = async (progress: UserProgress, forceImmediate = 
     if (forceImmediate) {
         await performWrite();
     } else {
-        // Schedule write in near future
         saveTimeout = setTimeout(performWrite, DEBOUNCE_DELAY_MS);
     }
 };
@@ -165,6 +166,7 @@ export const checkDailyReset = (progress: UserProgress): UserProgress => {
   const todayDateStr = new Date(now).toISOString().split('T')[0];
 
   if (progress.lastLoginDate !== todayDateStr) {
+       // Streak Logic
        if (progress.lastLoginDate) {
            const lastDate = new Date(progress.lastLoginDate);
            const current = new Date(todayDateStr);
@@ -182,17 +184,25 @@ export const checkDailyReset = (progress: UserProgress): UserProgress => {
            progress.streak = 0;
        }
 
+       // Reset Daily Stats
        progress.wordsLearnedToday = 0;
        progress.aiGenerationsToday = 0; 
        progress.dailyProgressByLevel = {}; 
        progress.nextSessionUnlockTime = undefined;
+       
+       // Reset Notification Counters
+       // IMPORTANT: We do NOT reset lastMotivationDate here, as it tracks frequency across days.
+       progress.dailyLaunchCount = 0;
+       progress.motivationMessageSentToday = false; 
+
        progress.lastLoginDate = todayDateStr;
-       saveUserProgress(progress, true); // Force immediate save on daily reset
+       saveUserProgress(progress, true); 
   } else if (progress.nextSessionUnlockTime && now >= progress.nextSessionUnlockTime) {
+      // Time lock expired within same day (rare but possible if adjusted)
       progress.wordsLearnedToday = 0;
       progress.dailyProgressByLevel = {}; 
       progress.nextSessionUnlockTime = undefined;
-      saveUserProgress(progress, true); // Force immediate save on unlock
+      saveUserProgress(progress, true);
   }
   
   return progress;
@@ -216,11 +226,9 @@ export const syncTelegramUserData = async () => {
 };
 
 export const resetUserProgress = async (): Promise<UserProgress> => {
-    console.log("💣 FACTORY RESET TRIGGERED");
     try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
     try { await idbService.clear(); } catch(e) {}
     try { await idbService.deleteDatabase(); } catch(e) {}
-    
     memoryCache = { ...INITIAL_PROGRESS };
     return memoryCache;
 };
@@ -230,14 +238,14 @@ export const completeOnboarding = async (name?: string): Promise<UserProgress> =
   progress.hasSeenOnboarding = true;
   if (name) progress.userName = name;
   progress.lastLoginDate = new Date().toISOString().split('T')[0];
-  await saveUserProgress(progress, true); // Force save on onboarding completion
+  await saveUserProgress(progress, true); 
   return progress;
 };
 
 export const logoutUser = async (): Promise<void> => {
     const progress = await getUserProgress();
     progress.hasSeenOnboarding = false;
-    await saveUserProgress(progress, true); // Force save on logout
+    await saveUserProgress(progress, true);
 };
 
 export const toggleDarkMode = async () => {
@@ -252,7 +260,6 @@ export const exportUserData = async (): Promise<string> => {
         const progress = await getUserProgress();
         return "VM5:" + safeEncode(JSON.stringify(progress));
     } catch (e) {
-        console.error("Export failed", e);
         return "";
     }
 };
@@ -261,7 +268,6 @@ export const importUserData = async (inputCode: string): Promise<{success: boole
     try {
         let cleanCode = inputCode.trim();
         if (cleanCode.startsWith("VM5:")) cleanCode = cleanCode.substring(4);
-        
         const jsonStr = safeDecode(cleanCode);
         const importedData = JSON.parse(jsonStr) as UserProgress;
         
@@ -280,16 +286,13 @@ export const importUserData = async (inputCode: string): Promise<{success: boole
         };
         
         memoryCache = mergedData;
-        await idbService.save(mergedData); // Force save immediately on import
-
+        await idbService.save(mergedData); 
         return { success: true, message: "Прогресс восстановлен!" };
     } catch (e: any) {
-        console.error(e);
         return { success: false, message: "Ошибка кода." };
     }
 };
 
-// Use this when leaving the page or critical updates
 export const forceSave = async () => {
     if (memoryCache) await saveUserProgress(memoryCache, true);
 }

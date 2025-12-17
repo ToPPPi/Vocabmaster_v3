@@ -1,1 +1,1669 @@
-EAST
+HANDLE
+
+
+  // ==============================================================================
+  // --- LEVEL A1 (Survival / Beginner) -------------------------------------------
+  // ==============================================================================
+
+  createRichWord('a1_easy', 'Easy', '/ˈiːzi/', 'изи', 'Легкий', ProficiencyLevel.A1, 'adj', 'High', 'Neutral',
+    'Достигаемый без больших усилий; не представляющий сложности для выполнения или понимания.',
+    '- Задача: "Easy task" (Легкая задача)\n- Характер: "Easygoing person" (Легкий в общении человек)\n- Наречие: "Take it easy" (Не принимай близко к сердцу)',
+    [
+      { en: 'The test was very easy for everyone in the class.', ru: 'Тест был очень легким для всех в классе.' },
+      { en: 'It is easy to make a mistake when you are tired.', ru: 'Легко допустить ошибку, когда ты устал.' },
+      { en: 'I want to find an easy way to learn English words.', ru: 'Я хочу найти легкий способ учить английские слова.' },
+      { en: 'Cooking pasta is quick and easy for dinner.', ru: 'Приготовление пасты — это быстро и легко для ужина.' }
+    ],
+    [
+      { meaning: "Comfortable and relaxed", translation: "Спокойный / Беззаботный", example: { en: "He leads an easy life.", ru: "Он ведет беззаботную жизнь." } },
+      { meaning: "Available / Compliant", translation: "Доступный / Покладистый", example: { en: "She is an easy target.", ru: "Она легкая мишень." } }
+    ]
+  ),
+
+  createRichWord('a1_eat', 'Eat', '/iːt/', 'ит', 'Есть', ProficiencyLevel.A1, 'verb', 'High', 'Neutral',
+    'Класть еду в рот, жевать и глотать её.',
+    '- Прием пищи: "Eat breakfast" (Завтракать)\n- Ресторан: "Eat out" (Есть вне дома)\n- Здоровье: "Eat well" (Хорошо питаться)',
+    [
+      { en: 'We usually eat dinner at seven o\'clock in the evening.', ru: 'Мы обычно ужинаем в семь часов вечера.' },
+      { en: 'Do you want to eat something before we go?', ru: 'Ты хочешь что-нибудь съесть перед тем, как мы пойдем?' },
+      { en: 'I do not eat meat because I am a vegetarian.', ru: 'Я не ем мясо, потому что я вегетарианец.' },
+      { en: 'Please wash your hands before you eat.', ru: 'Пожалуйста, вымой руки перед едой.' }
+    ],
+    [
+      { meaning: "To erode or destroy", translation: "Разъедать", example: { en: "Rust eats into the metal.", ru: "Ржавчина разъедает металл." } },
+      { meaning: "To use up resources", translation: "Поглощать (ресурсы)", example: { en: "This car eats a lot of petrol.", ru: "Эта машина жрет много бензина." } }
+    ]
+  ),
+
+  createRichWord('a1_egg', 'Egg', '/eɡ/', 'эг', 'Яйцо', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Овальный объект с твердой скорлупой, который откладывают птицы; часто используется в пищу.',
+    '- Приготовление: "Boiled egg" (Вареное яйцо)\n- Блюдо: "Fried eggs" (Яичница)\n- Выпечка: "Egg yolk" (Яичный желток)',
+    [
+      { en: 'I like to have a boiled egg for breakfast.', ru: 'Я люблю съедать вареное яйцо на завтрак.' },
+      { en: 'Can you buy a dozen eggs at the shop?', ru: 'Можешь купить дюжину яиц в магазине?' },
+      { en: 'Break the egg carefully into the bowl.', ru: 'Осторожно разбей яйцо в миску.' },
+      { en: 'Chickens lay eggs almost every single day.', ru: 'Куры несут яйца почти каждый день.' }
+    ],
+    [
+      { meaning: "A biological cell", translation: "Яйцеклетка", example: { en: "The egg is fertilized.", ru: "Яйцеклетка оплодотворена." } },
+      { meaning: "To encourage (phrasal verb)", translation: "Подстрекать", example: { en: "He egged me on to do it.", ru: "Он подстрекал меня сделать это." } }
+    ]
+  ),
+
+  createRichWord('a1_eight', 'Eight', '/eɪt/', 'эйт', 'Восемь', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Число, следующее за семью и предшествующее девяти (8).',
+    '- Время: "Eight o\'clock" (Восемь часов)\n- Возраст: "Eight years old" (Восемь лет)\n- Количество: "Eight people" (Восемь человек)',
+    [
+      { en: 'My little brother is eight years old today.', ru: 'Моему младшему брату сегодня исполняется восемь лет.' },
+      { en: 'The train leaves the station at eight in the morning.', ru: 'Поезд отходит от станции в восемь утра.' },
+      { en: 'There are eight apples on the kitchen table.', ru: 'На кухонном столе лежат восемь яблок.' },
+      { en: 'I have to work eight hours a day.', ru: 'Мне приходится работать восемь часов в день.' }
+    ],
+    [] // Числительные редко имеют вторичные значения
+  ),
+
+  createRichWord('a1_eleven', 'Eleven', '/ɪˈlev.ən/', 'илевен', 'Одиннадцать', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Число, следующее за десятью и предшествующее двенадцати (11).',
+    '- Спорт: "Eleven players" (Одиннадцать игроков)\n- Время: "Eleven pm" (Одиннадцать вечера)\n- Этаж: "Eleventh floor" (Одиннадцатый этаж)',
+    [
+      { en: 'Our football team has eleven players on the field.', ru: 'В нашей футбольной команде одиннадцать игроков на поле.' },
+      { en: 'She usually goes to bed at eleven o\'clock.', ru: 'Она обычно ложится спать в одиннадцать часов.' },
+      { en: 'This building has more than eleven floors.', ru: 'В этом здании больше одиннадцати этажей.' },
+      { en: 'Chapter eleven is very interesting to read.', ru: 'Главу одиннадцать очень интересно читать.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_else', 'Else', '/els/', 'элс', 'Еще / Другой', ProficiencyLevel.A1, 'adv', 'High', 'Neutral',
+    'Используется для обозначения чего-то другого или дополнительного к уже упомянутому.',
+    '- Вопрос: "What else?" (Что еще?)\n- Место: "Somewhere else" (Где-то в другом месте)\n- Люди: "Someone else" (Кто-то другой)',
+    [
+      { en: 'Do you need anything else from the shop?', ru: 'Тебе нужно что-нибудь еще из магазина?' },
+      { en: 'Ask somebody else, I do not know the answer.', ru: 'Спроси кого-нибудь другого, я не знаю ответа.' },
+      { en: 'Let\'s go somewhere else for lunch today.', ru: 'Давай пойдем пообедаем где-нибудь в другом месте сегодня.' },
+      { en: 'Who else is coming to the party with us?', ru: 'Кто еще идет с нами на вечеринку?' }
+    ],
+    [
+      { meaning: "Otherwise (conditional)", translation: "Иначе", example: { en: "Run, or else you'll be late.", ru: "Беги, иначе ты опоздаешь." } }
+    ]
+  ),
+
+  createRichWord('a1_end', 'End', '/end/', 'энд', 'Конец', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Финальная часть чего-либо; момент, когда что-то прекращается.',
+    '- Время: "At the end" (В конце)\n- Выходные: "Weekend" (Конец недели / Выходные)\n- Кино: "The end" (Конец фильма)',
+    [
+      { en: 'We stayed until the end of the movie.', ru: 'Мы остались до самого конца фильма.' },
+      { en: 'Put a full stop at the end of the sentence.', ru: 'Поставь точку в конце предложения.' },
+      { en: 'I will pay you at the end of the month.', ru: 'Я заплачу тебе в конце месяца.' },
+      { en: 'This road comes to an end near the river.', ru: 'Эта дорога заканчивается у реки.' }
+    ],
+    [
+      { meaning: "A goal or purpose", translation: "Цель", example: { en: "To achieve your ends.", ru: "Чтобы достичь своих целей." } },
+      { meaning: "To finish (verb)", translation: "Заканчивать", example: { en: "The meeting ended late.", ru: "Встреча закончилась поздно." } }
+    ]
+  ),
+
+  createRichWord('a1_enjoy', 'Enjoy', '/ɪnˈdʒɔɪ/', 'инджой', 'Наслаждаться', ProficiencyLevel.A1, 'verb', 'High', 'Neutral',
+    'Получать удовольствие от чего-либо; хорошо проводить время.',
+    '- Пожелание: "Enjoy your meal" (Приятного аппетита)\n- Досуг: "Enjoy the party" (Веселиться на вечеринке)\n- Хобби: "Enjoy reading" (Любить читать)',
+    [
+      { en: 'I really enjoy listening to classical music.', ru: 'Мне действительно нравится слушать классическую музыку.' },
+      { en: 'Did you enjoy your holiday in Spain?', ru: 'Тебе понравился твой отпуск в Испании?' },
+      { en: 'We enjoyed the beautiful view from the window.', ru: 'Мы наслаждались прекрасным видом из окна.' },
+      { en: 'Sit down, relax, and enjoy the show.', ru: 'Садитесь, расслабьтесь и наслаждайтесь шоу.' }
+    ],
+    [
+      { meaning: "To possess a benefit (formal)", translation: "Обладать (правом/преимуществом)", example: { en: "Citizens enjoy equal rights.", ru: "Граждане обладают равными правами." } }
+    ]
+  ),
+
+  createRichWord('a1_enough', 'Enough', '/ɪˈnʌf/', 'инаф', 'Достаточно', ProficiencyLevel.A1, 'adv', 'High', 'Neutral',
+    'В той мере, в которой необходимо; столько, сколько нужно.',
+    '- Количество: "Money enough" (Достаточно денег)\n- Качество: "Good enough" (Достаточно хороший)\n- Эмоции: "That\'s enough!" (С меня хватит!)',
+    [
+      { en: 'I do not have enough money to buy this car.', ru: 'У меня недостаточно денег, чтобы купить эту машину.' },
+      { en: 'Is the water warm enough for swimming?', ru: 'Вода достаточно теплая для купания?' },
+      { en: 'She is old enough to drive a car now.', ru: 'Она теперь достаточно взрослая, чтобы водить машину.' },
+      { en: 'We have enough food for everyone at the party.', ru: 'У нас достаточно еды для всех на вечеринке.' }
+    ],
+    [
+      { meaning: "Stop it (Interjection)", translation: "Хватит!", example: { en: "Enough! I don't want to hear it.", ru: "Хватит! Я не хочу это слышать." } }
+    ]
+  ),
+
+  createRichWord('a1_evening', 'Evening', '/ˈiːv.nɪŋ/', 'ивнинг', 'Вечер', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Часть дня между окончанием рабочего времени и сном; время, когда темнеет.',
+    '- Приветствие: "Good evening" (Добрый вечер)\n- Время: "This evening" (Сегодня вечером)\n- Регулярность: "Every evening" (Каждый вечер)',
+    [
+      { en: 'We watch TV together in the evening.', ru: 'Мы вместе смотрим телевизор по вечерам.' },
+      { en: 'Are you free this evening for a walk?', ru: 'Ты свободен сегодня вечером для прогулки?' },
+      { en: 'The shops close early on Sunday evenings.', ru: 'Магазины закрываются рано по вечерам в воскресенье.' },
+      { en: 'It was a cold and rainy evening in November.', ru: 'Был холодный и дождливый ноябрьский вечер.' }
+    ],
+    [
+      { meaning: "Making something level/even (verb gerund)", translation: "Выравнивание", example: { en: "Evening out the surface.", ru: "Выравнивание поверхности." } }
+    ]
+  ),
+
+  createRichWord('a1_every', 'Every', '/ˈev.ri/', 'эври', 'Каждый', ProficiencyLevel.A1, 'adj', 'High', 'Neutral',
+    'Используется для обозначения всех членов группы без исключения.',
+    '- Время: "Every day" (Каждый день)\n- Люди: "Everyone" (Все / Каждый человек)\n- Предметы: "Everything" (Всё)',
+    [
+      { en: 'I brush my teeth every morning and night.', ru: 'Я чищу зубы каждое утро и вечер.' },
+      { en: 'Every student must bring a pen to the exam.', ru: 'Каждый студент должен принести ручку на экзамен.' },
+      { en: 'We go to visit our grandmother every Sunday.', ru: 'Мы навещаем нашу бабушку каждое воскресенье.' },
+      { en: 'She knows every song on this album.', ru: 'Она знает каждую песню на этом альбоме.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_expensive', 'Expensive', '/ɪkˈspen.sɪv/', 'экспенсив', 'Дорогой', ProficiencyLevel.A1, 'adj', 'High', 'Neutral',
+    'Стоящий много денег; имеющий высокую цену.',
+    '- Одежда: "Expensive clothes" (Дорогая одежда)\n- Цена: "Too expensive" (Слишком дорого)\n- Жизнь: "Expensive lifestyle" (Дорогой образ жизни)',
+    [
+      { en: 'This car is too expensive for me to buy.', ru: 'Эта машина слишком дорогая, чтобы я мог её купить.' },
+      { en: 'London is a very expensive city to live in.', ru: 'Лондон — очень дорогой город для жизни.' },
+      { en: 'I do not like expensive restaurants.', ru: 'Я не люблю дорогие рестораны.' },
+      { en: 'Is this watch expensive or cheap?', ru: 'Эти часы дорогие или дешевые?' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_eye', 'Eye', '/aɪ/', 'ай', 'Глаз', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Орган зрения у людей и животных.',
+    '- Внешность: "Blue eyes" (Голубые глаза)\n- Контакт: "Eye contact" (Зрительный контакт)\n- Взгляд: "Keep an eye on" (Присматривать за)',
+    [
+      { en: 'She has beautiful big green eyes.', ru: 'У нее красивые большие зеленые глаза.' },
+      { en: 'Close your eyes and try to sleep.', ru: 'Закрой глаза и попытайся уснуть.' },
+      { en: 'I got some soap in my eye.', ru: 'Мне мыло попало в глаз.' },
+      { en: 'The doctor checked my eyes yesterday.', ru: 'Врач проверил мои глаза вчера.' }
+    ],
+    [
+      { meaning: "Eye of a needle", translation: "Ушко иголки", example: { en: "Thread through the eye.", ru: "Продеть нитку через ушко." } },
+      { meaning: "Centre of a storm", translation: "Око бури", example: { en: "The eye of the hurricane.", ru: "Центр (око) урагана." } },
+      { meaning: "To look at closely (verb)", translation: "Разглядывать", example: { en: "He eyed the cake hungrily.", ru: "Он голодно разглядывал торт." } }
+    ]
+  ),
+
+  createRichWord('a1_face', 'Face', '/feɪs/', 'фейс', 'Лицо', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Передняя часть головы, где находятся глаза, нос и рот.',
+    '- Гигиена: "Wash your face" (Умывать лицо)\n- Выражение: "Sad face" (Грустное лицо)\n- Положение: "Face to face" (Лицом к лицу)',
+    [
+      { en: 'He had a big smile on his face.', ru: 'У него была широкая улыбка на лице.' },
+      { en: 'You should wash your face every morning.', ru: 'Тебе следует умывать лицо каждое утро.' },
+      { en: 'Her face turned red when she was shy.', ru: 'Ее лицо покраснело, когда она засмущалась.' },
+      { en: 'I do not want to see his face again.', ru: 'Я не хочу снова видеть его лицо.' }
+    ],
+    [
+      { meaning: "Front surface of an object", translation: "Лицевая сторона / Циферблат", example: { en: "The face of the clock.", ru: "Циферблат часов." } },
+      { meaning: "To confront (verb)", translation: "Сталкиваться / Смотреть в лицо", example: { en: "You must face the truth.", ru: "Ты должен посмотреть правде в глаза." } },
+      { meaning: "To look towards (verb)", translation: "Быть обращенным к", example: { en: "My window faces the park.", ru: "Мое окно выходит на парк." } }
+    ]
+  ),
+
+  createRichWord('a1_fact', 'Fact', '/fækt/', 'фэкт', 'Факт', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'То, что действительно существует или произошло; истинная информация.',
+    '- Реальность: "In fact" (На самом деле)\n- Информация: "Interesting fact" (Интересный факт)\n- Проверка: "Check the facts" (Проверить факты)',
+    [
+      { en: 'It is a fact that the earth is round.', ru: 'Это факт, что земля круглая.' },
+      { en: 'In fact, I did not want to go there at all.', ru: 'На самом деле, я вообще не хотел туда идти.' },
+      { en: 'Tell me the facts, not your opinion.', ru: 'Скажи мне факты, а не твое мнение.' },
+      { en: 'He knows a lot of interesting historical facts.', ru: 'Он знает много интересных исторических фактов.' }
+    ],
+    [
+      { meaning: "Legal reality", translation: "Обстоятельство / Деяние", example: { en: "Accessory after the fact.", ru: "Укрывательство после совершения преступления." } }
+    ]
+  ),
+
+  createRichWord('a1_fall', 'Fall', '/fɔːl/', 'фол', 'Падать', ProficiencyLevel.A1, 'verb', 'High', 'Neutral',
+    'Быстро опускаться вниз под действием гравитации; терять равновесие.',
+    '- Движение: "Fall down" (Упасть вниз)\n- Чувства: "Fall in love" (Влюбиться)\n- Сон: "Fall asleep" (Заснуть)',
+    [
+      { en: 'Leaves fall from the trees in autumn.', ru: 'Листья падают с деревьев осенью.' },
+      { en: 'Be careful not to fall on the ice.', ru: 'Будь осторожен, не упади на льду.' },
+      { en: 'She fell asleep while watching the movie.', ru: 'Она заснула во время просмотра фильма.' },
+      { en: 'Prices usually fall after Christmas.', ru: 'Цены обычно падают после Рождества.' }
+    ],
+    [
+      { meaning: "Autumn (American English)", translation: "Осень", example: { en: "We travel in the fall.", ru: "Мы путешествуем осенью." } },
+      { meaning: "A decrease", translation: "Падение / Спад", example: { en: "A fall in temperature.", ru: "Понижение температуры." } }
+    ]
+  ),
+
+  createRichWord('a1_family', 'Family', '/ˈfæm.əl.i/', 'фэмили', 'Семья', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Группа людей, состоящая из родителей и детей, или всех родственников.',
+    '- Состав: "Big family" (Большая семья)\n- Имя: "Family name" (Фамилия)\n- Отношения: "Family member" (Член семьи)',
+    [
+      { en: 'My family lives in a small house.', ru: 'Моя семья живет в маленьком доме.' },
+      { en: 'I have a large family with three brothers.', ru: 'У меня большая семья с тремя братьями.' },
+      { en: 'Family is the most important thing to her.', ru: 'Семья — это самое важное для нее.' },
+      { en: 'We usually spend Christmas with our family.', ru: 'Мы обычно проводим Рождество с семьей.' }
+    ],
+    [
+      { meaning: "Group of related things (biology)", translation: "Семейство", example: { en: "The cat family includes lions.", ru: "Семейство кошачьих включает львов." } }
+    ]
+  ),
+
+  createRichWord('a1_far', 'Far', '/fɑːr/', 'фар', 'Далеко', ProficiencyLevel.A1, 'adv', 'High', 'Neutral',
+    'На большом расстоянии; не близко.',
+    '- Расстояние: "Far away" (Далеко)\n- Вопрос: "How far?" (Как далеко?)\n- Сравнение: "By far" (Безусловно / Намного)',
+    [
+      { en: 'My school is not far from my house.', ru: 'Моя школа находится недалеко от моего дома.' },
+      { en: 'How far is the airport from here?', ru: 'Как далеко отсюда аэропорт?' },
+      { en: 'She wants to travel far away.', ru: 'Она хочет уехать далеко.' },
+      { en: 'This is by far the best cake I have eaten.', ru: 'Это безусловно лучший торт, который я ел.' }
+    ],
+    [
+      { meaning: "To a great degree", translation: "Значительно / Гораздо", example: { en: "He is far better now.", ru: "Ему теперь гораздо лучше." } },
+      { meaning: "Political extreme", translation: "Крайний (полит.)", example: { en: "The far right party.", ru: "Крайне правая партия." } }
+    ]
+  ),
+
+  createRichWord('a1_farm', 'Farm', '/fɑːm/', 'фарм', 'Ферма', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Участок земли, используемый для выращивания урожая или разведения животных.',
+    '- Животные: "Farm animals" (Фермерские животные)\n- Работа: "Work on a farm" (Работать на ферме)\n- Место: "Farm house" (Фермерский дом)',
+    [
+      { en: 'My uncle lives on a farm with many cows.', ru: 'Мой дядя живет на ферме, где много коров.' },
+      { en: 'We get fresh milk from the farm.', ru: 'Мы берем свежее молоко с фермы.' },
+      { en: 'Children love to visit the farm in summer.', ru: 'Дети любят посещать ферму летом.' },
+      { en: 'They grow potatoes on their farm.', ru: 'Они выращивают картофель на своей ферме.' }
+    ],
+    [
+      { meaning: "To cultivate land (verb)", translation: "Заниматься фермерством", example: { en: "They farm the land.", ru: "Они возделывают землю." } },
+      { meaning: "To subcontract (phrasal verb 'farm out')", translation: "Передавать (работу)", example: { en: "Farm out the work.", ru: "Передать работу субподрядчику." } }
+    ]
+  ),
+
+  createRichWord('a1_fast', 'Fast', '/fɑːst/', 'фаст', 'Быстрый', ProficiencyLevel.A1, 'adj', 'High', 'Neutral',
+    'Движущийся или происходящий с высокой скоростью.',
+    '- Еда: "Fast food" (Фастфуд / Быстрая еда)\n- Скорость: "Run fast" (Бежать быстро)\n- Транспорт: "Fast train" (Скорый поезд)',
+    [
+      { en: 'You are walking too fast for me.', ru: 'Ты идешь слишком быстро для меня.' },
+      { en: 'Cheetahs are very fast animals.', ru: 'Гепарды — очень быстрые животные.' },
+      { en: 'I need a fast computer for my work.', ru: 'Мне нужен быстрый компьютер для работы.' },
+      { en: 'Don\'t drive so fast, it is dangerous.', ru: 'Не води так быстро, это опасно.' }
+    ],
+    [
+      { meaning: "Period without food (noun)", translation: "Пост / Голодание", example: { en: "Break the fast.", ru: "Прервать пост (разговеться)." } },
+      { meaning: "Firmly fixed (adv)", translation: "Крепко / Прочно", example: { en: "Hold fast to the rope.", ru: "Крепко держись за веревку." } },
+      { meaning: "Ahead of time (clock)", translation: "Спешить (о часах)", example: { en: "My watch is fast.", ru: "Мои часы спешат." } }
+    ]
+  ),
+
+  createRichWord('a1_fat', 'Fat', '/fæt/', 'фэт', 'Толстый / Жирный', ProficiencyLevel.A1, 'adj', 'High', 'Neutral',
+    'Имеющий много лишнего веса (о человеке или животном); содержащий много масла (о еде).',
+    '- Внешность: "Fat cat" (Толстый кот / Богач)\n- Еда: "Low fat" (Обезжиренный)\n- Оскорбление: "Get fat" (Растолстеть)',
+    [
+      { en: 'My cat is fat because he eats too much.', ru: 'Мой кот толстый, потому что слишком много ест.' },
+      { en: 'Try not to eat too much fat meat.', ru: 'Старайся не есть слишком много жирного мяса.' },
+      { en: 'I think I am getting a bit fat.', ru: 'Мне кажется, я немного толстею.' },
+      { en: 'This milk has less fat than the other one.', ru: 'В этом молоке меньше жира, чем в другом.' }
+    ],
+    [
+      { meaning: "Oily substance (noun)", translation: "Жир", example: { en: "Fry in animal fat.", ru: "Жарить на животном жире." } }
+    ]
+  ),
+
+  createRichWord('a1_father', 'Father', '/ˈfɑː.ðər/', 'фазер', 'Отец', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Родитель мужского пола.',
+    '- Семья: "My father" (Мой отец)\n- Обращение: "Father Christmas" (Дед Мороз / Санта)\n- Подобный: "Like father, like son" (Яблоко от яблони)',
+    [
+      { en: 'My father works in a bank.', ru: 'Мой отец работает в банке.' },
+      { en: 'I look like my father.', ru: 'Я похож на своего отца.' },
+      { en: 'Her father is a very tall man.', ru: 'Ее отец — очень высокий мужчина.' },
+      { en: 'Father is cooking dinner tonight.', ru: 'Отец готовит ужин сегодня вечером.' }
+    ],
+    [
+      { meaning: "Priest title", translation: "Отец (священник)", example: { en: "Father John.", ru: "Отец Джон." } },
+      { meaning: "Founder/Originator", translation: "Основоположник", example: { en: "The father of modern physics.", ru: "Отец современной физики." } }
+    ]
+  ),
+
+  createRichWord('a1_favourite', 'Favourite', '/ˈfeɪ.vər.ɪt/', 'фэйворит', 'Любимый', ProficiencyLevel.A1, 'adj', 'High', 'Neutral',
+    'Тот, который нравится больше всего по сравнению с другими.',
+    '- Предпочтение: "Favourite colour" (Любимый цвет)\n- Еда: "Favourite food" (Любимая еда)\n- Интернет: "Add to favourites" (Добавить в избранное)',
+    [
+      { en: 'Blue is my favourite colour.', ru: 'Синий — мой любимый цвет.' },
+      { en: 'What is your favourite song?', ru: 'Какая твоя любимая песня?' },
+      { en: 'Pizza is my favourite food for lunch.', ru: 'Пицца — моя любимая еда на обед.' },
+      { en: 'This is my favourite book in the library.', ru: 'Это моя любимая книга в библиотеке.' }
+    ],
+    [
+      { meaning: "Preferred person/thing (noun)", translation: "Фаворит / Любимец", example: { en: "The teacher's favourite.", ru: "Любимчик учителя." } }
+    ]
+  ),
+
+  createRichWord('a1_feel', 'Feel', '/fiːl/', 'фил', 'Чувствовать', ProficiencyLevel.A1, 'verb', 'High', 'Neutral',
+    'Испытывать эмоцию или физическое ощущение; трогать что-то.',
+    '- Здоровье: "Feel sick" (Чувствовать тошноту/болезнь)\n- Эмоции: "Feel happy" (Чувствовать счастье)\n- Мнение: "I feel that..." (Я считаю, что...)',
+    [
+      { en: 'I feel very tired after work.', ru: 'Я чувствую себя очень уставшим после работы.' },
+      { en: 'Do you feel cold in this room?', ru: 'Тебе холодно в этой комнате?' },
+      { en: 'I feel sad when it rains.', ru: 'Мне грустно, когда идет дождь.' },
+      { en: 'Touch this blanket, it feels soft.', ru: 'Потрогай это одеяло, оно мягкое на ощупь.' }
+    ],
+    [
+      { meaning: "Atmosphere/Ambience (noun)", translation: "Атмосфера / Ощущение", example: { en: "The feel of the city.", ru: "Атмосфера города." } },
+      { meaning: "Ability/Talent (noun)", translation: "Чутье", example: { en: "A feel for languages.", ru: "Чутье к языкам." } }
+    ]
+  ),
+
+  createRichWord('a1_few', 'Few', '/fjuː/', 'фью', 'Мало / Несколько', ProficiencyLevel.A1, 'adj', 'High', 'Neutral',
+    'Небольшое количество чего-либо (исчисляемого).',
+    '- Количество: "A few days" (Несколько дней)\n- Недостаток: "Very few people" (Очень мало людей)\n- Выражение: "Quite a few" (Довольно много)',
+    [
+      { en: 'I have a few friends in London.', ru: 'У меня есть несколько друзей в Лондоне.' },
+      { en: 'There are very few apples left.', ru: 'Осталось очень мало яблок.' },
+      { en: 'Give me a few minutes to finish.', ru: 'Дай мне несколько минут, чтобы закончить.' },
+      { en: 'Few people know the answer to this.', ru: 'Мало кто знает ответ на это.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_film', 'Film', '/fɪlm/', 'филм', 'Фильм', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'История, показанная в виде движущихся картинок на экране.',
+    '- Кино: "Watch a film" (Смотреть фильм)\n- Жанр: "Horror film" (Фильм ужасов)\n- Производство: "Make a film" (Снимать фильм)',
+    [
+      { en: 'We watched a funny film last night.', ru: 'Мы смотрели смешной фильм вчера вечером.' },
+      { en: 'What is your favourite film?', ru: 'Какой твой любимый фильм?' },
+      { en: 'The film starts at eight o\'clock.', ru: 'Фильм начинается в восемь часов.' },
+      { en: 'I want to be a film star.', ru: 'Я хочу быть кинозвездой.' }
+    ],
+    [
+      { meaning: "Thin layer", translation: "Пленка / Слой", example: { en: "A thin film of oil.", ru: "Тонкая пленка масла." } },
+      { meaning: "Camera roll", translation: "Фотопленка", example: { en: "A roll of film.", ru: "Катушка пленки." } },
+      { meaning: "To record (verb)", translation: "Снимать (на камеру)", example: { en: "They filmed the event.", ru: "Они снимали событие." } }
+    ]
+  ),
+
+  createRichWord('a1_find', 'Find', '/faɪnd/', 'файнд', 'Находить', ProficiencyLevel.A1, 'verb', 'High', 'Neutral',
+    'Обнаруживать что-то, что было потеряно или спрятано; узнавать информацию.',
+    '- Поиск: "Find keys" (Найти ключи)\n- Открытие: "Find out" (Узнать / Выяснить)\n- Путь: "Find a way" (Найти способ)',
+    [
+      { en: 'I cannot find my keys anywhere.', ru: 'Я нигде не могу найти свои ключи.' },
+      { en: 'Did you find the book you were looking for?', ru: 'Ты нашел книгу, которую искал?' },
+      { en: 'You can find the answer on the internet.', ru: 'Ты можешь найти ответ в интернете.' },
+      { en: 'It is hard to find a good job now.', ru: 'Сейчас трудно найти хорошую работу.' }
+    ],
+    [
+      { meaning: "To judge/consider", translation: "Считать / Находить", example: { en: "I find it difficult.", ru: "Я нахожу это сложным." } },
+      { meaning: "A discovery (noun)", translation: "Находка", example: { en: "An amazing find.", ru: "Удивительная находка." } }
+    ]
+  ),
+
+  createRichWord('a1_fine', 'Fine', '/faɪn/', 'файн', 'Хороший / В порядке', ProficiencyLevel.A1, 'adj', 'High', 'Neutral',
+    'Хорошего качества; обозначает удовлетворительное состояние здоровья или дел.',
+    '- Состояние: "I am fine" (Я в порядке)\n- Погода: "Fine weather" (Прекрасная погода)\n- Согласие: "That\'s fine" (Это нормально / Договорились)',
+    [
+      { en: 'How are you? I am fine, thanks.', ru: 'Как дела? Я в порядке, спасибо.' },
+      { en: 'The weather will be fine tomorrow.', ru: 'Погода завтра будет хорошей.' },
+      { en: 'Is it fine if I come later?', ru: 'Ничего, если я приду позже?' },
+      { en: 'Everything is going to be fine.', ru: 'Всё будет хорошо.' }
+    ],
+    [
+      { meaning: "Monetary penalty (noun)", translation: "Штраф", example: { en: "A parking fine.", ru: "Штраф за парковку." } },
+      { meaning: "Very thin/delicate", translation: "Тонкий / Мелкий", example: { en: "Fine hair.", ru: "Тонкие волосы." } },
+      { meaning: "Of high quality", translation: "Изысканный", example: { en: "Fine wine.", ru: "Изысканное вино." } }
+    ]
+  ),
+
+  createRichWord('a1_finger', 'Finger', '/ˈfɪŋ.ɡər/', 'фингер', 'Палец (руки)', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Одна из пяти подвижных частей на конце руки человека.',
+    '- Указание: "Point a finger" (Указывать пальцем)\n- Украшение: "Ring finger" (Безымянный палец)\n- Еда: "Fish fingers" (Рыбные палочки)',
+    [
+      { en: 'I cut my finger while cooking.', ru: 'Я порезал палец, когда готовил.' },
+      { en: 'He pointed a finger at the door.', ru: 'Он указал пальцем на дверь.' },
+      { en: 'She wears a ring on her finger.', ru: 'Она носит кольцо на пальце.' },
+      { en: 'Don\'t eat with your fingers, use a fork.', ru: 'Не ешь руками (пальцами), используй вилку.' }
+    ],
+    [
+      { meaning: "To touch (verb)", translation: "Трогать пальцами", example: { en: "Don't finger the food.", ru: "Не трогай еду пальцами." } }
+    ]
+  ),
+
+  createRichWord('a1_finish', 'Finish', '/ˈfɪn.ɪʃ/', 'финиш', 'Заканчивать', ProficiencyLevel.A1, 'verb', 'High', 'Neutral',
+    'Доводить дело до конца; прекращать делать что-либо.',
+    '- Работа: "Finish work" (Закончить работу)\n- Спорт: "Finish line" (Финишная черта)\n- Еда: "Finish your meal" (Доесть еду)',
+    [
+      { en: 'I need to finish my homework first.', ru: 'Сначала мне нужно закончить домашнее задание.' },
+      { en: 'What time do you finish work?', ru: 'Во сколько ты заканчиваешь работу?' },
+      { en: 'They finished the race together.', ru: 'Они закончили гонку вместе.' },
+      { en: 'Have you finished reading that book?', ru: 'Ты закончил читать ту книгу?' }
+    ],
+    [
+      { meaning: "Surface texture (noun)", translation: "Отделка / Покрытие", example: { en: "Matte finish.", ru: "Матовое покрытие." } }
+    ]
+  ),
+
+  createRichWord('a1_fire', 'Fire', '/faɪər/', 'файер', 'Огонь / Пожар', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Пламя, свет и жар от горения; неконтролируемое горение.',
+    '- Опасность: "On fire" (В огне)\n- Быт: "Make a fire" (Развести костер/огонь)\n- Служба: "Fire station" (Пожарная станция)',
+    [
+      { en: 'Don\'t play with fire, it is dangerous.', ru: 'Не играй с огнем, это опасно.' },
+      { en: 'We sat around the fire to keep warm.', ru: 'Мы сидели вокруг костра, чтобы согреться.' },
+      { en: 'The house was on fire.', ru: 'Дом был в огне.' },
+      { en: 'Call the fire brigade immediately!', ru: 'Вызывай пожарных немедленно!' }
+    ],
+    [
+      { meaning: "To dismiss from job (verb)", translation: "Увольнять", example: { en: "He was fired yesterday.", ru: "Его уволили вчера." } },
+      { meaning: "To shoot (verb)", translation: "Стрелять", example: { en: "Fire the gun.", ru: "Выстрелить из пистолета." } }
+    ]
+  ),
+
+  createRichWord('a1_first', 'First', '/fɜːst/', 'фёрст', 'Первый', ProficiencyLevel.A1, 'adv', 'High', 'Neutral',
+    'Находящийся в начале ряда; предшествующий всем остальным по времени или порядку.',
+    '- Порядок: "First place" (Первое место)\n- Время: "First time" (Первый раз)\n- Помощь: "First aid" (Первая помощь)',
+    [
+      { en: 'This is my first visit to London.', ru: 'Это мой первый визит в Лондон.' },
+      { en: 'Who came first in the race?', ru: 'Кто пришел первым в гонке?' },
+      { en: 'First, wash your hands, then eat.', ru: 'Сначала помой руки, потом ешь.' },
+      { en: 'Ladies first.', ru: 'Дамы вперед (первые).' }
+    ],
+    []
+  ),
+
+  // ==============================================================================
+  // --- LEVEL A2 (Elementary) ----------------------------------------------------
+  // ==============================================================================
+
+  createRichWord('a2_either', 'Either', '/ˈaɪ.ðər/', 'айзер', 'Любой из двух / Или', ProficiencyLevel.A2, 'adj', 'High', 'Neutral',
+    'Один из двух вариантов; используется в отрицательных предложениях как "тоже".',
+    '- Выбор: "Either... or" (Или... или)\n- Согласие: "Me either" (Я тоже нет - разг.)\n- Варианты: "Either way" (В любом случае)',
+    [
+      { en: 'You can have either tea or coffee.', ru: 'Ты можешь выпить или чай, или кофе.' },
+      { en: 'I don\'t like this movie either.', ru: 'Мне этот фильм тоже не нравится.' },
+      { en: 'Either day is fine for me.', ru: 'Мне подходит любой день (из двух).' },
+      { en: 'There are trees on either side of the road.', ru: 'Деревья есть с обеих сторон дороги.' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_empty', 'Empty', '/ˈemp.ti/', 'эмпти', 'Пустой', ProficiencyLevel.A2, 'adj', 'High', 'Neutral',
+    'Не содержащий ничего внутри; никем не занятый.',
+    '- Емкость: "Empty bottle" (Пустая бутылка)\n- Помещение: "Empty room" (Пустая комната)\n- Обещания: "Empty promises" (Пустые обещания)',
+    [
+      { en: 'The box is empty, there is nothing inside.', ru: 'Коробка пуста, внутри ничего нет.' },
+      { en: 'The streets were empty early in the morning.', ru: 'Улицы были пусты рано утром.' },
+      { en: 'Can you give me an empty glass?', ru: 'Можешь дать мне пустой стакан?' },
+      { en: 'I feel empty without you.', ru: 'Я чувствую опустошение без тебя.' }
+    ],
+    [
+      { meaning: "To remove contents (verb)", translation: "Опустошать", example: { en: "Empty your pockets.", ru: "Выверни (опустоши) карманы." } },
+      { meaning: "Meaningless", translation: "Бессмысленный", example: { en: "Empty words.", ru: "Пустые слова." } }
+    ]
+  ),
+
+  createRichWord('a2_engine', 'Engine', '/ˈen.dʒɪn/', 'энджин', 'Двигатель', ProficiencyLevel.A2, 'noun', 'Medium', 'Neutral',
+    'Машина с движущимися частями, которая преобразует энергию в движение.',
+    '- Авто: "Car engine" (Двигатель машины)\n- Интернет: "Search engine" (Поисковая система)\n- Пожарные: "Fire engine" (Пожарная машина)',
+    [
+      { en: 'Start the engine and let\'s go.', ru: 'Заводи двигатель и поехали.' },
+      { en: 'The plane has two powerful engines.', ru: 'У самолета два мощных двигателя.' },
+      { en: 'There is a problem with the engine.', ru: 'С двигателем какая-то проблема.' },
+      { en: 'Google is a popular search engine.', ru: 'Google — популярная поисковая система.' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_enter', 'Enter', '/ˈen.tər/', 'энтер', 'Войти / Ввести', ProficiencyLevel.A2, 'verb', 'High', 'Neutral',
+    'Зайти внутрь помещения; внести данные в компьютер или список.',
+    '- Помещение: "Enter the room" (Войти в комнату)\n- Данные: "Enter password" (Ввести пароль)\n- Соревнование: "Enter a competition" (Принять участие в соревновании)',
+    [
+      { en: 'Please knock before you enter the room.', ru: 'Пожалуйста, постучите, прежде чем войти в комнату.' },
+      { en: 'You must enter your password to log in.', ru: 'Вы должны ввести свой пароль, чтобы войти.' },
+      { en: 'Do not enter this area without permission.', ru: 'Не входите в эту зону без разрешения.' },
+      { en: 'He decided to enter the race next month.', ru: 'Он решил принять участие в гонке в следующем месяце.' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_especially', 'Especially', '/ɪˈspeʃ.əl.i/', 'испешали', 'Особенно', ProficiencyLevel.A2, 'adv', 'High', 'Neutral',
+    'Больше, чем обычно; главным образом; специально для кого-то.',
+    '- Предпочтение: "Especially like" (Особенно нравиться)\n- Назначение: "Made especially for you" (Сделано специально для тебя)\n- Погода: "Especially hot" (Особенно жарко)',
+    [
+      { en: 'I like fruit, especially apples and grapes.', ru: 'Я люблю фрукты, особенно яблоки и виноград.' },
+      { en: 'It is especially cold this winter.', ru: 'Этой зимой особенно холодно.' },
+      { en: 'This cake was made especially for you.', ru: 'Этот торт был сделан специально для тебя.' },
+      { en: 'She is kind to everyone, especially children.', ru: 'Она добра ко всем, особенно к детям.' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_even', 'Even', '/ˈiː.vən/', 'ивэн', 'Даже / Ровный', ProficiencyLevel.A2, 'adv', 'High', 'Neutral',
+    'Используется для усиления неожиданности; также означает гладкую поверхность или равный счет.',
+    '- Усиление: "Even me" (Даже я)\n- Сравнение: "Even better" (Даже лучше)\n- Поверхность: "Even surface" (Ровная поверхность)',
+    [
+      { en: 'Everyone went to the party, even John.', ru: 'Все пошли на вечеринку, даже Джон.' },
+      { en: 'I cannot run, I can\'t even walk fast.', ru: 'Я не могу бегать, я даже быстро ходить не могу.' },
+      { en: 'The floor in this room is not very even.', ru: 'Пол в этой комнате не очень ровный.' },
+      { en: 'These two teams are very even in skill.', ru: 'Эти две команды очень равны по мастерству.' }
+    ],
+    [
+      { meaning: "Divisible by two", translation: "Четный", example: { en: "Even numbers like 2, 4, 6.", ru: "Четные числа, такие как 2, 4, 6." } },
+      { meaning: "Equal (adj)", translation: "Равный / Квиты", example: { en: "Now we are even.", ru: "Теперь мы квиты." } }
+    ]
+  ),
+
+  createRichWord('a2_ever', 'Ever', '/ˈev.ər/', 'эвер', 'Когда-либо', ProficiencyLevel.A2, 'adv', 'High', 'Neutral',
+    'В любое время; используется в вопросах и отрицаниях, а также для усиления.',
+    '- Опыт: "Have you ever...?" (Ты когда-нибудь...?)\n- Вечность: "For ever" (Навсегда)\n- Усиление: "Best ever" (Лучший за все время)',
+    [
+      { en: 'Have you ever been to Paris?', ru: 'Ты когда-нибудь был в Париже?' },
+      { en: 'This is the best pizza I have ever tasted.', ru: 'Это лучшая пицца, которую я когда-либо пробовал.' },
+      { en: 'Don\'t ever do that again!', ru: 'Никогда больше этого не делай!' },
+      { en: 'Will this rain ever stop?', ru: 'Этот дождь когда-нибудь прекратится?' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_exact', 'Exact', '/ɪɡˈzækt/', 'игзэкт', 'Точный', ProficiencyLevel.A2, 'adj', 'High', 'Neutral',
+    'Полностью правильный; содержащий все детали; без ошибок.',
+    '- Время: "Exact time" (Точное время)\n- Место: "Exact location" (Точное местоположение)\n- Копия: "Exact copy" (Точная копия)',
+    [
+      { en: 'Tell me the exact time of arrival.', ru: 'Скажи мне точное время прибытия.' },
+      { en: 'I need the exact amount of money.', ru: 'Мне нужна точная сумма денег.' },
+      { en: 'Those were his exact words.', ru: 'Это были его точные слова.' },
+      { en: 'Do you know the exact address?', ru: 'Ты знаешь точный адрес?' }
+    ],
+    [
+      { meaning: "To demand/force (verb, formal)", translation: "Взыскивать / Требовать", example: { en: "To exact revenge.", ru: "Отомстить (взыскать месть)." } }
+    ]
+  ),
+
+  createRichWord('a2_except', 'Except', '/ɪkˈsept/', 'иксепт', 'Кроме / За исключением', ProficiencyLevel.A2, 'prep', 'High', 'Neutral',
+    'Не включая; за вычетом кого-то или чего-то.',
+    '- Исключение: "Everyone except me" (Все, кроме меня)\n- Время: "Except Sunday" (Кроме воскресенья)\n- Фраза: "Except for" (За исключением)',
+    [
+      { en: 'The museum is open every day except Monday.', ru: 'Музей открыт каждый день, кроме понедельника.' },
+      { en: 'Everyone passed the exam except Tom.', ru: 'Все сдали экзамен, кроме Тома.' },
+      { en: 'I like all vegetables except onions.', ru: 'Я люблю все овощи, кроме лука.' },
+      { en: 'The street was empty except for a cat.', ru: 'Улица была пуста, не считая кошки.' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_excuse', 'Excuse', '/ɪkˈskjuːz/', 'икскьюз', 'Извинять / Оправдание', ProficiencyLevel.A2, 'verb', 'High', 'Neutral',
+    'Простить за небольшую ошибку; или объяснение причины ошибки (сущ.). Обратите внимание: глагол /z/, сущ. /s/.',
+    '- Вежливость: "Excuse me" (Простите / Извините)\n- Причина: "Good excuse" (Хорошее оправдание)\n- Опоздание: "Excuse for being late" (Оправдание за опоздание)',
+    [
+      { en: 'Excuse me, can you help me?', ru: 'Извините, вы можете мне помочь?' },
+      { en: 'Please excuse my messy room.', ru: 'Пожалуйста, извините за беспорядок в моей комнате.' },
+      { en: 'He had no excuse for his rude behavior.', ru: 'У него не было оправдания его грубому поведению.' },
+      { en: 'Stop making excuses and do your work.', ru: 'Перестань искать оправдания и делай свою работу.' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_explain', 'Explain', '/ɪkˈspleɪn/', 'иксплейн', 'Объяснять', ProficiencyLevel.A2, 'verb', 'High', 'Neutral',
+    'Сделать что-то понятным, рассказав об этом подробно или показав причины.',
+    '- Проблема: "Explain the problem" (Объяснить проблему)\n- Причина: "Explain why" (Объяснить почему)\n- Детали: "Explain in detail" (Объяснить подробно)',
+    [
+      { en: 'Can you explain this rule to me?', ru: 'Можешь объяснить мне это правило?' },
+      { en: 'He tried to explain why he was late.', ru: 'Он попытался объяснить, почему он опоздал.' },
+      { en: 'The teacher explained the lesson very well.', ru: 'Учитель очень хорошо объяснил урок.' },
+      { en: 'It is difficult to explain how I feel.', ru: 'Трудно объяснить, что я чувствую.' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_extra', 'Extra', '/ˈek.strə/', 'экстра', 'Дополнительный / Лишний', ProficiencyLevel.A2, 'adj', 'High', 'Neutral',
+    'Больше, чем обычно или необходимо; добавленный к чему-то.',
+    '- Расходы: "Extra cost" (Дополнительная стоимость)\n- Время: "Extra time" (Дополнительное время)\n- Усилие: "Extra effort" (Дополнительное усилие)',
+    [
+      { en: 'I need an extra blanket, it is cold.', ru: 'Мне нужно дополнительное одеяло, здесь холодно.' },
+      { en: 'They charged me extra for the luggage.', ru: 'Они взяли с меня дополнительную плату за багаж.' },
+      { en: 'Do you have any extra pens?', ru: 'У тебя есть лишние ручки?' },
+      { en: 'Cook a bit extra in case visitors come.', ru: 'Приготовь немного больше на случай, если придут гости.' }
+    ],
+    [
+      { meaning: "Background actor (noun)", translation: "Массовка / Актер массовки", example: { en: "Thousands of extras.", ru: "Тысячи актеров массовки." } }
+    ]
+  ),
+
+  createRichWord('a2_feed', 'Feed', '/fiːd/', 'фид', 'Кормить', ProficiencyLevel.A2, 'verb', 'High', 'Neutral',
+    'Давать еду человеку или животному.',
+    '- Животные: "Feed the dog" (Покормить собаку)\n- Семья: "Feed the family" (Прокормить семью)\n- Младенец: "Feed the baby" (Покормить ребенка)',
+    [
+      { en: 'Don\'t forget to feed the cat.', ru: 'Не забудь покормить кота.' },
+      { en: 'She has a large family to feed.', ru: 'У нее большая семья, которую нужно кормить.' },
+      { en: 'We are not allowed to feed the animals at the zoo.', ru: 'Нам не разрешено кормить животных в зоопарке.' },
+      { en: 'The mother feeds her baby with a spoon.', ru: 'Мама кормит своего малыша с ложки.' }
+    ],
+    [
+      { meaning: "Data stream (noun)", translation: "Лента (новостей)", example: { en: "Social media feed.", ru: "Лента в соцсетях." } },
+      { meaning: "To supply (fuel/info)", translation: "Подавать / Снабжать", example: { en: "Feed information to the police.", ru: "Сливать (подавать) информацию полиции." } }
+    ]
+  ),
+
+  createRichWord('a2_field', 'Field', '/fiːld/', 'филд', 'Поле / Область', ProficiencyLevel.A2, 'noun', 'High', 'Neutral',
+    'Открытый участок земли для фермерства или спорта; также область знаний или деятельности.',
+    '- Спорт: "Football field" (Футбольное поле)\n- Природа: "Green field" (Зеленое поле/луг)\n- Работа: "Field of study" (Область изучения)',
+    [
+      { en: 'The cows are grazing in the field.', ru: 'Коровы пасутся на поле.' },
+      { en: 'He is an expert in the field of medicine.', ru: 'Он эксперт в области медицины.' },
+      { en: 'We played soccer on the school field.', ru: 'Мы играли в футбол на школьном поле.' },
+      { en: 'The field was covered with snow.', ru: 'Поле было покрыто снегом.' }
+    ],
+    [
+      { meaning: "To deal with (questions) - verb", translation: "Обрабатывать / Отвечать", example: { en: "He fielded the questions well.", ru: "Он хорошо отвечал на вопросы." } }
+    ]
+  ),
+
+  createRichWord('a2_fight', 'Fight', '/faɪt/', 'файт', 'Драться / Бороться', ProficiencyLevel.A2, 'verb', 'High', 'Neutral',
+    'Использовать физическую силу против кого-то; стараться победить или преодолеть что-то.',
+    '- Конфликт: "Start a fight" (Начать драку)\n- Права: "Fight for rights" (Бороться за права)\n- Болезнь: "Fight a cold" (Бороться с простудой)',
+    [
+      { en: 'The two boys started to fight in the playground.', ru: 'Два мальчика начали драться на детской площадке.' },
+      { en: 'Soldiers fight to protect their country.', ru: 'Солдаты сражаются, чтобы защитить свою страну.' },
+      { en: 'I have to fight to stay awake.', ru: 'Мне приходится бороться, чтобы не уснуть.' },
+      { en: 'They had a big fight about money.', ru: 'У них была крупная ссора из-за денег.' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_fill', 'Fill', '/fɪl/', 'фил', 'Наполнять', ProficiencyLevel.A2, 'verb', 'High', 'Neutral',
+    'Сделать полным; занять все свободное место.',
+    '- Емкость: "Fill the glass" (Наполнить стакан)\n- Документы: "Fill in a form" (Заполнить форму)\n- Чувства: "Fill with joy" (Наполнить радостью)',
+    [
+      { en: 'Please fill the bucket with water.', ru: 'Пожалуйста, наполни ведро водой.' },
+      { en: 'Fill in your name and address here.', ru: 'Впишите сюда ваше имя и адрес.' },
+      { en: 'The smell of fresh bread filled the room.', ru: 'Запах свежего хлеба наполнил комнату.' },
+      { en: 'Her eyes filled with tears.', ru: 'Ее глаза наполнились слезами.' }
+    ],
+    [
+      { meaning: "To satisfy hunger", translation: "Насыщать", example: { en: "The sandwich didn't fill me.", ru: "Сэндвич меня не насытил." } }
+    ]
+  ),
+
+  createRichWord('a2_final', 'Final', '/ˈfaɪ.nəl/', 'файнал', 'Последний / Окончательный', ProficiencyLevel.A2, 'adj', 'High', 'Neutral',
+    'Находящийся в конце; не подлежащий изменению.',
+    '- Решение: "Final decision" (Окончательное решение)\n- Экзамен: "Final exam" (Итоговый экзамен)\n- Результат: "Final score" (Финальный счет)',
+    [
+      { en: 'This is your final chance to apologize.', ru: 'Это твой последний шанс извиниться.' },
+      { en: 'The final match will be played on Sunday.', ru: 'Финальный матч будет сыгран в воскресенье.' },
+      { en: 'I need to make some final changes to my essay.', ru: 'Мне нужно внести последние изменения в мое эссе.' },
+      { en: 'What was the final answer?', ru: 'Каков был окончательный ответ?' }
+    ],
+    [
+      { meaning: "Deciding game (noun)", translation: "Финал", example: { en: "Cup Final.", ru: "Финал кубка." } }
+    ]
+  ),
+
+  // ==============================================================================
+  // --- LEVEL B1 (Threshold / Intermediate) --------------------------------------
+  // ==============================================================================
+
+  createRichWord('b1_edge', 'Edge', '/edʒ/', 'эдж', 'Край / Грань', ProficiencyLevel.B1, 'noun', 'Medium', 'Neutral',
+    'Внешняя граница объекта, поверхности или области; острая сторона ножа.',
+    '- Место: "Edge of the cliff" (Край обрыва)\n- Острота: "Sharp edge" (Острое лезвие)\n- Преимущество: "Competitive edge" (Конкурентное преимущество)',
+    [
+      { en: 'Don\'t stand too close to the edge of the platform.', ru: 'Не стой слишком близко к краю платформы.' },
+      { en: 'He sat on the edge of the bed looking worried.', ru: 'Он сидел на краю кровати, выглядя обеспокоенным.' },
+      { en: 'This company has an edge over its rivals due to technology.', ru: 'У этой компании есть преимущество перед соперниками благодаря технологиям.' },
+      { en: 'Be careful, the knife has a very sharp edge.', ru: 'Будь осторожен, у ножа очень острое лезвие.' }
+    ],
+    [
+      { meaning: "Tension/Nervousness", translation: "Напряжение", example: { en: "There was an edge to her voice.", ru: "В ее голосе слышалось напряжение." } },
+      { meaning: "To move gradually (verb)", translation: "Продвигаться осторожно", example: { en: "He edged closer to the door.", ru: "Он осторожно придвинулся ближе к двери." } }
+    ]
+  ),
+
+  createRichWord('b1_educate', 'Educate', '/ˈedʒ.u.keɪt/', 'эджукейт', 'Обучать / Давать образование', ProficiencyLevel.B1, 'verb', 'Medium', 'Formal',
+    'Преподавать кому-либо (обычно в школе или университете); развивать чьи-то знания и навыки.',
+    '- Процесс: "Educate children" (Давать образование детям)\n- Цель: "Educate the public" (Просвещать общественность)\n- Результат: "Well educated" (Хорошо образованный)',
+    [
+      { en: 'Parents want to educate their children in the best schools.', ru: 'Родители хотят дать детям образование в лучших школах.' },
+      { en: 'The program aims to educate people about healthy eating.', ru: 'Программа нацелена на просвещение людей о здоровом питании.' },
+      { en: 'He was educated at Oxford University.', ru: 'Он получил образование в Оксфордском университете.' },
+      { en: 'It is important to educate yourself throughout your life.', ru: 'Важно заниматься самообразованием на протяжении всей жизни.' }
+    ],
+    []
+  ),
+
+  createRichWord('b1_employ', 'Employ', '/ɪmˈplɔɪ/', 'имплой', 'Нанимать (на работу)', ProficiencyLevel.B1, 'verb', 'Medium', 'Formal',
+    'Платить кому-либо за работу; предоставлять рабочее место.',
+    '- Бизнес: "Employ staff" (Нанимать персонал)\n- Статус: "Self-employed" (Самозанятый)\n- Использование: "Employ methods" (Применять методы - форм.)',
+    [
+      { en: 'The factory employs over two thousand people.', ru: 'Фабрика предоставляет работу более чем двум тысячам людей.' },
+      { en: 'They are looking to employ a new manager next month.', ru: 'Они планируют нанять нового менеджера в следующем месяце.' },
+      { en: 'She is currently employed by a large international bank.', ru: 'В настоящее время она работает в крупном международном банке.' },
+      { en: 'We need to employ more effective strategies to win.', ru: 'Нам нужно применять более эффективные стратегии для победы.' }
+    ],
+    [
+      { meaning: "To use (formal)", translation: "Использовать / Применять", example: { en: "Employ a technique.", ru: "Применить технику." } }
+    ]
+  ),
+
+  createRichWord('b1_excite', 'Excite', '/ɪkˈsaɪt/', 'иксайт', 'Волновть / Возбуждать', ProficiencyLevel.B1, 'verb', 'Medium', 'Neutral',
+    'Вызывать сильные чувства энтузиазма, нетерпения или нервозности; провоцировать реакцию.',
+    '- Эмоции: "Excite the audience" (Взбудоражить аудиторию)\n- Интерес: "Excite curiosity" (Возбудить любопытство)\n- Состояние: "Nothing excites me" (Меня ничего не волнует)',
+    [
+      { en: 'The news of the victory excited the whole nation.', ru: 'Новости о победе взволновали всю нацию.' },
+      { en: 'Don\'t excite the dog, he needs to calm down.', ru: 'Не возбуждай собаку, ей нужно успокоиться.' },
+      { en: 'The possibility of travel excites me very much.', ru: 'Возможность путешествовать меня очень воодушевляет.' },
+      { en: 'Try not to excite the patient before the surgery.', ru: 'Постарайтесь не волновать пациента перед операцией.' }
+    ],
+    []
+  ),
+
+  createRichWord('b1_expect', 'Expect', '/ɪkˈspekt/', 'икспект', 'Ожидать', ProficiencyLevel.B1, 'verb', 'High', 'Neutral',
+    'Думать или верить, что что-то произойдет; требовать выполнения чего-либо как обязанности.',
+    '- Прогноз: "Expect rain" (Ожидать дождь)\n- Визит: "Expect guests" (Ждать гостей)\n- Требование: "Expect respect" (Требовать уважения)',
+    [
+      { en: 'I expect him to arrive within ten minutes.', ru: 'Я ожидаю, что он прибудет в течение десяти минут.' },
+      { en: 'We are expecting a lot of changes next year.', ru: 'Мы ожидаем много изменений в следующем году.' },
+      { en: 'She is expecting a baby in June.', ru: 'Она ждет ребенка в июне.' },
+      { en: 'Teachers expect students to do their homework on time.', ru: 'Учителя ожидают, что студенты будут делать домашнее задание вовремя.' }
+    ],
+    []
+  ),
+
+  createRichWord('b1_experience', 'Experience', '/ɪkˈspɪə.ri.əns/', 'икспириенс', 'Опыт / Переживание', ProficiencyLevel.B1, 'noun', 'High', 'Neutral',
+    'Знания или навыки, полученные в процессе работы; или событие, которое оставило впечатление.',
+    '- Работа: "Work experience" (Опыт работы)\n- Жизнь: "Personal experience" (Личный опыт)\n- Глагол: "Experience difficulties" (Испытывать трудности)',
+    [
+      { en: 'She has ten years of experience in marketing.', ru: 'У нее десять лет опыта работы в маркетинге.' },
+      { en: 'It was a terrifying experience that I will never forget.', ru: 'Это было ужасное переживание, которое я никогда не забуду.' },
+      { en: 'We experienced some problems with the engine.', ru: 'Мы столкнулись с некоторыми проблемами с двигателем.' },
+      { en: 'Experience teaches us many valuable lessons.', ru: 'Опыт преподает нам много ценных уроков.' }
+    ],
+    []
+  ),
+
+  createRichWord('b1_express', 'Express', '/ɪkˈspres/', 'экспресс', 'Выражать', ProficiencyLevel.B1, 'verb', 'Medium', 'Neutral',
+    'Передавать мысли или чувства словами, жестами или поведением.',
+    '- Мнение: "Express an opinion" (Выразить мнение)\n- Чувства: "Express gratitude" (Выразить благодарность)\n- Себя: "Express yourself" (Самовыражаться)',
+    [
+      { en: 'I find it difficult to express my feelings in words.', ru: 'Мне трудно выразить свои чувства словами.' },
+      { en: 'She expressed her concern about the safety rules.', ru: 'Она выразила свою озабоченность правилами безопасности.' },
+      { en: 'Music helps teenagers to express themselves.', ru: 'Музыка помогает подросткам самовыражаться.' },
+      { en: 'The letter expressed deep regret for the mistake.', ru: 'Письмо выражало глубокое сожаление об ошибке.' }
+    ],
+    [
+      { meaning: "Fast (adj)", translation: "Скорый / Экспресс", example: { en: "Express train.", ru: "Скорый поезд." } },
+      { meaning: "Explicit/Clear (adj)", translation: "Явный / Прямой", example: { en: "Express orders.", ru: "Прямые приказы." } }
+    ]
+  ),
+
+  createRichWord('b1_fear', 'Fear', '/fɪər/', 'фир', 'Страх', ProficiencyLevel.B1, 'noun', 'Medium', 'Neutral',
+    'Неприятная эмоция, вызванная угрозой опасности, боли или вреда.',
+    '- Фобия: "Fear of heights" (Страх высоты)\n- Действие: "Overcome fear" (Преодолеть страх)\n- Глагол: "Fear the worst" (Опасаться худшего)',
+    [
+      { en: 'He has a deep fear of spiders and snakes.', ru: 'У него глубокий страх перед пауками и змеями.' },
+      { en: 'She managed to conquer her fear of flying.', ru: 'Ей удалось побороть свой страх полетов.' },
+      { en: 'There is no reason to fear the future.', ru: 'Нет причин бояться будущего.' },
+      { en: 'I fear that we might be late for the train.', ru: 'Я опасаюсь, что мы можем опоздать на поезд.' }
+    ],
+    []
+  ),
+
+  createRichWord('b1_fellow', 'Fellow', '/ˈfel.əʊ/', 'фелоу', 'Приятель / Коллега', ProficiencyLevel.B1, 'noun', 'Low', 'Neutral',
+    'Человек в том же положении, что и вы; или неформальное название мужчины (устар. или разг.).',
+    '- Группа: "Fellow students" (Однокурсники)\n- Обращение: "Nice fellow" (Славный малый)\n- Гражданство: "Fellow citizens" (Сограждане)',
+    [
+      { en: 'He introduced me to his fellow workers.', ru: 'Он представил меня своим коллегам по работе.' },
+      { en: 'She is a research fellow at the university.', ru: 'Она научный сотрудник в университете.' },
+      { en: 'He seems like a very pleasant fellow.', ru: 'Он кажется очень приятным малым.' },
+      { en: 'My fellow Americans, we must unite.', ru: 'Мои сограждане американцы, мы должны объединиться.' }
+    ],
+    []
+  ),
+
+  createRichWord('b1_figure', 'Figure', '/ˈfɪɡ.ər/', 'фигэр', 'Цифра / Фигура', ProficiencyLevel.B1, 'noun', 'High', 'Neutral',
+    'Числовое значение; форма тела человека; или важная личность.',
+    '- Математика: "Six-figure sum" (Шестизначная сумма)\n- Личность: "Public figure" (Публичная личность)\n- Фразовый глагол: "Figure out" (Выяснить / Понять)',
+    [
+      { en: 'The unemployment figures have dropped this month.', ru: 'Цифры безработицы снизились в этом месяце.' },
+      { en: 'She has a slim figure because she exercises daily.', ru: 'У нее стройная фигура, потому что она тренируется ежедневно.' },
+      { en: 'We need to figure out how to solve this puzzle.', ru: 'Нам нужно выяснить, как решить эту головоломку.' },
+      { en: 'He was a leading figure in the art world.', ru: 'Он был ведущей фигурой в мире искусства.' }
+    ],
+    []
+  ),
+];
+
+
+
+Вот TypeScript код для списка слов от FISH до HANDLE, сгруппированный по уровням (A1, A2, B1), с транскрипциями, переводами и примерами.
+
+code
+TypeScript
+download
+content_copy
+expand_less
+import { createRichWord } from './utils/createRichWord';
+import { ProficiencyLevel } from './enums';
+
+export const wordsBatchFtoH = [
+  // ==============================================================================
+  // --- LEVEL A1 (Survival / Beginner) -------------------------------------------
+  // ==============================================================================
+
+  createRichWord('a1_fish', 'Fish', '/fɪʃ/', 'фиш', 'Рыба', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Животное, которое живет в воде, имеет плавники и дышит жабрами.',
+    '- Еда: "Fish and chips" (Рыба с жареной картошкой)\n- Хобби: "Go fishing" (Идти на рыбалку)\n- Природа: "Tropical fish" (Тропическая рыба)',
+    [
+      { en: 'Fish swim in the river.', ru: 'Рыба плавает в реке.' },
+      { en: 'I like to eat grilled fish for dinner.', ru: 'Я люблю есть рыбу на гриле на ужин.' },
+      { en: 'There are many colourful fish in the aquarium.', ru: 'В аквариуме много разноцветных рыб.' },
+      { en: 'My father caught a big fish yesterday.', ru: 'Мой отец вчера поймал большую рыбу.' }
+    ],
+    [
+      { meaning: "To catch fish (verb)", translation: "Ловить рыбу", example: { en: "He fishes every Sunday.", ru: "Он рыбачит каждое воскресенье." } }
+    ]
+  ),
+
+  createRichWord('a1_five', 'Five', '/faɪv/', 'файв', 'Пять', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Число, следующее за четырьмя и предшествующее шести (5).',
+    '- Время: "Five o\'clock" (Пять часов)\n- Возраст: "Five years old" (Пять лет)\n- Деньги: "Five pounds" (Пять фунтов)',
+    [
+      { en: 'I have five fingers on each hand.', ru: 'У меня по пять пальцев на каждой руке.' },
+      { en: 'The bus arrives in five minutes.', ru: 'Автобус прибудет через пять минут.' },
+      { en: 'She has five cats in her house.', ru: 'У нее в доме пять кошек.' },
+      { en: 'We need five chairs for the table.', ru: 'Нам нужно пять стульев для стола.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_flat', 'Flat', '/flæt/', 'флэт', 'Квартира', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Набор комнат для проживания, обычно на одном этаже здания (британский английский).',
+    '- Жилье: "Rent a flat" (Снимать квартиру)\n- Здание: "Block of flats" (Многоквартирный дом)\n- Размер: "Two-bedroom flat" (Двухкомнатная квартира)',
+    [
+      { en: 'I live in a small flat in London.', ru: 'Я живу в маленькой квартире в Лондоне.' },
+      { en: 'Her flat is on the third floor.', ru: 'Ее квартира находится на третьем этаже.' },
+      { en: 'They bought a new flat last month.', ru: 'Они купили новую квартиру в прошлом месяце.' },
+      { en: 'Is your flat near the city centre?', ru: 'Твоя квартира находится рядом с центром города?' }
+    ],
+    [
+      { meaning: "Smooth and level (adj)", translation: "Плоский / Ровный", example: { en: "A flat surface.", ru: "Ровная поверхность." } },
+      { meaning: "Deflated tyre (adj/noun)", translation: "Спущенный (о шине)", example: { en: "I have a flat tyre.", ru: "У меня спустило колесо." } }
+    ]
+  ),
+
+  createRichWord('a1_floor', 'Floor', '/flɔːr/', 'флор', 'Пол / Этаж', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Поверхность, по которой ходят в комнате; или уровень здания.',
+    '- Помещение: "Wooden floor" (Деревянный пол)\n- Уровень: "Ground floor" (Первый этаж - брит.)\n- Действие: "Sit on the floor" (Сидеть на полу)',
+    [
+      { en: 'Don\'t drop food on the floor.', ru: 'Не роняй еду на пол.' },
+      { en: 'Our office is on the fifth floor.', ru: 'Наш офис находится на пятом этаже.' },
+      { en: 'The floor was wet and slippery.', ru: 'Пол был мокрым и скользким.' },
+      { en: 'I live on the top floor of the building.', ru: 'Я живу на последнем этаже здания.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_flower', 'Flower', '/ˈflaʊ.ər/', 'флауэр', 'Цветок', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Красивая цветная часть растения, из которой образуются семена или плоды.',
+    '- Подарок: "Bunch of flowers" (Букет цветов)\n- Сад: "Plant flowers" (Сажать цветы)\n- Природа: "Wild flowers" (Полевые цветы)',
+    [
+      { en: 'He gave her a beautiful red flower.', ru: 'Он подарил ей красивый красный цветок.' },
+      { en: 'Flowers grow in the garden in spring.', ru: 'Цветы растут в саду весной.' },
+      { en: 'Put the flowers in a vase with water.', ru: 'Поставь цветы в вазу с водой.' },
+      { en: 'Bees like to visit flowers.', ru: 'Пчелы любят посещать цветы.' }
+    ],
+    [
+      { meaning: "To bloom (verb)", translation: "Цвести", example: { en: "The roses flowered early.", ru: "Розы зацвели рано." } }
+    ]
+  ),
+
+  createRichWord('a1_fly', 'Fly', '/flaɪ/', 'флай', 'Летать', ProficiencyLevel.A1, 'verb', 'High', 'Neutral',
+    'Передвигаться по воздуху с помощью крыльев или на самолете.',
+    '- Путешествие: "Fly to London" (Лететь в Лондон)\n- Птицы: "Birds fly" (Птицы летают)\n- Время: "Time flies" (Время летит)',
+    [
+      { en: 'Birds can fly very high in the sky.', ru: 'Птицы могут летать очень высоко в небе.' },
+      { en: 'We are going to fly to Spain for our holiday.', ru: 'Мы полетим в Испанию в отпуск.' },
+      { en: 'Penguins cannot fly, but they can swim.', ru: 'Пингвины не умеют летать, но умеют плавать.' },
+      { en: 'I want to learn how to fly a plane.', ru: 'Я хочу научиться управлять (летать на) самолетом.' }
+    ],
+    [
+      { meaning: "Insect (noun)", translation: "Муха", example: { en: "There is a fly in my soup.", ru: "В моем супе муха." } },
+      { meaning: "Zipper on trousers (noun)", translation: "Ширинка", example: { en: "Your fly is open.", ru: "У тебя ширинка расстегнута." } }
+    ]
+  ),
+
+  createRichWord('a1_food', 'Food', '/fuːd/', 'фуд', 'Еда', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'То, что люди и животные едят для поддержания жизни.',
+    '- Вкус: "Delicious food" (Вкусная еда)\n- Тип: "Fast food" (Фастфуд)\n- Покупка: "Buy food" (Покупать продукты)',
+    [
+      { en: 'We need to buy some food for dinner.', ru: 'Нам нужно купить еды на ужин.' },
+      { en: 'Chinese food is very popular here.', ru: 'Китайская еда здесь очень популярна.' },
+      { en: 'Don\'t talk with food in your mouth.', ru: 'Не разговаривай с едой во рту.' },
+      { en: 'The food in this restaurant is excellent.', ru: 'Еда в этом ресторане отличная.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_foot', 'Foot', '/fʊt/', 'фут', 'Ступня / Нога', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Нижняя часть ноги, на которой человек стоит.',
+    '- Передвижение: "On foot" (Пешком)\n- Спорт: "Kick with foot" (Пнуть ногой)\n- Левая/Правая: "Left foot" (Левая нога)',
+    [
+      { en: 'My foot hurts after playing football.', ru: 'У меня болит нога (ступня) после игры в футбол.' },
+      { en: 'We went to the shops on foot.', ru: 'Мы пошли в магазины пешком.' },
+      { en: 'He stepped on my foot by mistake.', ru: 'Он наступил мне на ногу по ошибке.' },
+      { en: 'Put your right foot forward.', ru: 'Выставь правую ногу вперед.' }
+    ],
+    [
+      { meaning: "Measurement unit", translation: "Фут (мера длины)", example: { en: "Six feet tall.", ru: "Шесть футов ростом." } },
+      { meaning: "Base/Bottom", translation: "Подножие / Основание", example: { en: "The foot of the mountain.", ru: "Подножие горы." } }
+    ]
+  ),
+
+  createRichWord('a1_football', 'Football', '/ˈfʊt.bɔːl/', 'футбол', 'Футбол', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Командная игра с мячом, который бьют ногами (в США - soccer).',
+    '- Игра: "Play football" (Играть в футбол)\n- Команда: "Football team" (Футбольная команда)\n- Матч: "Football match" (Футбольный матч)',
+    [
+      { en: 'Football is the most popular sport in Brazil.', ru: 'Футбол — самый популярный вид спорта в Бразилии.' },
+      { en: 'We play football in the park every Saturday.', ru: 'Мы играем в футбол в парке каждую субботу.' },
+      { en: 'Did you watch the football match last night?', ru: 'Ты смотрел футбольный матч вчера вечером?' },
+      { en: 'He is a famous football player.', ru: 'Он известный футболист.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_for', 'For', '/fɔːr/', 'фор', 'Для / В течение', ProficiencyLevel.A1, 'prep', 'High', 'Neutral',
+    'Предлог, указывающий на предназначение, длительность времени или причину.',
+    '- Подарок: "For you" (Для тебя)\n- Время: "For two days" (В течение двух дней)\n- Причина: "Wait for me" (Жди меня)',
+    [
+      { en: 'This present is for you.', ru: 'Этот подарок для тебя.' },
+      { en: 'I have lived here for ten years.', ru: 'Я живу здесь уже десять лет.' },
+      { en: 'We are waiting for the bus.', ru: 'Мы ждем автобус.' },
+      { en: 'Is this train for London?', ru: 'Этот поезд идет в Лондон?' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_forget', 'Forget', '/fəˈɡet/', 'фэгет', 'Забывать', ProficiencyLevel.A1, 'verb', 'High', 'Neutral',
+    'Перестать помнить что-то; не вспомнить информацию или вещь.',
+    '- Память: "Forget the name" (Забыть имя)\n- Действие: "Don\'t forget" (Не забудь)\n- Вещи: "Forget keys" (Забыть ключи)',
+    [
+      { en: 'I often forget where I put my keys.', ru: 'Я часто забываю, куда положил ключи.' },
+      { en: 'Don\'t forget to call your mother.', ru: 'Не забудь позвонить маме.' },
+      { en: 'She will never forget this day.', ru: 'Она никогда не забудет этот день.' },
+      { en: 'Sorry, I forgot your birthday.', ru: 'Извини, я забыл про твой день рождения.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_four', 'Four', '/fɔːr/', 'фор', 'Четыре', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Число, следующее за тремя и предшествующее пяти (4).',
+    '- Время: "Four pm" (Четыре часа дня)\n- Количество: "Four seasons" (Четыре времени года)\n- Семья: "Four children" (Четверо детей)',
+    [
+      { en: 'A table usually has four legs.', ru: 'У стола обычно четыре ножки.' },
+      { en: 'There are four people in my family.', ru: 'В моей семье четыре человека.' },
+      { en: 'He arrived at four o\'clock exactly.', ru: 'Он прибыл ровно в четыре часа.' },
+      { en: 'I have read four books this month.', ru: 'Я прочитал четыре книги в этом месяце.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_free', 'Free', '/friː/', 'фри', 'Свободный / Бесплатный', ProficiencyLevel.A1, 'adj', 'High', 'Neutral',
+    'Не стоящий денег; или не занятый чем-то; или имеющий свободу.',
+    '- Цена: "Free of charge" (Бесплатно)\n- Время: "Free time" (Свободное время)\n- Статус: "Feel free" (Не стесняйтесь)',
+    [
+      { en: 'Is this seat free?', ru: 'Это место свободно?' },
+      { en: 'Entrance to the museum is free.', ru: 'Вход в музей бесплатный.' },
+      { en: 'I am free this evening if you want to meet.', ru: 'Я свободен сегодня вечером, если хочешь встретиться.' },
+      { en: 'You are free to go now.', ru: 'Теперь вы свободны (можете идти).' }
+    ],
+    [
+      { meaning: "To release (verb)", translation: "Освобождать", example: { en: "Free the prisoners.", ru: "Освободить заключенных." } }
+    ]
+  ),
+
+  createRichWord('a1_friday', 'Friday', '/ˈfraɪ.deɪ/', 'фрайдей', 'Пятница', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'День недели после четверга и перед субботой.',
+    '- Время: "On Friday" (В пятницу)\n- Вечер: "Friday night" (Вечер пятницы)\n- Регулярность: "Every Friday" (Каждую пятницу)',
+    [
+      { en: 'I finish work early on Friday.', ru: 'Я заканчиваю работу рано в пятницу.' },
+      { en: 'Let\'s go to the cinema this Friday.', ru: 'Давай пойдем в кино в эту пятницу.' },
+      { en: 'Friday is my favourite day of the week.', ru: 'Пятница — мой любимый день недели.' },
+      { en: 'We have a meeting next Friday morning.', ru: 'У нас встреча в следующую пятницу утром.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_friend', 'Friend', '/frend/', 'френд', 'Друг', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Человек, которого вы знаете и любите, и с которым вам нравится проводить время.',
+    '- Отношения: "Best friend" (Лучший друг)\n- Действие: "Make friends" (Подружиться)\n- Общение: "Visit a friend" (Навестить друга)',
+    [
+      { en: 'Tom is my best friend from school.', ru: 'Том — мой лучший друг со школы.' },
+      { en: 'I am going to meet some friends later.', ru: 'Я собираюсь встретиться с друзьями позже.' },
+      { en: 'She is a good friend of mine.', ru: 'Она моя хорошая подруга.' },
+      { en: 'It is important to help your friends.', ru: 'Важно помогать своим друзьям.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_from', 'From', '/frɒm/', 'фром', 'Из / От', ProficiencyLevel.A1, 'prep', 'High', 'Neutral',
+    'Предлог, указывающий на происхождение, начальную точку или источник.',
+    '- Происхождение: "Where are you from?" (Откуда ты?)\n- Время: "From 9 to 5" (С 9 до 5)\n- Отправитель: "Letter from him" (Письмо от него)',
+    [
+      { en: 'I am from Italy.', ru: 'Я из Италии.' },
+      { en: 'The train from Paris arrives at noon.', ru: 'Поезд из Парижа прибывает в полдень.' },
+      { en: 'I received a gift from my grandmother.', ru: 'Я получил подарок от бабушки.' },
+      { en: 'He works from Monday to Friday.', ru: 'Он работает с понедельника по пятницу.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_front', 'Front', '/frʌnt/', 'франт', 'Перед / Передняя часть', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Сторона объекта, которая обращена вперед или является наиболее важной.',
+    '- Положение: "In front of" (Перед)\n- Часть дома: "Front door" (Входная дверь)\n- Место: "At the front" (Спереди)',
+    [
+      { en: 'There is a garden in front of the house.', ru: 'Перед домом есть сад.' },
+      { en: 'Please sit in the front seat of the car.', ru: 'Пожалуйста, садись на переднее сиденье машины.' },
+      { en: 'The front of the building is very beautiful.', ru: 'Фасад здания очень красив.' },
+      { en: 'Wait for me at the front door.', ru: 'Жди меня у входной двери.' }
+    ],
+    [
+      { meaning: "A boundary in war", translation: "Фронт (воен.)", example: { en: "Soldiers at the front.", ru: "Солдаты на фронте." } }
+    ]
+  ),
+
+  createRichWord('a1_full', 'Full', '/fʊl/', 'фул', 'Полный', ProficiencyLevel.A1, 'adj', 'High', 'Neutral',
+    'Содержащий столько, сколько может вместить; не пустой; сытый (о еде).',
+    '- Емкость: "Full of water" (Полный воды)\n- Еда: "I am full" (Я сыт)\n- Время: "Full time" (Полная занятость)',
+    [
+      { en: 'The glass is full of milk.', ru: 'Стакан полон молока.' },
+      { en: 'I cannot eat any more, I am full.', ru: 'Я больше не могу есть, я сыт.' },
+      { en: 'The bus was full, so we waited for the next one.', ru: 'Автобус был полон, поэтому мы ждали следующий.' },
+      { en: 'Write your full name on the form.', ru: 'Напишите ваше полное имя в бланке.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_fun', 'Fun', '/fʌn/', 'фан', 'Веселье', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Удовольствие, развлечение или что-то, что доставляет радость.',
+    '- Действие: "Have fun" (Веселиться)\n- Оценка: "It was fun" (Было весело)\n- Люди: "Fun person" (Веселый человек - разг.)',
+    [
+      { en: 'We had a lot of fun at the party.', ru: 'Мы очень повеселились на вечеринке.' },
+      { en: 'Playing games is fun for children.', ru: 'Играть в игры — это весело для детей.' },
+      { en: 'Have fun on your holiday!', ru: 'Хорошо повеселиться в отпуске!' },
+      { en: 'Skiing is great fun.', ru: 'Кататься на лыжах — это большое удовольствие.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_game', 'Game', '/ɡeɪm/', 'гейм', 'Игра', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Развлекательное занятие или вид спорта с правилами.',
+    '- Компьютер: "Video game" (Видеоигра)\n- Спорт: "Football game" (Футбольная игра)\n- Развлечение: "Play a game" (Сыграть в игру)',
+    [
+      { en: 'Do you want to play a card game?', ru: 'Хочешь сыграть в карточную игру?' },
+      { en: 'The football game starts at six.', ru: 'Футбольный матч начинается в шесть.' },
+      { en: 'Monopoly is a popular board game.', ru: 'Монополия — популярная настольная игра.' },
+      { en: 'It is just a game, don\'t be angry.', ru: 'Это всего лишь игра, не злись.' }
+    ],
+    [
+      { meaning: "Wild animals hunted for food", translation: "Дичь", example: { en: "Game meat.", ru: "Мясо дичи." } }
+    ]
+  ),
+
+  createRichWord('a1_garden', 'Garden', '/ˈɡɑː.dən/', 'гардэн', 'Сад / Огород', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Участок земли рядом с домом, где выращивают цветы, деревья или овощи.',
+    '- Работа: "Work in the garden" (Работать в саду)\n- Растения: "Flower garden" (Цветочный сад)\n- Мебель: "Garden chair" (Садовый стул)',
+    [
+      { en: 'Our house has a big beautiful garden.', ru: 'У нашего дома есть большой красивый сад.' },
+      { en: 'She loves planting flowers in her garden.', ru: 'Она любит сажать цветы в своем саду.' },
+      { en: 'Children are playing in the garden.', ru: 'Дети играют в саду.' },
+      { en: 'We grow vegetables in our vegetable garden.', ru: 'Мы выращиваем овощи в нашем огороде.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_get', 'Get', '/ɡet/', 'гет', 'Получать / Становиться', ProficiencyLevel.A1, 'verb', 'High', 'Neutral',
+    'Один из самых частых глаголов. Основные значения: получать, покупать, приносить, становиться, добираться.',
+    '- Получение: "Get a present" (Получить подарок)\n- Изменение: "Get cold" (Замерзнуть/Похолодать)\n- Движение: "Get home" (Добраться до дома)',
+    [
+      { en: 'I got a letter from my friend today.', ru: 'Я получил письмо от друга сегодня.' },
+      { en: 'It is getting dark outside.', ru: 'На улице становится темно.' },
+      { en: 'Can you get me a glass of water?', ru: 'Можешь принести мне стакан воды?' },
+      { en: 'How do I get to the airport?', ru: 'Как мне добраться до аэропорта?' }
+    ],
+    [
+      { meaning: "To understand (informal)", translation: "Понимать", example: { en: "I don't get it.", ru: "Я не понимаю это." } },
+      { meaning: "To catch (illness)", translation: "Подхватить (болезнь)", example: { en: "Get the flu.", ru: "Заболеть гриппом." } }
+    ]
+  ),
+
+  createRichWord('a1_girl', 'Girl', '/ɡɜːl/', 'гёрл', 'Девочка / Девушка', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Ребенок женского пола или молодая женщина.',
+    '- Возраст: "Little girl" (Маленькая девочка)\n- Отношения: "Girlfriend" (Подруга / Девушка)\n- Школа: "School girl" (Школьница)',
+    [
+      { en: 'The girl is playing with her doll.', ru: 'Девочка играет со своей куклой.' },
+      { en: 'She is a very clever girl.', ru: 'Она очень умная девочка.' },
+      { en: 'There are three boys and two girls in the group.', ru: 'В группе три мальчика и две девочки.' },
+      { en: 'A young girl helped me cross the road.', ru: 'Молодая девушка помогла мне перейти дорогу.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_give', 'Give', '/ɡɪv/', 'гив', 'Давать', ProficiencyLevel.A1, 'verb', 'High', 'Neutral',
+    'Передавать что-то кому-то; предоставлять.',
+    '- Подарок: "Give a present" (Дарить подарок)\n- Помощь: "Give a hand" (Помочь)\n- Возврат: "Give back" (Отдавать обратно)',
+    [
+      { en: 'Please give me the book.', ru: 'Пожалуйста, дай мне книгу.' },
+      { en: 'He gave her flowers for her birthday.', ru: 'Он подарил ей цветы на день рождения.' },
+      { en: 'They gave us some good advice.', ru: 'Они дали нам хороший совет.' },
+      { en: 'Don\'t give money to strangers.', ru: 'Не давай деньги незнакомцам.' }
+    ],
+    [
+      { meaning: "To stop doing (phrasal verb 'give up')", translation: "Сдаваться / Бросать", example: { en: "Never give up.", ru: "Никогда не сдавайся." } }
+    ]
+  ),
+
+  createRichWord('a1_glass', 'Glass', '/ɡlɑːs/', 'глас', 'Стекло / Стакан', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Прозрачный твердый материал; или емкость для питья из этого материала.',
+    '- Материал: "Made of glass" (Сделано из стекла)\n- Посуда: "Glass of water" (Стакан воды)\n- Аксессуар: "Glasses" (Очки)',
+    [
+      { en: 'Can I have a glass of water, please?', ru: 'Можно мне стакан воды, пожалуйста?' },
+      { en: 'Be careful, there is broken glass on the floor.', ru: 'Осторожно, на полу разбитое стекло.' },
+      { en: 'He wears glasses to read.', ru: 'Он носит очки для чтения.' },
+      { en: 'The window is made of glass.', ru: 'Окно сделано из стекла.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_go', 'Go', '/ɡəʊ/', 'гоу', 'Идти / Ехать', ProficiencyLevel.A1, 'verb', 'High', 'Neutral',
+    'Двигаться из одного места в другое; уходить.',
+    '- Место: "Go to school" (Идти в школу)\n- Дом: "Go home" (Идти домой - без предлога!)\n- Активность: "Go shopping" (Идти за покупками)',
+    [
+      { en: 'I go to work by bus every day.', ru: 'Я езжу на работу на автобусе каждый день.' },
+      { en: 'Where did they go?', ru: 'Куда они ушли?' },
+      { en: 'Let\'s go for a walk in the park.', ru: 'Давай пойдем прогуляемся в парке.' },
+      { en: 'It is time to go to bed.', ru: 'Пора ложиться спать.' }
+    ],
+    [
+      { meaning: "To disappear", translation: "Исчезать / Проходить", example: { en: "My headache has gone.", ru: "Моя головная боль прошла." } },
+      { meaning: "Attempt/Turn (noun)", translation: "Попытка / Ход", example: { en: "It's your go.", ru: "Твой ход." } }
+    ]
+  ),
+
+  createRichWord('a1_gold', 'Gold', '/ɡəʊld/', 'голд', 'Золото / Золотой', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Драгоценный желтый металл; или желто-оранжевый цвет.',
+    '- Украшение: "Gold ring" (Золотое кольцо)\n- Награда: "Gold medal" (Золотая медаль)\n- Цвет: "Gold colour" (Золотой цвет)',
+    [
+      { en: 'She wears a gold necklace.', ru: 'Она носит золотое ожерелье.' },
+      { en: 'Gold is a very expensive metal.', ru: 'Золото — очень дорогой металл.' },
+      { en: 'He won a gold medal in the Olympics.', ru: 'Он выиграл золотую медаль на Олимпийских играх.' },
+      { en: 'The leaves turn gold in autumn.', ru: 'Листья становятся золотыми осенью.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_good', 'Good', '/ɡʊd/', 'гуд', 'Хороший', ProficiencyLevel.A1, 'adj', 'High', 'Neutral',
+    'Высокого качества; приятный; подходящий.',
+    '- Приветствие: "Good morning" (Доброе утро)\n- Качество: "Good idea" (Хорошая идея)\n- Навык: "Good at English" (Хорош в английском)',
+    [
+      { en: 'This is a very good book.', ru: 'Это очень хорошая книга.' },
+      { en: 'She is a good student.', ru: 'Она хорошая студентка.' },
+      { en: 'Vegetables are good for your health.', ru: 'Овощи полезны (хороши) для твоего здоровья.' },
+      { en: 'Have a good day!', ru: 'Хорошего дня!' }
+    ],
+    [
+      { meaning: "Benefit/Advantage (noun)", translation: "Благо / Польза", example: { en: "For the public good.", ru: "На благо общества." } }
+    ]
+  ),
+
+  createRichWord('a1_goodbye', 'Goodbye', '/ɡʊdˈbaɪ/', 'гудбай', 'До свидания', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Слово, которое говорят, когда уходят или заканчивают разговор.',
+    '- Прощание: "Say goodbye" (Попрощаться)\n- Уход: "Kiss goodbye" (Поцеловать на прощание)',
+    [
+      { en: 'He said goodbye and left the room.', ru: 'Он сказал "до свидания" и вышел из комнаты.' },
+      { en: 'It is sad to say goodbye to friends.', ru: 'Грустно прощаться с друзьями.' },
+      { en: 'Goodbye, see you tomorrow!', ru: 'До свидания, увидимся завтра!' },
+      { en: 'She waved goodbye from the train.', ru: 'Она помахала на прощание из поезда.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_grandfather', 'Grandfather', '/ˈɡræn.fɑː.ðər/', 'грэнфазер', 'Дедушка', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Отец одного из родителей.',
+    '- Семья: "My grandfather" (Мой дедушка)\n- Возраст: "Old grandfather" (Старый дедушка)',
+    [
+      { en: 'My grandfather tells great stories.', ru: 'Мой дедушка рассказывает отличные истории.' },
+      { en: 'I visit my grandfather every Sunday.', ru: 'Я навещаю дедушку каждое воскресенье.' },
+      { en: 'Her grandfather is seventy years old.', ru: 'Ее дедушке семьдесят лет.' },
+      { en: 'Grandfather likes to sit in his armchair.', ru: 'Дедушка любит сидеть в своем кресле.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_grass', 'Grass', '/ɡrɑːs/', 'грас', 'Трава', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Зеленое растение, которое растет на земле в полях, садах и парках.',
+    '- Природа: "Green grass" (Зеленая трава)\n- Сад: "Cut the grass" (Стричь траву)\n- Запрет: "Keep off the grass" (По газону не ходить)',
+    [
+      { en: 'The grass is very green after the rain.', ru: 'Трава очень зеленая после дождя.' },
+      { en: 'Please do not walk on the grass.', ru: 'Пожалуйста, не ходите по траве.' },
+      { en: 'Cows eat grass in the field.', ru: 'Коровы едят траву на поле.' },
+      { en: 'He lay on the grass and looked at the sky.', ru: 'Он лежал на траве и смотрел на небо.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_great', 'Great', '/greɪt/', 'грейт', 'Великолепный / Великий', ProficiencyLevel.A1, 'adj', 'High', 'Neutral',
+    'Очень хороший; большой по размеру или количеству.',
+    '- Эмоция: "That\'s great!" (Это здорово!)\n- Размер: "Great number" (Огромное количество)\n- Личность: "Great writer" (Великий писатель)',
+    [
+      { en: 'We had a great time at the party.', ru: 'Мы отлично провели время на вечеринке.' },
+      { en: 'She is a great singer.', ru: 'Она великолепная певица.' },
+      { en: 'It is a great pleasure to meet you.', ru: 'Это огромная честь (удовольствие) встретить вас.' },
+      { en: 'London is a great city.', ru: 'Лондон — великий (большой/отличный) город.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_green', 'Green', '/ɡriːn/', 'грин', 'Зеленый', ProficiencyLevel.A1, 'adj', 'High', 'Neutral',
+    'Цвет травы или листьев.',
+    '- Еда: "Green apple" (Зеленое яблоко)\n- Светофор: "Green light" (Зеленый свет)\n- Природа: "Green trees" (Зеленые деревья)',
+    [
+      { en: 'Grass is usually green.', ru: 'Трава обычно зеленая.' },
+      { en: 'She has beautiful green eyes.', ru: 'У нее красивые зеленые глаза.' },
+      { en: 'Eat your green vegetables.', ru: 'Ешь свои зеленые овощи.' },
+      { en: 'Wait for the green light to cross.', ru: 'Жди зеленого света, чтобы перейти.' }
+    ],
+    [
+      { meaning: "Inexperienced (metaphor)", translation: "Зеленый / Неопытный", example: { en: "He is still a bit green.", ru: "Он все еще немного зеленый (неопытный)." } }
+    ]
+  ),
+
+  createRichWord('a1_grey', 'Grey', '/ɡreɪ/', 'грей', 'Серый', ProficiencyLevel.A1, 'adj', 'High', 'Neutral',
+    'Цвет между черным и белым (как пепел или тучи).',
+    '- Погода: "Grey sky" (Серое небо)\n- Внешность: "Grey hair" (Седые волосы)\n- Одежда: "Grey suit" (Серый костюм)',
+    [
+      { en: 'The sky is grey and it might rain.', ru: 'Небо серое, и может пойти дождь.' },
+      { en: 'My grandfather has grey hair.', ru: 'У моего дедушки седые волосы.' },
+      { en: 'I bought a grey sofa for the living room.', ru: 'Я купил серый диван для гостиной.' },
+      { en: 'Grey is a very neutral colour.', ru: 'Серый — очень нейтральный цвет.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_ground', 'Ground', '/ɡraʊnd/', 'граунд', 'Земля', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Твердая поверхность планеты, по которой мы ходим.',
+    '- Поверхность: "On the ground" (На земле)\n- Этаж: "Ground floor" (Первый этаж)\n- Спорт: "Sports ground" (Спортивная площадка)',
+    [
+      { en: 'The apple fell to the ground.', ru: 'Яблоко упало на землю.' },
+      { en: 'We sat on the ground and had a picnic.', ru: 'Мы сидели на земле и устроили пикник.' },
+      { en: 'The ground was frozen hard.', ru: 'Земля сильно промерзла.' },
+      { en: 'Don\'t leave your bag on the ground.', ru: 'Не оставляй свою сумку на земле.' }
+    ],
+    [
+      { meaning: "Reason/Basis (often plural)", translation: "Основание", example: { en: "Grounds for divorce.", ru: "Основания для развода." } },
+      { meaning: "Ground coffee (adj)", translation: "Молотый", example: { en: "Freshly ground coffee.", ru: "Свежемолотый кофе." } }
+    ]
+  ),
+
+  createRichWord('a1_group', 'Group', '/ɡruːp/', 'груп', 'Группа', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Несколько людей или вещей, находящихся вместе или связанных чем-то.',
+    '- Люди: "Group of friends" (Группа друзей)\n- Музыка: "Pop group" (Поп-группа)\n- Обучение: "Group work" (Групповая работа)',
+    [
+      { en: 'A group of tourists visited the museum.', ru: 'Группа туристов посетила музей.' },
+      { en: 'We worked in small groups in class.', ru: 'Мы работали в малых группах на уроке.' },
+      { en: 'This is a group for learning English.', ru: 'Это группа для изучения английского.' },
+      { en: 'Stand together in a group for the photo.', ru: 'Встаньте вместе в группу для фотографии.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_guy', 'Guy', '/ɡaɪ/', 'гай', 'Парень', ProficiencyLevel.A1, 'noun', 'High', 'Informal',
+    'Мужчина или мальчик (неформально); во множественном числе может означать группу людей любого пола.',
+    '- Обращение: "Hey guys!" (Эй, ребята!)\n- Описание: "Nice guy" (Хороший парень)\n- Знакомый: "I know a guy" (Я знаю одного парня)',
+    [
+      { en: 'He is a really nice guy.', ru: 'Он действительно хороший парень.' },
+      { en: 'Come on guys, let\'s go!', ru: 'Давайте, ребята, пошли!' },
+      { en: 'Who is that guy over there?', ru: 'Кто тот парень вон там?' },
+      { en: 'I met a guy from Canada yesterday.', ru: 'Я встретил парня из Канады вчера.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_hair', 'Hair', '/heər/', 'хэа', 'Волосы', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Тонкие нити, растущие на голове и теле человека.',
+    '- Внешность: "Long hair" (Длинные волосы)\n- Уход: "Wash hair" (Мыть волосы)\n- Цвет: "Dark hair" (Темные волосы)',
+    [
+      { en: 'She has long brown hair.', ru: 'У нее длинные коричневые волосы.' },
+      { en: 'I need to cut my hair.', ru: 'Мне нужно подстричь волосы.' },
+      { en: 'He is losing his hair.', ru: 'Он лысеет (теряет свои волосы).' },
+      { en: 'Brush your hair before you go out.', ru: 'Расчеши волосы перед выходом.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_half', 'Half', '/hɑːf/', 'хаф', 'Половина', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Одна из двух равных частей чего-либо (50%).',
+    '- Время: "Half past two" (Половина третьего)\n- Количество: "Half a kilo" (Полкило)\n- Разделение: "Cut in half" (Разрезать пополам)',
+    [
+      { en: 'Give me half of your sandwich.', ru: 'Дай мне половину твоего бутерброда.' },
+      { en: 'The meeting lasted an hour and a half.', ru: 'Встреча длилась полтора часа.' },
+      { en: 'I bought it for half price.', ru: 'Я купил это за полцены.' },
+      { en: 'Half of the students were late.', ru: 'Половина студентов опоздала.' }
+    ],
+    []
+  ),
+
+  createRichWord('a1_hand', 'Hand', '/hænd/', 'хэнд', 'Рука (кисть)', ProficiencyLevel.A1, 'noun', 'High', 'Neutral',
+    'Часть тела на конце руки, включающая пальцы и ладонь.',
+    '- Приветствие: "Shake hands" (Пожать руки)\n- Помощь: "Give a hand" (Помочь)\n- Удержание: "Hold hands" (Держаться за руки)',
+    [
+      { en: 'Wash your hands before dinner.', ru: 'Мой руки перед ужином.' },
+      { en: 'He writes with his left hand.', ru: 'Он пишет левой рукой.' },
+      { en: 'Raise your hand if you know the answer.', ru: 'Поднимите руку, если знаете ответ.' },
+      { en: 'Hold my hand when we cross the street.', ru: 'Держи меня за руку, когда мы переходим улицу.' }
+    ],
+    [
+      { meaning: "Clock pointer", translation: "Стрелка часов", example: { en: "The hour hand.", ru: "Часовая стрелка." } },
+      { meaning: "To pass (verb)", translation: "Передавать", example: { en: "Hand me the salt.", ru: "Передай мне соль." } }
+    ]
+  ),
+
+  // ==============================================================================
+  // --- LEVEL A2 (Elementary) ----------------------------------------------------
+  // ==============================================================================
+
+  createRichWord('a2_fit', 'Fit', '/fɪt/', 'фит', 'Подходить / Быть в форме', ProficiencyLevel.A2, 'verb', 'High', 'Neutral',
+    'Быть правильного размера или формы; быть здоровым и сильным.',
+    '- Одежда: "This coat fits me" (Это пальто мне подходит)\n- Здоровье: "Keep fit" (Поддерживать форму)\n- Уместность: "Fit for purpose" (Пригодный для цели)',
+    [
+      { en: 'These shoes do not fit me very well.', ru: 'Эти туфли мне не очень хорошо подходят.' },
+      { en: 'I go to the gym to keep fit.', ru: 'Я хожу в спортзал, чтобы поддерживать форму.' },
+      { en: 'The key fits the lock perfectly.', ru: 'Ключ идеально подходит к замку.' },
+      { en: 'He is not fit enough to run a marathon.', ru: 'Он недостаточно в форме, чтобы бежать марафон.' }
+    ],
+    [
+      { meaning: "Seizure/Tantrum (noun)", translation: "Приступ / Припадок", example: { en: "A fit of coughing.", ru: "Приступ кашля." } }
+    ]
+  ),
+
+  createRichWord('a2_fix', 'Fix', '/fɪks/', 'фикс', 'Чинить / Фиксировать', ProficiencyLevel.A2, 'verb', 'High', 'Neutral',
+    'Ремонтировать сломанное; прикреплять что-то на место.',
+    '- Ремонт: "Fix the car" (Починить машину)\n- Проблема: "Fix the problem" (Решить проблему)\n- Время: "Fix a date" (Назначить дату)',
+    [
+      { en: 'Can you fix my computer?', ru: 'Ты можешь починить мой компьютер?' },
+      { en: 'I need to fix this shelf to the wall.', ru: 'Мне нужно прикрепить эту полку к стене.' },
+      { en: 'Let\'s fix a time for the meeting.', ru: 'Давай назначим время для встречи.' },
+      { en: 'He managed to fix the broken toy.', ru: 'Ему удалось починить сломанную игрушку.' }
+    ],
+    [
+      { meaning: "Difficult situation (noun, informal)", translation: "Переплет / Затруднение", example: { en: "I'm in a fix.", ru: "Я в затруднительном положении." } }
+    ]
+  ),
+
+  createRichWord('a2_follow', 'Follow', '/ˈfɒl.əʊ/', 'фолоу', 'Следовать', ProficiencyLevel.A2, 'verb', 'High', 'Neutral',
+    'Идти за кем-то; подчиняться правилам; подписываться в соцсетях.',
+    '- Движение: "Follow me" (Следуй за мной)\n- Правила: "Follow the rules" (Соблюдать правила)\n- Соцсети: "Follow on Instagram" (Подписаться в Инстаграм)',
+    [
+      { en: 'Follow me and I will show you the way.', ru: 'Следуй за мной, и я покажу тебе дорогу.' },
+      { en: 'You must follow the instructions carefully.', ru: 'Ты должен внимательно следовать инструкциям.' },
+      { en: 'Do you follow any celebrities on Twitter?', ru: 'Ты подписан на каких-нибудь знаменитостей в Твиттере?' },
+      { en: 'Summer follows spring.', ru: 'Лето следует за весной.' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_forest', 'Forest', '/ˈfɒr.ɪst/', 'форист', 'Лес', ProficiencyLevel.A2, 'noun', 'Medium', 'Neutral',
+    'Большая территория, покрытая деревьями и растениями.',
+    '- Природа: "Thick forest" (Густой лес)\n- Прогулка: "Walk in the forest" (Гулять в лесу)\n- Экология: "Rain forest" (Тропический лес)',
+    [
+      { en: 'Bears live in the forest.', ru: 'Медведи живут в лесу.' },
+      { en: 'We went for a long walk in the forest.', ru: 'Мы ходили на долгую прогулку в лес.' },
+      { en: 'The forest is full of old trees.', ru: 'Лес полон старых деревьев.' },
+      { en: 'It is easy to get lost in a big forest.', ru: 'Легко заблудиться в большом лесу.' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_form', 'Form', '/fɔːm/', 'форм', 'Форма / Бланк', ProficiencyLevel.A2, 'noun', 'High', 'Neutral',
+    'Документ с пропусками для заполнения; или внешний вид/очертание чего-либо.',
+    '- Документ: "Fill in a form" (Заполнить бланк)\n- Очертание: "In the form of" (В форме чего-либо)\n- Спорт: "In good form" (В хорошей форме)',
+    [
+      { en: 'Please fill in this application form.', ru: 'Пожалуйста, заполните этот бланк заявления.' },
+      { en: 'Water takes the form of ice when it freezes.', ru: 'Вода принимает форму льда, когда замерзает.' },
+      { en: 'Swimming is a great form of exercise.', ru: 'Плавание — это отличная форма упражнений.' },
+      { en: 'The clouds had strange forms.', ru: 'У облаков были странные формы.' }
+    ],
+    [
+      { meaning: "To create/establish (verb)", translation: "Формировать", example: { en: "Form a government.", ru: "Сформировать правительство." } }
+    ]
+  ),
+
+  createRichWord('a2_freeze', 'Freeze', '/friːz/', 'фриз', 'Замерзать / Замораживать', ProficiencyLevel.A2, 'verb', 'Medium', 'Neutral',
+    'Превращаться в лед; чувствовать сильный холод.',
+    '- Погода: "Water freezes" (Вода замерзает)\n- Еда: "Frozen food" (Замороженная еда)\n- Ощущения: "I\'m freezing" (Я замерзаю)',
+    [
+      { en: 'Water freezes at zero degrees Celsius.', ru: 'Вода замерзает при нуле градусов Цельсия.' },
+      { en: 'You can freeze this soup for later.', ru: 'Ты можешь заморозить этот суп на потом.' },
+      { en: 'Put on a coat or you will freeze.', ru: 'Надень пальто, иначе замерзнешь.' },
+      { en: 'The computer screen froze again.', ru: 'Экран компьютера снова завис.' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_fresh', 'Fresh', '/freʃ/', 'фреш', 'Свежий', ProficiencyLevel.A2, 'adj', 'High', 'Neutral',
+    'Недавно сделанный или собранный; не испорченный; прохладный (о воздухе).',
+    '- Еда: "Fresh fruit" (Свежие фрукты)\n- Воздух: "Fresh air" (Свежий воздух)\n- Начало: "Fresh start" (Новое начало)',
+    [
+      { en: 'I bought some fresh bread from the bakery.', ru: 'Я купил свежий хлеб в пекарне.' },
+      { en: 'Open the window to let in some fresh air.', ru: 'Открой окно, чтобы впустить свежий воздух.' },
+      { en: 'Do you have fresh milk?', ru: 'У вас есть свежее молоко?' },
+      { en: 'She looks fresh and rested.', ru: 'Она выглядит свежей и отдохнувшей.' }
+    ],
+    [
+      { meaning: "Cheeky/Rude (informal)", translation: "Нахальный", example: { en: "Don't get fresh with me.", ru: "Не дерзи мне." } }
+    ]
+  ),
+
+  createRichWord('a2_gas', 'Gas', '/ɡæs/', 'гэс', 'Газ / Бензин (US)', ProficiencyLevel.A2, 'noun', 'High', 'Neutral',
+    'Вещество в газообразном состоянии; в американском английском — сокращение от gasoline (бензин).',
+    '- Кухня: "Gas cooker" (Газовая плита)\n- Топливо (US): "Gas station" (Заправка)\n- Физика: "Natural gas" (Природный газ)',
+    [
+      { en: 'We cook on a gas stove.', ru: 'Мы готовим на газовой плите.' },
+      { en: 'The car is running out of gas.', ru: 'У машины заканчивается бензин (US).' },
+      { en: 'There was a smell of gas in the kitchen.', ru: 'На кухне пахло газом.' },
+      { en: 'Helium is a very light gas.', ru: 'Гелий — очень легкий газ.' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_general', 'General', '/ˈdʒen.ər.əl/', 'дженерэл', 'Общий', ProficiencyLevel.A2, 'adj', 'High', 'Neutral',
+    'Касающийся большинства людей или вещей; не подробный.',
+    '- Мнение: "General opinion" (Общее мнение)\n- Знания: "General knowledge" (Общая эрудиция)\n- Целое: "In general" (В общем)',
+    [
+      { en: 'The general opinion is that the film is good.', ru: 'Общее мнение таково, что фильм хороший.' },
+      { en: 'In general, I like living here.', ru: 'В общем, мне нравится жить здесь.' },
+      { en: 'He gave us a general idea of the plan.', ru: 'Он дал нам общее представление о плане.' },
+      { en: 'This is a hospital for general medicine.', ru: 'Это больница общей медицины.' }
+    ],
+    [
+      { meaning: "Army officer rank (noun)", translation: "Генерал", example: { en: "A five-star general.", ru: "Пятизвездочный генерал." } }
+    ]
+  ),
+
+  createRichWord('a2_glad', 'Glad', '/ɡlæd/', 'глэд', 'Радый / Довольный', ProficiencyLevel.A2, 'adj', 'High', 'Neutral',
+    'Испытывающий радость или удовольствие от чего-либо.',
+    '- Новость: "Glad to hear" (Рад слышать)\n- Встреча: "Glad to meet you" (Рад познакомиться)\n- Помощь: "Glad to help" (Рад помочь)',
+    [
+      { en: 'I am so glad you came.', ru: 'Я так рад, что ты пришел.' },
+      { en: 'She was glad to finish the exam.', ru: 'Она была рада закончить экзамен.' },
+      { en: 'We are glad to be home again.', ru: 'Мы рады снова быть дома.' },
+      { en: 'I would be glad to help you.', ru: 'Я был бы рад помочь тебе.' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_god', 'God', '/ɡɒd/', 'год', 'Бог', ProficiencyLevel.A2, 'noun', 'High', 'Neutral',
+    'Высшее существо, создатель вселенной (в религиях).',
+    '- Вера: "Believe in God" (Верить в Бога)\n- Восклицание: "Oh my God!" (О боже!)\n- Фраза: "God bless you" (Будьте здоровы / Да благословит вас Бог)',
+    [
+      { en: 'They pray to God every day.', ru: 'Они молятся Богу каждый день.' },
+      { en: 'Do you believe in God?', ru: 'Ты веришь в Бога?' },
+      { en: 'God knows where he is.', ru: 'Бог знает, где он.' },
+      { en: 'Thank God you are safe!', ru: 'Слава Богу, ты в безопасности!' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_grow', 'Grow', '/ɡrəʊ/', 'гроу', 'Расти / Выращивать', ProficiencyLevel.A2, 'verb', 'High', 'Neutral',
+    'Увеличиваться в размере; становиться взрослее; выращивать растения.',
+    '- Дети: "Grow up" (Взрослеть)\n- Растения: "Grow vegetables" (Выращивать овощи)\n- Бизнес: "Grow fast" (Быстро расти)',
+    [
+      { en: 'Children grow very quickly.', ru: 'Дети растут очень быстро.' },
+      { en: 'We grow tomatoes in our garden.', ru: 'Мы выращиваем помидоры в нашем саду.' },
+      { en: 'He wants to grow his hair long.', ru: 'Он хочет отрастить длинные волосы.' },
+      { en: 'The economy is growing slowly.', ru: 'Экономика растет медленно.' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_guess', 'Guess', '/ɡes/', 'гес', 'Угадывать / Догадываться', ProficiencyLevel.A2, 'verb', 'High', 'Neutral',
+    'Давать ответ, не зная точно фактов; предполагать.',
+    '- Игра: "Guess the word" (Угадай слово)\n- Мнение: "I guess so" (Полагаю, что так)\n- Попытка: "Make a guess" (Сделать предположение)',
+    [
+      { en: 'Can you guess how old I am?', ru: 'Можешь угадать, сколько мне лет?' },
+      { en: 'I guess we should go home now.', ru: 'Полагаю, нам пора идти домой.' },
+      { en: 'Guess what happened yesterday!', ru: 'Угадай, что случилось вчера!' },
+      { en: 'You will never guess who I met.', ru: 'Ты никогда не угадаешь, кого я встретил.' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_gun', 'Gun', '/ɡʌn/', 'ган', 'Пистолет / Оружие', ProficiencyLevel.A2, 'noun', 'Medium', 'Neutral',
+    'Оружие, которое стреляет пулями.',
+    '- Опасность: "Carry a gun" (Носить оружие)\n- Действие: "Shoot a gun" (Стрелять из пистолета)\n- Тип: "Machine gun" (Пулемет)',
+    [
+      { en: 'Police officers carry guns in some countries.', ru: 'Полицейские носят оружие в некоторых странах.' },
+      { en: 'He pointed a gun at the target.', ru: 'Он направил пистолет на мишень.' },
+      { en: 'I heard the sound of a gun.', ru: 'Я услышал звук выстрела (оружия).' },
+      { en: 'Guns are very dangerous.', ru: 'Оружие очень опасно.' }
+    ],
+    []
+  ),
+
+  createRichWord('a2_hall', 'Hall', '/hɔːl/', 'хол', 'Коридор / Зал', ProficiencyLevel.A2, 'noun', 'High', 'Neutral',
+    'Проход в здании, соединяющий комнаты; или большое помещение для собраний.',
+    '- Дом: "Entrance hall" (Прихожая)\n- Школа: "School hall" (Школьный зал)\n- Проход: "Down the hall" (В конце коридора)',
+    [
+      { en: 'Leave your coat in the hall.', ru: 'Оставь свое пальто в прихожей.' },
+      { en: 'The concert was held in the town hall.', ru: 'Концерт проходил в городской ратуше (зале).' },
+      { en: 'My room is at the end of the hall.', ru: 'Моя комната в конце коридора.' },
+      { en: 'We gathered in the main hall for the meeting.', ru: 'Мы собрались в главном зале на собрание.' }
+    ],
+    []
+  ),
+
+  // ==============================================================================
+  // --- LEVEL B1 (Threshold / Intermediate) --------------------------------------
+  // ==============================================================================
+
+  createRichWord('b1_force', 'Force', '/fɔːs/', 'форс', 'Сила / Заставлять', ProficiencyLevel.B1, 'noun', 'Medium', 'Neutral',
+    'Физическая сила или энергия; действие по принуждению кого-либо.',
+    '- Полиция: "Police force" (Полиция / Силы правопорядка)\n- Физика: "Force of gravity" (Сила гравитации)\n- Глагол: "Force open" (Взломать / Открыть силой)',
+    [
+      { en: 'The wind was blowing with great force.', ru: 'Ветер дул с огромной силой.' },
+      { en: 'They had to use force to open the door.', ru: 'Им пришлось применить силу, чтобы открыть дверь.' },
+      { en: 'You cannot force me to do it.', ru: 'Ты не можешь заставить меня сделать это.' },
+      { en: 'Peacekeeping forces were sent to the region.', ru: 'Миротворческие силы были отправлены в регион.' }
+    ],
+    []
+  ),
+
+  createRichWord('b1_fortunate', 'Fortunate', '/ˈfɔː.tʃən.ət/', 'фоченэт', 'Удачливый / Счастливый', ProficiencyLevel.B1, 'adj', 'Low', 'Formal',
+    'Имеющий удачу; находящийся в благоприятном положении (более формальный синоним lucky).',
+    '- Условие: "Fortunate position" (Выгодное положение)\n- Событие: "Fortunate coincidence" (Счастливое совпадение)\n- Фраза: "Feel fortunate" (Чувствовать себя счастливчиком)',
+    [
+      { en: 'I was fortunate to have such good teachers.', ru: 'Мне повезло (я был удачлив) иметь таких хороших учителей.' },
+      { en: 'He is in a fortunate position to choose his job.', ru: 'Он в выгодном положении, чтобы выбирать работу.' },
+      { en: 'It was fortunate that no one was hurt.', ru: 'К счастью, никто не пострадал.' },
+      { en: 'We are fortunate to have a garden.', ru: 'Нам повезло иметь сад.' }
+    ],
+    []
+  ),
+
+  createRichWord('b1_forward', 'Forward', '/ˈfɔː.wəd/', 'фовэд', 'Вперед', ProficiencyLevel.B1, 'adv', 'High', 'Neutral',
+    'В направлении передней части; в будущее.',
+    '- Движение: "Move forward" (Двигаться вперед)\n- Ожидание: "Look forward to" (С нетерпением ждать)\n- Время: "From this day forward" (С этого дня и впредь)',
+    [
+      { en: 'Please step forward when I call your name.', ru: 'Пожалуйста, выйдите вперед, когда я назову ваше имя.' },
+      { en: 'I look forward to hearing from you.', ru: 'Я с нетерпением жду ответа от вас.' },
+      { en: 'He fell forward onto his face.', ru: 'Он упал вперед лицом.' },
+      { en: 'We need to plan forward for the next year.', ru: 'Нам нужно планировать наперед на следующий год.' }
+    ],
+    [
+      { meaning: "To send on (email/letter)", translation: "Переслать", example: { en: "Forward the email.", ru: "Переслать электронное письмо." } },
+      { meaning: "Confident/Bold (adj)", translation: "Развязный / Самоуверенный", example: { en: "She is a bit forward.", ru: "Она немного развязна." } }
+    ]
+  ),
+
+  createRichWord('b1_fright', 'Fright', '/fraɪt/', 'фрайт', 'Испуг', ProficiencyLevel.B1, 'noun', 'Low', 'Neutral',
+    'Внезапное сильное чувство страха или шока.',
+    '- Реакция: "Cry of fright" (Крик испуга)\n- Состояние: "Die of fright" (Умереть со страху)\n- Действие: "Get a fright" (Испугаться)',
+    [
+      { en: 'You gave me such a fright jumping out like that!', ru: 'Ты меня так напугал, выпрыгнув вот так!' },
+      { en: 'She shook with fright when she saw the dog.', ru: 'Она затряслась от испуга, когда увидела собаку.' },
+      { en: 'The noise caused a fright among the birds.', ru: 'Шум вызвал переполох (испуг) среди птиц.' },
+      { en: 'To my fright, the door began to open.', ru: 'К моему ужасу, дверь начала открываться.' }
+    ],
+    []
+  ),
+
+  createRichWord('b1_further', 'Further', '/ˈfɜː.ðər/', 'фёзэ', 'Дальше / Дальнейший', ProficiencyLevel.B1, 'adj', 'High', 'Neutral',
+    'На большем расстоянии (сравнительная степень от far); или дополнительный.',
+    '- Расстояние: "Further away" (Дальше)\n- Информация: "Further information" (Дополнительная информация)\n- Образование: "Further education" (Дальнейшее образование)',
+    [
+      { en: 'For further details, please contact the office.', ru: 'За дополнительными деталями, пожалуйста, свяжитесь с офисом.' },
+      { en: 'It is further than I thought.', ru: 'Это дальше, чем я думал.' },
+      { en: 'We need to discuss this matter further.', ru: 'Нам нужно обсудить этот вопрос более глубоко (дальше).' },
+      { en: 'Do you have any further questions?', ru: 'У вас есть еще (дальнейшие) вопросы?' }
+    ],
+    [
+      { meaning: "To promote/advance (verb)", translation: "Способствовать / Продвигать", example: { en: "Further his career.", ru: "Продвигать его карьеру." } }
+    ]
+  ),
+
+  createRichWord('b1_gentle', 'Gentle', '/ˈdʒen.təl/', 'джентл', 'Нежный / Мягкий', ProficiencyLevel.B1, 'adj', 'Medium', 'Neutral',
+    'Спокойный, добрый; не грубый и не сильный.',
+    '- Характер: "Gentle person" (Мягкий человек)\n- Прикосновение: "Gentle touch" (Нежное прикосновение)\n- Ветер: "Gentle breeze" (Легкий ветерок)',
+    [
+      { en: 'Be gentle with the baby.', ru: 'Будь нежен с ребенком.' },
+      { en: 'He has a very gentle voice.', ru: 'У него очень мягкий голос.' },
+      { en: 'The doctor was very gentle.', ru: 'Врач был очень аккуратен (нежен).' },
+      { en: 'Cook over a gentle heat.', ru: 'Готовьте на медленном (мягком) огне.' }
+    ],
+    []
+  ),
+
+  createRichWord('b1_glance', 'Glance', '/ɡlɑːns/', 'гланс', 'Быстрый взгляд', ProficiencyLevel.B1, 'noun', 'Medium', 'Neutral',
+    'Быстрое движение глаз, чтобы посмотреть на что-то.',
+    '- Действие: "Take a glance" (Взглянуть)\n- Оценка: "At a glance" (С первого взгляда)\n- Глагол: "Glance at watch" (Глянуть на часы)',
+    [
+      { en: 'She took a quick glance at the newspaper.', ru: 'Она бросила быстрый взгляд на газету.' },
+      { en: 'I could tell at a glance that something was wrong.', ru: 'Я мог сказать с первого взгляда, что что-то не так.' },
+      { en: 'He glanced at his watch nervously.', ru: 'Он нервно глянул на свои часы.' },
+      { en: 'They exchanged a glance and smiled.', ru: 'Они переглянулись и улыбнулись.' }
+    ],
+    []
+  ),
+
+  createRichWord('b1_govern', 'Govern', '/ˈɡʌv.ən/', 'гавэн', 'Управлять / Править', ProficiencyLevel.B1, 'verb', 'Medium', 'Formal',
+    'Осуществлять политическую власть над страной или группой людей.',
+    '- Политика: "Govern the country" (Управлять страной)\n- Грамматика: "Verb governs the case" (Глагол управляет падежом)\n- Влияние: "Prices are governed by demand" (Цены регулируются спросом)',
+    [
+      { en: 'The party has governed the country for ten years.', ru: 'Партия управляет страной уже десять лет.' },
+      { en: 'Laws exist to govern our behaviour.', ru: 'Законы существуют, чтобы регулировать наше поведение.' },
+      { en: 'It is difficult to govern such a large nation.', ru: 'Трудно управлять такой большой нацией.' },
+      { en: 'We need to govern our spending strictly.', ru: 'Нам нужно строго контролировать (управлять) наши расходы.' }
+    ],
+    []
+  ),
+
+  createRichWord('b1_handle', 'Handle', '/ˈhæn.dəl/', 'хэндл', 'Справляться / Ручка', ProficiencyLevel.B1, 'verb', 'High', 'Neutral',
+    'Иметь дело с ситуацией или проблемой (глагол); часть предмета, за которую его держат (сущ.).',
+    '- Проблема: "Handle the situation" (Справиться с ситуацией)\n- Предмет: "Door handle" (Дверная ручка - A2)\n- Ответственность: "Can you handle it?" (Ты справишься с этим?)',
+    [
+      { en: 'I can handle this problem myself.', ru: 'Я могу справиться с этой проблемой сам.' },
+      { en: 'The handle of the cup is broken.', ru: 'Ручка чашки сломана.' },
+      { en: 'She knows how to handle difficult customers.', ru: 'Она знает, как обращаться с трудными клиентами.' },
+      { en: 'Please handle the goods with care.', ru: 'Пожалуйста, обращайтесь с товаром осторожно.' }
+    ],
+    []
+  ),
+];

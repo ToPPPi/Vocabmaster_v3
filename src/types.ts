@@ -63,8 +63,13 @@ export interface UserProgress {
   // Sync Meta
   lastLocalUpdate: number; 
   lastCloudSync: number;   
-  lastAutoBackupDate?: number; // New field for auto-backup timer
+  lastAutoBackupDate?: number; 
   
+  // Smart Notification Meta
+  dailyLaunchCount: number;        // How many times app opened today
+  motivationMessageSentToday: boolean; // Legacy flag, kept for compatibility
+  lastMotivationDate?: number;     // Timestamp of last sent message (for multi-day spacing)
+
   wordsLearnedToday: number;
   aiGenerationsToday: number;
   

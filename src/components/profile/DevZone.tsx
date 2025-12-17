@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { Wrench, TestTube, Clock, Search, Loader2, Activity } from 'lucide-react';
+import { Wrench, TestTube, Clock, Search, Loader2, Activity, Music, Send } from 'lucide-react';
 import { dev_UnlockRealWords, dev_PopulateReview, dev_RunHealthCheck, togglePremium } from '../../services/storageService';
 import { triggerHaptic } from '../../utils/uiHelpers';
+import { RewardOverlay, RewardType } from '../RewardOverlay';
 
 interface DevZoneProps {
     onUpdate: () => void;
@@ -13,12 +14,50 @@ export const DevZone: React.FC<DevZoneProps> = ({ onUpdate }) => {
     const [loadingProgress, setLoadingProgress] = useState(0);
     const [loadingText, setLoadingText] = useState("");
     const [report, setReport] = useState<string[] | null>(null);
+    const [testReward, setTestReward] = useState<RewardType | null>(null);
 
     const handleDevPremium = async () => {
         triggerHaptic('success');
         await togglePremium(true);
         await onUpdate();
         alert("Developer Premium Granted!");
+    };
+
+    const handleTestNotification = async () => {
+        const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
+        if (!tgUser) {
+            alert("Вы не в Telegram. Невозможно отправить сообщение.");
+            return;
+        }
+
+        setIsDevLoading(true);
+        setLoadingText("Отправка боту...");
+        setLoadingProgress(50);
+
+        try {
+            const response = await fetch('/api/send-message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: tgUser.id,
+                    text: `👋 Привет, ${tgUser.first_name}! \n\nЭто тест напоминания. \n🔥 Не забудь выучить слова сегодня!`
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                triggerHaptic('success');
+                alert("Сообщение отправлено! Проверьте чат с ботом.");
+            } else {
+                throw new Error(result.error || "Ошибка отправки");
+            }
+        } catch (e: any) {
+            console.error(e);
+            alert(`Ошибка: ${e.message}. Убедитесь, что вы запустили бота (/start).`);
+        } finally {
+            setIsDevLoading(false);
+        }
     };
 
     const handleDevUnlockWords = async () => {
@@ -88,6 +127,8 @@ export const DevZone: React.FC<DevZoneProps> = ({ onUpdate }) => {
 
     return (
         <>
+            <RewardOverlay type={testReward} onClose={() => setTestReward(null)} />
+
             {/* LOADING OVERLAY - Scoped to DevZone usage */}
             {isDevLoading && (
                 <div className="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-6 animate-in fade-in duration-200">
@@ -120,6 +161,21 @@ export const DevZone: React.FC<DevZoneProps> = ({ onUpdate }) => {
                     >
                         [DEV] Grant Premium
                     </button>
+
+                    <div className="grid grid-cols-2 gap-2">
+                        <button 
+                            onClick={() => setTestReward('happy_cat_test')}
+                            className="py-2 bg-pink-500 text-white text-xs font-bold rounded-xl shadow-sm active:scale-95 flex items-center justify-center gap-1"
+                        >
+                            <Music className="w-3 h-3"/> Happy Cat
+                        </button>
+                        <button 
+                            onClick={handleTestNotification}
+                            className="py-2 bg-sky-500 text-white text-xs font-bold rounded-xl shadow-sm active:scale-95 flex items-center justify-center gap-1"
+                        >
+                            <Send className="w-3 h-3"/> Test Notify
+                        </button>
+                    </div>
 
                     <div className="flex gap-2">
                         <button 

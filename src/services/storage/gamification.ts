@@ -8,7 +8,7 @@ import {
     Medal, PenTool,
     MousePointerClick as MousePointerClickIcon, Calendar as CalendarIcon, Gamepad as GamepadIcon, Coins as CoinsIcon, ShoppingBag as ShoppingBagIcon, CheckCircle as CheckCircleIcon, Mountain as MountainIcon, Send as SendIcon, Briefcase, Bot
   } from 'lucide-react';
-import { Achievement, ProficiencyLevel, Word } from '../../types';
+import { Achievement, ProficiencyLevel, Word, UserProgress } from '../../types';
 import { getUserProgress, saveUserProgress } from './core';
 import { loadAllWords, loadWordsForLevel } from '../../data/words';
 
@@ -30,6 +30,7 @@ export const calculateCoverage = (wordCount: number): number => {
     }
 };
 
+// ... [Existing Stat Functions kept for brevity, not modifying them] ...
 export const getStatsByLevel = async (): Promise<{ lvl: string; current: number; total: number; percent: number }[]> => {
     const progress = await getUserProgress();
     const allWords = await loadAllWords();
@@ -83,19 +84,19 @@ export const getBlitzWords = async (level: ProficiencyLevel): Promise<{ target: 
     });
 };
 
+// ... [Rank Logic] ...
 export const getUserRank = (learnedCount: number) => {
     const RANKS = [
-        { threshold: 0, title: 'Наблюдатель', icon: '👀' },
-        { threshold: 100, title: 'Турист', icon: '🧳' },
-        { threshold: 300, title: 'Выживший', icon: '🏝️' },
-        { threshold: 600, title: 'Студент', icon: '📚' },
-        { threshold: 1000, title: 'Путешественник', icon: '✈️' },
-        { threshold: 2000, title: 'Собеседник', icon: '💬' },
-        { threshold: 3000, title: 'Знаток', icon: '🧐' },
-        { threshold: 5000, title: 'Журналист', icon: '🎙️' },
-        { threshold: 7000, title: 'Дипломат', icon: '🤝' },
-        { threshold: 9000, title: 'Философ', icon: '🧠' },
-        { threshold: 10000, title: 'Легенда', icon: '👑' },
+        { threshold: 0, title: 'Выживание в Аэропорту', icon: '🛫', nextTitle: 'Заказ в ресторане' },
+        { threshold: 300, title: 'Заказ в Ресторане', icon: '🍔', nextTitle: 'Small Talk в отеле' },
+        { threshold: 800, title: 'Small Talk в Отеле', icon: '🏨', nextTitle: 'Чтение новостей' },
+        { threshold: 1500, title: 'Чтение Новостей', icon: '📰', nextTitle: 'Email переписка' },
+        { threshold: 2500, title: 'Email Переписка', icon: '📧', nextTitle: 'Relocation Ready' },
+        { threshold: 3500, title: 'Relocation Ready', icon: '🌍', nextTitle: 'IT Собеседование' },
+        { threshold: 5000, title: 'IT Собеседование', icon: '💻', nextTitle: 'Netflix без субтитров' },
+        { threshold: 7500, title: 'Netflix без сабов', icon: '🎬', nextTitle: 'Свобода общения' },
+        { threshold: 9000, title: 'Свобода общения', icon: '🗣️', nextTitle: 'Google Interview' },
+        { threshold: 10000, title: 'Google Interview', icon: '🏆', nextTitle: 'Максимум' },
     ];
     let currentRank = RANKS[0];
     let nextRank = RANKS[1];
@@ -114,11 +115,86 @@ export const getUserRank = (learnedCount: number) => {
         icon: currentRank.icon,
         currentThreshold: currentRank.threshold,
         nextThreshold: nextRank ? nextRank.threshold : 10000,
-        nextTitle: nextRank ? nextRank.title : 'Максимум',
+        nextTitle: nextRank ? nextRank.title : 'Absolute Master', 
         isMax: !nextRank
     };
 };
 
+// --- SMART NOTIFICATION LOGIC ---
+const MOTIVATION_MESSAGES = [
+    "🔥 <b>Не сбавляй темп!</b>\nТы сегодня уже заходил, но пару новых слов выучить не помешает. Погнали?",
+    "👀 <b>Псс, парень!</b>\nНе хочешь немного расширить словарный запас? Зайди в раздел Блиц!",
+    "🚀 <b>Космос ждет!</b>\nТвой уровень растет. Если выучишь еще 5 слов сегодня, завтра будет легче.",
+    "👋 <b>Ты забыл слова?</b>\nОни скучают без тебя. Зайди на 5 минут и сделай их счастливыми.",
+    "💡 <b>Факт дня:</b>\nРегулярность важнее интенсивности. Даже 2 минуты сейчас лучше, чем час через неделю."
+];
+
+export const triggerSmartMotivation = async (progress: UserProgress) => {
+    // 1. Always increment session count to track daily activity
+    progress.dailyLaunchCount = (progress.dailyLaunchCount || 0) + 1;
+
+    // 2. COOLDOWN CHECK
+    // Ensure we don't spam. Limit to roughly 1-2 times per week.
+    // 72 hours = 3 days gap minimum.
+    const now = Date.now();
+    const lastSent = progress.lastMotivationDate || 0;
+    const COOLDOWN_MS = 3 * 24 * 60 * 60 * 1000; 
+
+    if (now - lastSent < COOLDOWN_MS) {
+        await saveUserProgress(progress);
+        return;
+    }
+
+    // 3. ACTIVITY CHECK
+    // User requested: "First time don't send, second time don't send... third time message appears."
+    // We only trigger if the user is engaged (opened app at least 3 times today).
+    if (progress.dailyLaunchCount < 3) {
+        await saveUserProgress(progress);
+        return;
+    }
+
+    // 4. RANDOMNESS
+    // Even if cooldown passed and user is active, we add randomness.
+    // 30% chance per qualifying session.
+    // This creates the effect of "random number of times" before triggering.
+    const shouldSend = Math.random() < 0.3;
+
+    if (!shouldSend) {
+        await saveUserProgress(progress);
+        return;
+    }
+
+    // 5. SEND MESSAGE
+    const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
+    if (!tgUser) {
+         await saveUserProgress(progress);
+         return;
+    }
+
+    const randomMsg = MOTIVATION_MESSAGES[Math.floor(Math.random() * MOTIVATION_MESSAGES.length)];
+
+    try {
+        const response = await fetch('/api/send-message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: tgUser.id,
+                text: randomMsg
+            })
+        });
+
+        if (response.ok) {
+            console.log("📢 Smart Motivation Sent!");
+            // Update the timestamp to reset the 3-day cooldown
+            progress.lastMotivationDate = now;
+            await saveUserProgress(progress);
+        }
+    } catch (e) {
+        console.error("Failed to send motivation", e);
+    }
+};
+
+// ... [Achievements code remains unchanged] ...
 export const getAchievements = async (): Promise<Achievement[]> => {
     const progress = await getUserProgress();
     const count = Object.keys(progress.wordProgress).length;
