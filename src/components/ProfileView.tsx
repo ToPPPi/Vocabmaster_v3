@@ -5,7 +5,7 @@ import { Header } from './Header';
 import { UserProgress, ViewState } from '../types';
 import { isUserPremium, getSecureNow, toggleDarkMode, logoutUser } from '../services/storageService';
 import { triggerHaptic } from '../utils/uiHelpers';
-import { RewardType } from '../RewardOverlay';
+import { RewardType } from './RewardOverlay';
 
 // Modular Components
 import { UserInfoCard } from './profile/UserInfoCard';
