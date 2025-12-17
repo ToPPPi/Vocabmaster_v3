@@ -20,7 +20,8 @@ export const DevZone: React.FC<DevZoneProps> = ({ onUpdate }) => {
         triggerHaptic('success');
         await togglePremium(true);
         await onUpdate();
-        alert("Developer Premium Granted!");
+        // TRIGGER THE HAPPY CAT REWARD HERE
+        setTestReward('premium_year');
     };
 
     const handleTestNotification = async () => {
@@ -157,9 +158,10 @@ export const DevZone: React.FC<DevZoneProps> = ({ onUpdate }) => {
                 <div className="space-y-3">
                     <button 
                         onClick={handleDevPremium}
-                        className="w-full py-2 bg-slate-800 dark:bg-slate-800 text-slate-200 text-xs font-mono rounded-xl opacity-80 hover:opacity-100 transition-opacity"
+                        className="w-full py-2 bg-gradient-to-r from-yellow-500 to-amber-600 text-white text-xs font-bold rounded-xl shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"
                     >
-                        [DEV] Grant Premium
+                        <Music className="w-4 h-4" />
+                        [DEV] Grant Premium + Happy Cat
                     </button>
 
                     <div className="grid grid-cols-2 gap-2">
@@ -167,7 +169,7 @@ export const DevZone: React.FC<DevZoneProps> = ({ onUpdate }) => {
                             onClick={() => setTestReward('happy_cat_test')}
                             className="py-2 bg-pink-500 text-white text-xs font-bold rounded-xl shadow-sm active:scale-95 flex items-center justify-center gap-1"
                         >
-                            <Music className="w-3 h-3"/> Happy Cat
+                            <Music className="w-3 h-3"/> Test Only Cat
                         </button>
                         <button 
                             onClick={handleTestNotification}

@@ -15,25 +15,26 @@ interface RewardConfig {
 // ASSETS CONFIGURATION
 const REWARDS: Record<RewardType, RewardConfig> = {
     'premium_month': {
-        gif: 'https://media1.tenor.com/m/pUaQYp4sN1MAAAAd/cat-happy.gif', // Happy Cat Jumping
+        // Updated to a reliable Tenor source for Happy Cat
+        gif: 'https://media.tenor.com/lCKwsD2OW1kAAAAi/happy-cat-happy-happy-cat.gif', 
         sound: 'https://www.myinstants.com/media/sounds/happy-happy-happy-cat.mp3', 
         title: 'Happy! Happy! Happy!',
         subtitle: 'Premium активирован на месяц',
-        volume: 0.1 // 10% volume (Quiet)
+        volume: 0.5 
     },
     'premium_year': {
-        gif: 'https://media1.tenor.com/m/pUaQYp4sN1MAAAAd/cat-happy.gif',
+        gif: 'https://media.tenor.com/lCKwsD2OW1kAAAAi/happy-cat-happy-happy-cat.gif',
         sound: 'https://www.myinstants.com/media/sounds/happy-happy-happy-cat.mp3',
         title: 'Happy! Happy! Happy!',
         subtitle: 'Целый год без ограничений!',
-        volume: 0.1 // 10% volume
+        volume: 0.5
     },
     'happy_cat_test': {
-        gif: 'https://media1.tenor.com/m/pUaQYp4sN1MAAAAd/cat-happy.gif',
+        gif: 'https://media.tenor.com/lCKwsD2OW1kAAAAi/happy-cat-happy-happy-cat.gif',
         sound: 'https://www.myinstants.com/media/sounds/happy-happy-happy-cat.mp3',
         title: 'Happy! Happy! Happy!',
-        subtitle: 'Тест анимации (Тихий звук)',
-        volume: 0.1
+        subtitle: 'Тест анимации',
+        volume: 0.5
     },
     'shop_buy': {
         gif: 'https://media.giphy.com/media/UPmV92Wd9X2O4/giphy.gif', 
@@ -98,8 +99,8 @@ export const RewardOverlay: React.FC<RewardOverlayProps> = ({ type, onClose }) =
         >
             <div className="relative bg-slate-900 p-1 rounded-[2.5rem] shadow-2xl max-w-sm w-full overflow-hidden border-[6px] border-yellow-400">
                 
-                {/* Content */}
-                <div className="relative rounded-[2rem] overflow-hidden aspect-square bg-black">
+                {/* Content - Removed aspect-square to allow gif to fit naturally */}
+                <div className="relative rounded-[2rem] overflow-hidden bg-black flex items-center justify-center h-80">
                     <img 
                         src={config.gif} 
                         alt="Reward" 

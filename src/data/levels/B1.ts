@@ -3622,19 +3622,6 @@ createRichWord('b1_coward', 'Coward', '/ˈkaʊəd/', 'кауэд', 'Трус', P
     ],
     []
   ),
-createRichWord('b1_buggy', 'Buggy', '/ˈbʌɡi/', 'баги', 'Коляска / Багги', ProficiencyLevel.B1, 'noun', 'Medium', 'Neutral',
-    'Легкая коляска для маленьких детей (брит.); легкий автомобиль для езды по песку.',
-    '- Дети: "Baby buggy" (Детская коляска)\n- Спорт: "Dune buggy" (Пляжный багги)\n- Гольф: "Golf buggy" (Гольф-кар)',
-    [
-        { en: 'She pushed the buggy through the park.', ru: 'Она толкала коляску по парку.' },
-        { en: 'We rented a dune buggy to drive on the beach.', ru: 'Мы арендовали багги, чтобы покататься по пляжу.' },
-        { en: 'The baby fell asleep in the buggy.', ru: 'Малыш заснул в коляске.' },
-        { en: 'Put the shopping bags under the buggy.', ru: 'Положи сумки с покупками под коляску.' }
-    ],
-    [
-        { meaning: "Full of bugs (software)", translation: "Глючный / С ошибками", example: { en: "This software is very buggy.", ru: "Это программное обеспечение очень глючное." } }
-    ]
-),
 
 createRichWord('b1_butler', 'Butler', '/ˈbʌtlə(r)/', 'батлэ', 'Дворецкий', ProficiencyLevel.B1, 'noun', 'Low', 'Neutral',
     'Главный слуга-мужчина в большом доме.',

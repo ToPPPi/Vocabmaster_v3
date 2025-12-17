@@ -3238,31 +3238,7 @@ createRichWord('a2_either', 'Either', '/ˈaɪ.ðər/', 'айзер', 'Любой
     ],
     []
   ),
-  createRichWord('a2_dolphin', 'Dolphin', '/ˈdɒl.fɪn/', 'долфин', 'Дельфин', ProficiencyLevel.A2, 'noun', 'Medium', 'Neutral',
-    'Умное морское млекопитающее, похожее на большую рыбу, с изогнутым спинным плавником.',
-    '- Море: "Swim with dolphins" (Плавать с дельфинами)\n- Шоу: "Dolphin show" (Шоу дельфинов)\n- Природа: "Wild dolphin" (Дикий дельфин)',
-    [
-      { en: 'Dolphins are very intelligent animals.', ru: 'Дельфины — очень умные животные.' },
-      { en: 'We saw a dolphin jumping out of the water.', ru: 'Мы видели дельфина, выпрыгивающего из воды.' },
-      { en: 'Dolphins communicate with each other using sounds.', ru: 'Дельфины общаются друг с другом с помощью звуков.' },
-      { en: 'The dolphin swam alongside the boat.', ru: 'Дельфин плыл рядом с лодкой.' }
-    ],
-    []
-  ),
 
-  createRichWord('a2_dot', 'Dot', '/dɒt/', 'дот', 'Точка', ProficiencyLevel.A2, 'noun', 'High', 'Neutral',
-    'Маленькая круглая отметка; используется в интернет-адресах.',
-    '- Интернет: "Dot com" (Точка ком)\n- Письмо: "Dot on the i" (Точка над i)\n- Узор: "Polka dot" (Узор в горошек)',
-    [
-      { en: 'The website address ends in dot com.', ru: 'Адрес веб-сайта заканчивается на точка ком.' },
-      { en: 'Connect the dots to draw a picture.', ru: 'Соедини точки, чтобы нарисовать картинку.' },
-      { en: 'She wore a dress with red dots.', ru: 'Она была в платье в красный горошек.' },
-      { en: 'Put a dot at the end of the sentence.', ru: 'Поставь точку в конце предложения.' }
-    ],
-    [
-      { meaning: "To mark with dots (verb)", translation: "Усеивать / Ставить точки", example: { en: "The field was dotted with flowers.", ru: "Поле было усеяно цветами." } }
-    ]
-  ),
 
   createRichWord('a2_exit', 'Exit', '/ˈek.sɪt/', 'экзит', 'Выход', ProficiencyLevel.A2, 'noun', 'High', 'Neutral',
     'Дверь или проход, используемый для выхода из здания; действие ухода.',
@@ -3303,19 +3279,6 @@ createRichWord('a2_either', 'Either', '/ˈaɪ.ðər/', 'айзер', 'Любой
     ]
   ),
 
-  createRichWord('a2_exit', 'Exit', '/ˈek.sɪt/', 'экзит', 'Выход', ProficiencyLevel.A2, 'noun', 'High', 'Neutral',
-    'Дверь или проход, используемый для выхода из здания; действие ухода.',
-    '- Здание: "Emergency exit" (Аварийный выход)\n- Знак: "Exit sign" (Знак выхода)\n- Дорога: "Take the exit" (Свернуть на съезд)',
-    [
-      { en: 'Where is the nearest exit?', ru: 'Где ближайший выход?' },
-      { en: 'Please leave by the rear exit.', ru: 'Пожалуйста, выходите через задний выход.' },
-      { en: 'He made a quick exit from the party.', ru: 'Он быстро ушел с вечеринки.' },
-      { en: 'The fire exit must be kept clear.', ru: 'Пожарный выход должен быть свободным.' }
-    ],
-    [
-      { meaning: "To leave (verb)", translation: "Выходить", example: { en: "Exit the program.", ru: "Выйти из программы." } }
-    ]
-  ),
   createRichWord('a2_disco', 'Disco', '/ˈdɪs.kəʊ/', 'диско', 'Дискотека', ProficiencyLevel.A2, 'noun', 'Medium', 'Neutral',
     'Место или мероприятие, где люди танцуют под поп-музыку.',
     '- Место: "Go to the disco" (Идти на дискотеку)\n- Музыка: "Disco music" (Диско музыка)\n- Свет: "Disco ball" (Диско-шар)',

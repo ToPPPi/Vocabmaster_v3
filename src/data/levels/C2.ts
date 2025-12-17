@@ -12732,17 +12732,6 @@ createRichWord('c2_digress', 'Digress', '/daɪˈɡres/', 'дайгрес', 'От
     []
   ),
 
-  createRichWord('c2_entwine', 'Entwine', '/ɪnˈtwaɪn/', 'интвайн', 'Сплетаться / Переплетаться', ProficiencyLevel.C2, 'verb', 'Low', 'Literary',
-    'Скручиваться вместе; быть тесно связанным.',
-    '- Растения: "Vines entwined" (Лозы переплелись)\n- Руки: "Fingers entwined" (Пальцы переплелись)\n- Судьбы: "Lives entwined" (Жизни переплелись)',
-    [
-      { en: 'Their fingers were entwined.', ru: 'Их пальцы были переплетены.' },
-      { en: 'The ivy entwined around the tree.', ru: 'Плющ обвился вокруг дерева.' },
-      { en: 'Our histories are closely entwined.', ru: 'Наши истории тесно переплетены.' },
-      { en: 'Flowers and ribbons were entwined in her hair.', ru: 'Цветы и ленты были вплетены в ее волосы.' }
-    ],
-    []
-  ),
   createRichWord('c2_epithet', 'Epithet', '/ˈep.ɪ.θet/', 'эписет', 'Эпитет / Прозвище', ProficiencyLevel.C2, 'noun', 'Low', 'Formal',
     'Прилагательное или фраза, описывающая качество; иногда используется как оскорбительное прозвище.',
     '- Литература: "Homeric epithet" (Гомеровский эпитет)\n- Оскорбление: "Racist epithet" (Расистское прозвище)\n- Описание: "Appropriate epithet" (Подходящий эпитет)',
